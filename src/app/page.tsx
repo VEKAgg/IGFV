@@ -6,6 +6,7 @@ import { FaSpaceShuttle, FaDiscord, FaExternalLinkAlt, FaUsers, FaHandsHelping, 
 import { IoIosPlanet, IoMdRocket } from 'react-icons/io';
 import { RiSpaceShipFill } from 'react-icons/ri';
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
+import DiscordLive from '@/components/Discord/DiscordLive';
 
 // Animated ship component that oscillates horizontally
 function AnimatedShip() {
@@ -117,8 +118,8 @@ function GridBackground() {
       {/* Grid Lines - Same as Marketplace */}
       <div className="absolute inset-0" style={{
         backgroundImage: `
-          linear-gradient(to right, rgba(255,107,0,0.1) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(255,107,0,0.1) 1px, transparent 1px)
+          linear-gradient(to right, rgba(0,40,104,0.12) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0,40,104,0.12) 1px, transparent 1px)
         `,
         backgroundSize: '4rem 4rem',
       }} />
@@ -295,6 +296,69 @@ export default function IGFVPage() {
             </motion.div>
           </section>
 
+          {/* Live Strip: member count + featured news (above the fold engagement) */}
+          <section className="bg-dark/40 backdrop-blur-sm py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="px-4 py-2 bg-norway-red text-norway-white rounded-md font-semibold">LIVE</div>
+                <div className="text-white">
+                  <div className="text-sm text-gray-200">Active members</div>
+                  <div className="text-2xl font-bold"><DiscordLive /></div>
+                </div>
+              </div>
+
+              <div className="flex-1">
+                <h3 className="text-white font-semibold mb-3">Quick Links</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <a href="/about" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
+                    <h4 className="text-norway-white font-bold">About</h4>
+                    <p className="text-gray-300 text-sm">Who we are and what we do.</p>
+                  </a>
+                  <a href="/resources" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
+                    <h4 className="text-norway-white font-bold">Resources</h4>
+                    <p className="text-gray-300 text-sm">Guides, builds, and useful links.</p>
+                  </a>
+                  <a href="/events" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
+                    <h4 className="text-norway-white font-bold">Events</h4>
+                    <p className="text-gray-300 text-sm">Upcoming ops and schedules.</p>
+                  </a>
+                  <a href="/gallery" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
+                    <h4 className="text-norway-white font-bold">Gallery</h4>
+                    <p className="text-gray-300 text-sm">Screenshots & member submissions.</p>
+                  </a>
+                </div>
+              </div>
+              {/* Discord widget (desktop only) */}
+              <div className="hidden lg:block ml-6">
+                <div className="w-[350px] h-[500px] bg-dark/50 rounded-md p-4 shadow-glow">
+                  <h4 className="text-white font-bold mb-2">Community Panel</h4>
+                  <div className="mb-4">
+                    <div className="text-sm text-gray-200">Active members</div>
+                    <div className="text-2xl font-bold"><DiscordLive /></div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h5 className="text-sm text-gray-300 mb-2">Announcements</h5>
+                    <ul className="text-gray-400 text-sm space-y-1">
+                      <li>Welcome new pilots!</li>
+                      <li>Carrier Valhall: refuel at Maco&apos;s Reach</li>
+                      <li>Event: Exploration Sprint Saturday</li>
+                    </ul>
+                  </div>
+
+                  <a
+                    href="https://discord.gg/igfv"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block mt-2 px-4 py-2 bg-norway-red text-norway-white rounded-md font-semibold hover:opacity-95 transition"
+                  >
+                    Open Discord
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* Consistent max width container for all content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hardware-accelerated">
             {/* Introduction Section - Consistent text size */}
@@ -410,6 +474,40 @@ export default function IGFVPage() {
                     <div className="text-primary mb-4">{value.icon}</div>
                     <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
                     <p className="text-base md:text-lg text-gray-400">{value.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* Squadron Stats Section */}
+            <section className="py-24 relative">
+              <motion.h2 
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-12 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                Squadron Overview
+              </motion.h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  { label: 'Active Members', value: '100+', icon: '👥' },
+                  { label: 'Systems Explored', value: '1,247', icon: '🌍' },
+                  { label: 'Total Credits Earned', value: '2.3B', icon: '💰' },
+                  { label: 'Faction Status', value: 'Growing', icon: '📈' },
+                ].map((stat, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-gradient-to-br from-norway-red/10 to-norway-blue/10 border border-norway-red/30 rounded-lg p-6 text-center hover:border-norway-red/60 transition-all"
+                  >
+                    <div className="text-4xl mb-3">{stat.icon}</div>
+                    <p className="text-gray-400 text-sm uppercase tracking-wider mb-2">{stat.label}</p>
+                    <p className="text-3xl font-bold text-norway-red">{stat.value}</p>
                   </motion.div>
                 ))}
               </div>

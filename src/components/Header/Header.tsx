@@ -12,13 +12,12 @@ export const Header: React.FC = () => {
 
   const navItems = [
     { href: '/about', label: 'About' },
-    { href: '/members', label: 'Members' },
-    { href: '/join', label: 'Join' },
+    { href: '/fleet-carrier', label: 'Fleet Carrier' },
+    { href: '/operations', label: 'Operations' },
+    { href: '/news', label: 'News' },
     { href: '/resources', label: 'Resources' },
     { href: '/events', label: 'Events' },
     { href: '/gallery', label: 'Gallery' },
-    { href: '/news', label: 'News' },
-    { href: '/discord', label: 'Discord' },
   ];
 
   const isActive = (href: string) => {
@@ -45,6 +44,16 @@ export const Header: React.FC = () => {
                 {item.label}
               </Link>
             ))}
+
+            {/* Discord CTA */}
+            <a
+              href="https://discord.gg/igfv"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 px-4 py-2 bg-norway-red text-norway-white rounded-md font-semibold hover:opacity-95 transition"
+            >
+              Discord
+            </a>
           </div>
 
           {/* Mobile toggle */}
@@ -69,6 +78,17 @@ export const Header: React.FC = () => {
                   {item.label}
                 </Link>
               ))}
+
+              {/* Mobile Discord CTA */}
+              <a
+                href="https://discord.gg/igfv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block mt-2 px-3 py-2 rounded-md bg-norway-red text-norway-white text-center font-semibold"
+                onClick={() => setIsOpen(false)}
+              >
+                Join Discord
+              </a>
             </div>
           </motion.div>
         )}

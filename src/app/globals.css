@@ -1,3 +1,10 @@
+/*
+  Centralized/global stylesheet for the Next.js app.
+  - This file is the single CSS entrypoint (imported by `src/app/layout.tsx`).
+  - Tailwind is used for utility classes; use these variables for app-wide
+    color tokens so components stay consistent.
+*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -40,6 +47,10 @@ html {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
+  /* Norway flag palette (centralized tokens) */
+  --norway-red: 239, 43, 45; /* #EF2B2D */
+  --norway-blue: 0, 40, 104; /* #002868 */
+  --norway-white: 255, 255, 255; /* #FFFFFF */
 }
 
 body {

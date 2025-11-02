@@ -2,6 +2,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { Header } from '@/components/Header/Header';
 import { Footer } from '@/components/Footer/Footer';
+import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 import { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -28,11 +29,18 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/veka-tabbar-logo.svg" sizes="any" />
       </head>
-      <body className={`${inter.className} bg-norway-blue text-norway-white`}>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow bg-gradient-to-b from-norway-blue to-dark-light">{children}</main>
-            <Footer />
+  <body className={`${inter.className} bg-black text-norway-white`}>
+          <div className="flex flex-col min-h-screen relative">
+            {/* Grid Background - visible on all pages */}
+            <div className="fixed inset-0 z-0 bg-grid pointer-events-none" />
+            
+            {/* Content Stack */}
+            <div className="relative z-10 flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow bg-transparent">{children}</main>
+              <Footer />
+              <ScrollToTop />
+            </div>
           </div>
       </body>
     </html>
