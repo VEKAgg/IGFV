@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add smoothness without using heavy JS */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove mask images for grid - we'll readd later */
+.bg-grid {
+  background-size: 100px 100px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+/* Performance optimizations */
+@layer utilities {
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .hardware-accelerated {
+    transform: translateZ(0);
+  }
+  
+  /* Optimize shadow animations */
+  .shadow-glow {
+    box-shadow: 0 0 15px rgba(255, 126, 0, 0.1);
+    transition: box-shadow 0.2s ease-out;
+  }
+  
+  .shadow-glow-hover {
+    box-shadow: 0 0 20px rgba(255, 126, 0, 0.2);
+  }
+}
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  font-family: Arial, Helvetica, sans-serif;
+}

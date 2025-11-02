@@ -1,0 +1,62 @@
+name: Deploy to Family PC Server
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    if: startsWith(github.event.head_commit.message, 'Merge pull request')
+    runs-on: [self-hosted, X64, AtlasOS, Linux]
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+          
+      - name: Build application
+        run: npm run build
+
+      - name: Start or restart PM2 process
+        run: |
+          # Check if PM2 is installed globally; if not, install it
+          if ! command -v pm2 &> /dev/null; then
+            npm install -g pm2
+          fi
+
+          # Use a direct check for process info instead of grep on pm2 list
+          if pm2 info veka > /dev/null 2>&1; then
+            pm2 restart veka --update-env
+          else
+            pm2 start deploy.json --update-env
+          fi
+
+          # Save the PM2 process list
+          pm2 save
+        shell: bash
+
+      - name: Health check
+        shell: bash
+        run: |
+          # Wait for the application to start
+          sleep 10
+
+          # Check if the app is running by making a request
+          if curl -s --fail http://localhost:3000 > /dev/null; then
+            echo "Health check passed"
+          else
+            echo "Health check failed"
+            exit 1
+          fi
