@@ -55,7 +55,14 @@ Create a `.env.local` file in the project root:
 INARA_API_KEY=your_inara_api_key_here
 ```
 
-The `INARA_API_KEY` is used server-side only for API proxy security.
+### Getting Your Inara API Key
+
+1. Register on [Inara.cz](https://inara.cz)
+2. Visit Settings → [API Keys](https://inara.cz/settings-api/)
+3. Create a new API key (give it a name like "IGFV Website")
+4. Copy the API key and add to `.env.local`
+
+The `INARA_API_KEY` is used **server-side only** for API proxy security—never exposed to client.
 
 ## Project Structure
 
