@@ -10,20 +10,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#FF6B00',
-          dark: '#CC5500',
-          light: '#FF8533',
+        norway: {
+          red: '#EF2B2D',
+          white: '#FFFFFF',
+          blue: '#002868',
         },
         dark: {
-          DEFAULT: '#121212',
-          light: '#1E1E1E',
-          lighter: '#2D2D2D',
+          DEFAULT: '#002868',
+          light: '#003C8F',
+          lighter: '#0050B5',
         },
         accent: {
-          DEFAULT: '#FF4D00',
-          dark: '#CC3D00',
-          light: '#FF704D',
+          DEFAULT: '#EF2B2D',
+          dark: '#CC2526',
+          light: '#FF4244',
         },
         background: "var(--background)",
         foreground: "var(--foreground)",

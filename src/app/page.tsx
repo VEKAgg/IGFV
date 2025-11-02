@@ -1,634 +1,636 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { MotionDiv } from '@/components/Motion/MotionDiv';
-import { AnimatedBackground } from '@/components/ui/AnimatedBackground';
-import { FaArrowDown, FaArrowUp, FaDiscord, FaGamepad, FaCar, FaSkull, FaTwitter, FaInstagram } from 'react-icons/fa';
-import { SiThreads } from 'react-icons/si';
-import { motion } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useAnimation, useInView } from 'framer-motion';
+import { FaSpaceShuttle, FaDiscord, FaExternalLinkAlt, FaUsers, FaHandsHelping, FaStar, FaQuestionCircle, FaComments, FaRocket, FaChevronDown, FaCheck, FaMoon, FaGlobeAmericas, FaSatellite } from 'react-icons/fa';
+import { IoIosPlanet, IoMdRocket } from 'react-icons/io';
+import { RiSpaceShipFill } from 'react-icons/ri';
+import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
 
-const fadeIn = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 }
-};
-
-const stats = [
-  { label: 'Active Players', value: '10K+' },
-  { label: 'Communities', value: '500+' },
-  { label: 'Daily Events', value: '50+' },
-  { label: 'Total Rewards', value: '100K+' },
-] as const;
-
-// Mock partners data
-const partners = [
-  { name: 'Corsair Gaming', logo: '/partners/corsair.png', url: '#' },
-  { name: 'SteelSeries', logo: '/partners/steelseries.png', url: '#' },
-  { name: 'Razer', logo: '/partners/razer.png', url: '#' },
-  { name: 'ASUS ROG', logo: '/partners/asus.png', url: '#' },
-  { name: 'Logitech G', logo: '/partners/logitech.png', url: '#' },
-  { name: 'MSI', logo: '/partners/msi.png', url: '#' },
-  { name: 'NVIDIA', logo: '/partners/nvidia.png', url: '#' },
-  { name: 'AMD', logo: '/partners/amd.png', url: '#' },
-];
-
-// Type for server status
-type ServerStatus = 'online' | 'degraded' | 'offline';
-
-// Mock server status data
-const serverStatus = [
-  { 
-    name: 'Discord Bot', 
-    icon: <FaDiscord />, 
-    status: 'online' as ServerStatus, 
-    uptime: '99.8%',
-    responseTime: '120ms',
-    history: [98, 99, 100, 99, 100, 98, 99, 100, 100, 99, 98, 97, 99, 100]
-  },
-  { 
-    name: 'Minecraft Server', 
-    icon: <FaGamepad />, 
-    status: 'online' as ServerStatus, 
-    uptime: '98.2%',
-    responseTime: '150ms',
-    history: [100, 99, 98, 97, 96, 98, 99, 100, 99, 98, 97, 98, 99, 100]
-  },
-  { 
-    name: 'Assetto Corsa Server', 
-    icon: <FaCar />, 
-    status: 'degraded' as ServerStatus, 
-    uptime: '95.4%',
-    responseTime: '210ms',
-    history: [100, 98, 95, 92, 90, 88, 92, 95, 98, 97, 94, 92, 95, 97]
-  },
-  { 
-    name: 'Rust Server', 
-    icon: <FaSkull />, 
-    status: 'online' as ServerStatus, 
-    uptime: '97.9%',
-    responseTime: '180ms',
-    history: [99, 98, 97, 96, 97, 98, 99, 97, 96, 97, 98, 99, 100, 99]
-  },
-];
-
-// Mock social media posts
-const socialPosts = {
-  twitter: [
-    { id: 1, username: 'VEKAOfficial', handle: '@veka_gaming', content: 'Excited to announce our upcoming tournament with prize pools exceeding $10,000! Registration opens next week. #VEKAGaming', likes: 245, retweets: 89, time: '2h ago', image: '/social/twitter-post1.jpg' },
-    { id: 2, username: 'VEKAOfficial', handle: '@veka_gaming', content: 'Our Discord community just reached 10,000 members! Thanks to everyone who makes this community amazing. #MilestoneAchieved', likes: 412, retweets: 156, time: '1d ago', image: '' },
-    { id: 3, username: 'VEKAOfficial', handle: '@veka_gaming', content: 'The new server update is live! Check out the improved performance and new features. Let us know what you think! #ServerUpdate', likes: 189, retweets: 45, time: '3d ago', image: '/social/twitter-post3.jpg' },
-  ],
-  instagram: [
-    { id: 1, username: 'veka_official', content: 'Community game night was a blast! Swipe to see more photos. #gamingcommunity', likes: 542, comments: 32, time: '5h ago', images: ['/social/insta-post1.jpg', '/social/insta-post1-2.jpg'] },
-    { id: 2, username: 'veka_official', content: 'Behind the scenes at our new studio setup. #gamingsetup #streamerlife', likes: 876, comments: 67, time: '2d ago', images: ['/social/insta-post2.jpg'] },
-    { id: 3, username: 'veka_official', content: 'Meet our newest team member! @gamer_pro will be helping coordinate community events. #welcomeaboard', likes: 723, comments: 45, time: '4d ago', images: ['/social/insta-post3.jpg'] },
-  ],
-  threads: [
-    { id: 1, username: 'VEKA', handle: '@veka_official', content: "We've been thinking about the future of gaming communities. Here's our vision for the next generation of social gaming experiences...", replies: 56, likes: 312, time: '3h ago' },
-    { id: 2, username: 'VEKA', handle: '@veka_official', content: "Question for our community: What features would you like to see in our next platform update? We're listening!", replies: 89, likes: 267, time: '1d ago' },
-    { id: 3, username: 'VEKA', handle: '@veka_official', content: 'Gaming tip of the day: Remember to take short breaks every hour to protect your eyes and prevent strain. Your health matters!', replies: 23, likes: 198, time: '2d ago' },
-  ]
-};
-
-// Type definition for StatusIndicator
-interface StatusProps {
-  status: 'online' | 'degraded' | 'offline';
-}
-
-// Type definition for ServerStatusGraph
-interface GraphProps {
-  history: number[];
-}
-
-const StatusIndicator = ({ status }: StatusProps) => {
-  const statusColors = {
-    online: 'bg-green-500',
-    degraded: 'bg-yellow-500',
-    offline: 'bg-red-500',
-  };
-
-  return (
-    <div className="flex items-center">
-      <div className={`w-3 h-3 rounded-full ${statusColors[status]} mr-2`}></div>
-      <span className="capitalize">{status}</span>
-    </div>
-  );
-};
-
-const ServerStatusGraph = ({ history }: GraphProps) => {
-  const points = history.map((value, index) => {
-    const x = (index / (history.length - 1)) * 100;
-    const y = 100 - value;
-    return `${x},${y}`;
-  }).join(' ');
-
-  return (
-    <div className="w-full h-12 relative">
-      <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <polyline
-          points={points}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="text-primary"
-        />
-      </svg>
-    </div>
-  );
-};
-
-export default function Home() {
-  const [showScrollUp, setShowScrollUp] = useState(false);
-  const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
+// Animated ship component that oscillates horizontally
+function AnimatedShip() {
+  const controls = useAnimation();
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false });
+  const { scrollYProgress } = useScroll();
+  
+  // Simplify animation to improve performance
+  const x = useTransform(scrollYProgress, [0, 1], [0, 50]);
   
   useEffect(() => {
-    // Check if user has already given cookie consent
-    const savedConsent = localStorage.getItem('cookieConsent');
-    if (savedConsent) {
-      setCookieConsent(savedConsent === 'true');
+    if (isInView) {
+      controls.start({
+        x: [0, 10, 0, -10, 0], // Reduced oscillation range
+        transition: {
+          duration: 5, // Slower animation
+          ease: "easeInOut",
+          repeat: Infinity,
+        }
+      });
     }
-
-    const handleScroll = () => {
-      if (window.scrollY > window.innerHeight) {
-        setShowScrollUp(true);
-      } else {
-        setShowScrollUp(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
-
-  const scrollToContent = () => {
-    window.scrollTo({
-      top: window.innerHeight,
-      behavior: 'smooth'
-    });
-  };
-
-  const handleAcceptCookies = () => {
-    setCookieConsent(true);
-    localStorage.setItem('cookieConsent', 'true');
-  };
-
-  const handleManageCookies = () => {
-    // This could open a more detailed cookie settings modal
-    setCookieConsent(true);
-    localStorage.setItem('cookieConsent', 'true');
-  };
+  }, [isInView, controls]);
 
   return (
-    <AnimatedBackground>
-      {/* Hero Section with Video Background */}
-      <section className="h-screen flex items-center justify-center px-6 relative overflow-hidden">
-        {/* Video Background */}
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            {/* <source src="/videos/hero-background.mp4" type="video/mp4" /> */}
-            <source src="https://media.istockphoto.com/id/1393551364/video/successful-young-female-gamer-putting-on-headphones-and-winning-in-a-video-game-on-personal.mp4?s=mp4-640x640-is&k=20&c=h21xGIQBoDuEnklnqFInmJcjAG1yvyKk7V1-dDB9N6Q=" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <div className="absolute inset-0 bg-dark/70"></div>
-          
-          {/* Gradient fade for smooth transition to content */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-dark to-transparent"></div>
-        </div>
-
-        <MotionDiv 
-          className="text-center relative z-10"
-          initial={fadeIn.initial}
-          animate={fadeIn.animate}
-          transition={fadeIn.transition}
-        >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-            Welcome to VEKA
-          </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            A dynamic community platform built for gamers, by gamers
-          </p>
-          <div className="flex justify-center space-x-4">
-            <MotionDiv 
-              whileHover={{ scale: 1.05 }}
-              className="bg-primary hover:bg-primary-dark px-8 py-3 rounded-lg shadow-glow hover:shadow-glow-hover transition-all cursor-pointer"
-            >
-              Join Community
-            </MotionDiv>
-            <MotionDiv 
-              whileHover={{ scale: 1.05 }}
-              className="bg-dark-lighter hover:bg-dark-light px-8 py-3 rounded-lg border border-primary/20 hover:border-primary/40 transition-all cursor-pointer"
-            >
-              Learn More
-            </MotionDiv>
-          </div>
-        </MotionDiv>
-
-        {/* Bouncing Down Arrow */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white cursor-pointer z-10"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-          onClick={scrollToContent}
-        >
-          <FaArrowDown className="text-3xl text-primary" />
-        </motion.div>
-      </section>
-
-      {/* Features Section - Add top padding for navbar clearance */}
-      <section className="py-24 px-6 pt-28">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {['Connect', 'Share', 'Grow'].map(feature => (
-              <MotionDiv 
-                key={feature}
-                className="p-6 bg-dark-lighter/50 backdrop-blur-sm rounded-lg shadow-glow hover:shadow-glow-hover transition-shadow"
-                whileHover={{ y: -5 }}
-              >
-                <h3 className="text-xl font-semibold mb-4 text-primary">{feature}</h3>
-                <p className="text-gray-400">
-                  {feature === 'Connect' && 'Join a thriving community of like-minded gamers and tech enthusiasts.'}
-                  {feature === 'Share' && 'Share your gaming experiences and technical knowledge with others.'}
-                  {feature === 'Grow' && 'Level up your skills with community support and resources.'}
-                </p>
-              </MotionDiv>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Partners Section - Add top padding for navbar clearance */}
-      <section className="py-12 px-6 pt-28 bg-dark-lighter/30">
-        <div className="container mx-auto mb-8">
-          <h2 className="text-3xl font-bold text-center text-white mb-12">Our Partners</h2>
-          <div className="overflow-hidden">
-            <motion.div 
-              className="flex space-x-8"
-              animate={{ x: [0, -1800] }}
-              transition={{ 
-                repeat: Infinity, 
-                duration: 30, 
-                ease: "linear",
-                repeatType: "loop"
-              }}
-            >
-              {/* Double the partners to create a seamless loop */}
-              {[...partners, ...partners].map((partner, index) => (
-                <div key={`${partner.name}-${index}`} className="flex-shrink-0 w-48 h-24 bg-dark-lighter rounded-lg flex items-center justify-center p-4">
-                  <div className="w-full h-full bg-gradient-to-br from-dark to-dark-lighter flex items-center justify-center">
-                    {/* If you have actual partner logos, use Image component here */}
-                    <span className="text-primary text-center font-medium">{partner.name}</span>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-24 px-6 pt-28">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((stat, index) => (
-              <MotionDiv
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="p-6 bg-dark-lighter/50 backdrop-blur-sm rounded-lg"
-              >
-                <h4 className="text-3xl font-bold text-primary mb-2">{stat.value}</h4>
-                <p className="text-gray-400">{stat.label}</p>
-              </MotionDiv>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Social Media Feed Section */}
-      <section className="py-24 px-6 pt-28 bg-dark-lighter/10">
-        <div className="container mx-auto">
-          <MotionDiv
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-              Community Feed
-            </h2>
-            <p className="text-lg text-gray-300 mt-4 max-w-2xl mx-auto">
-              Stay connected with our latest updates across social media
-            </p>
-          </MotionDiv>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Twitter Feed */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-center mb-6">
-                <FaTwitter className="text-[#1DA1F2] text-2xl mr-3" />
-                <h3 className="text-xl font-semibold text-white">Twitter</h3>
-              </div>
-              
-              {socialPosts.twitter.map(post => (
-                <MotionDiv
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-dark-lighter/50 backdrop-blur-sm p-5 rounded-lg"
-                >
-                  <div className="flex items-start mb-3">
-                    <div className="w-10 h-10 rounded-full bg-dark-lighter flex-shrink-0 mr-3 flex items-center justify-center text-primary">
-                      V
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="font-medium text-white">{post.username}</span>
-                        <span className="text-gray-400 text-sm ml-2">{post.handle}</span>
-                      </div>
-                      <span className="text-xs text-gray-400">{post.time}</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-300 mb-3">{post.content}</p>
-                  
-                  {post.image && (
-                    <div className="rounded-lg overflow-hidden mb-3 bg-dark-lighter h-40 flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">Image: {post.image}</span>
-                    </div>
-                  )}
-                  
-                  <div className="flex text-gray-400 text-sm">
-                    <span className="mr-4">{post.likes} Likes</span>
-                    <span>{post.retweets} Retweets</span>
-                  </div>
-                </MotionDiv>
-              ))}
-            </div>
-            
-            {/* Instagram Feed */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-center mb-6">
-                <FaInstagram className="text-[#E1306C] text-2xl mr-3" />
-                <h3 className="text-xl font-semibold text-white">Instagram</h3>
-              </div>
-              
-              {socialPosts.instagram.map(post => (
-                <MotionDiv
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-dark-lighter/50 backdrop-blur-sm p-5 rounded-lg"
-                >
-                  <div className="flex items-start mb-3">
-                    <div className="w-10 h-10 rounded-full bg-dark-lighter flex-shrink-0 mr-3 flex items-center justify-center text-primary">
-                      V
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="font-medium text-white">{post.username}</span>
-                      </div>
-                      <span className="text-xs text-gray-400">{post.time}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 gap-2 mb-3">
-                    {post.images.map((img, idx) => (
-                      <div key={idx} className="rounded-lg overflow-hidden bg-dark-lighter h-40 flex items-center justify-center">
-                        <span className="text-gray-500 text-sm">Image: {img}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <p className="text-gray-300 mb-3">{post.content}</p>
-                  
-                  <div className="flex text-gray-400 text-sm">
-                    <span className="mr-4">{post.likes} Likes</span>
-                    <span>{post.comments} Comments</span>
-                  </div>
-                </MotionDiv>
-              ))}
-            </div>
-            
-            {/* Threads Feed */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-center mb-6">
-                <SiThreads className="text-white text-2xl mr-3" />
-                <h3 className="text-xl font-semibold text-white">Threads</h3>
-              </div>
-              
-              {socialPosts.threads.map(post => (
-                <MotionDiv
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-dark-lighter/50 backdrop-blur-sm p-5 rounded-lg"
-                >
-                  <div className="flex items-start mb-3">
-                    <div className="w-10 h-10 rounded-full bg-dark-lighter flex-shrink-0 mr-3 flex items-center justify-center text-primary">
-                      V
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="font-medium text-white">{post.username}</span>
-                        <span className="text-gray-400 text-sm ml-2">{post.handle}</span>
-                      </div>
-                      <span className="text-xs text-gray-400">{post.time}</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-300 mb-3">{post.content}</p>
-                  
-                  <div className="flex text-gray-400 text-sm">
-                    <span className="mr-4">{post.replies} Replies</span>
-                    <span>{post.likes} Likes</span>
-                  </div>
-                </MotionDiv>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Server Status Section */}
-      <section className="py-24 px-6 pt-28 bg-dark-lighter/20">
-        <div className="container mx-auto">
-          <MotionDiv
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-              Service Status
-            </h2>
-            <p className="text-lg text-gray-300 mt-4 max-w-2xl mx-auto">
-              Real-time monitoring of our community servers and services
-            </p>
-          </MotionDiv>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {serverStatus.map((server, index) => (
-              <MotionDiv
-                key={server.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-dark-lighter/50 backdrop-blur-sm p-6 rounded-lg"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center">
-                    <span className="text-primary text-xl mr-3">{server.icon}</span>
-                    <h3 className="font-medium">{server.name}</h3>
-                  </div>
-                  <StatusIndicator status={server.status} />
-                </div>
-                
-                <ServerStatusGraph history={server.history} />
-                
-                <div className="flex justify-between mt-4 text-sm text-gray-400">
-                  <div>Uptime: {server.uptime}</div>
-                  <div>Response: {server.responseTime}</div>
-                </div>
-              </MotionDiv>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Discord Community Widget */}
-      <section className="py-24 px-6 pt-28 bg-dark-lighter/30">
-        <div className="container mx-auto">
-          <MotionDiv
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-              Join Our Discord Community
-            </h2>
-            <p className="text-lg text-gray-300 mt-4 max-w-2xl mx-auto">
-              Connect with players, participate in events, and stay updated with the latest news
-            </p>
-          </MotionDiv>
-
-          <div className="flex flex-col md:flex-row items-center justify-center gap-12">
-            <div className="w-full md:w-1/2 lg:w-1/3">
-              <div className="bg-dark-lighter/50 backdrop-blur-sm p-6 rounded-lg shadow-glow">
-                <h3 className="text-xl font-bold text-white mb-4">Why Join Our Discord?</h3>
-                <ul className="space-y-3 text-gray-300">
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">•</span>
-                    <span>Exclusive gaming events and tournaments</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">•</span>
-                    <span>Connect with a friendly community of gamers</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">•</span>
-                    <span>Get the latest news and updates</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">•</span>
-                    <span>Share gameplay moments and strategies</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-primary mr-2">•</span>
-                    <span>Voice chat while gaming with friends</span>
-                  </li>
-                </ul>
-                <div className="mt-6">
-                  <a
-                    href="https://discord.gg/veka"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block text-center bg-primary hover:bg-primary-dark px-6 py-3 rounded-lg shadow-glow hover:shadow-glow-hover transition-all"
-                  >
-                    Join Discord Server
-                  </a>
-                </div>
-              </div>
-            </div>
-            
-            <div className="w-full md:w-1/2 lg:w-auto flex justify-center">
-              <iframe 
-                src="https://discord.com/widget?id=792556339359907871&theme=dark" 
-                width="350" 
-                height="500" 
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" 
-                frameBorder="0" 
-                sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-                className="shadow-glow rounded-lg"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Scroll to top button */}
-      {showScrollUp && (
-        <motion.button
-          className="fixed bottom-8 right-8 z-50 bg-primary p-3 rounded-full shadow-glow hover:shadow-glow-hover transition-all"
-          onClick={scrollToTop}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-        >
-          <FaArrowUp className="text-white text-xl" />
-        </motion.button>
-      )}
-
-      {/* Cookie Banner */}
-      {cookieConsent === null && (
-        <motion.div 
-          className="fixed bottom-0 left-0 right-0 bg-dark-lighter/90 backdrop-blur-md p-4 shadow-lg z-50 border-t border-primary/20"
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
-            <div className="mb-4 md:mb-0 md:mr-8">
-              <p className="text-gray-300 text-sm md:text-base">
-                We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.
-              </p>
-            </div>
-            <div className="flex space-x-4">
-              <button 
-                onClick={handleManageCookies}
-                className="px-4 py-2 text-sm border border-primary/50 text-gray-300 rounded hover:bg-dark-light transition-colors"
-              >
-                Manage Preferences
-              </button>
-              <button 
-                onClick={handleAcceptCookies}
-                className="px-4 py-2 text-sm bg-primary hover:bg-primary-dark text-white rounded transition-colors"
-              >
-                Accept All
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatedBackground>
+    <motion.div
+      ref={ref}
+      animate={controls}
+      style={{ x }}
+      className="inline-block text-primary will-change-transform"
+    >
+      <FaSpaceShuttle className="text-4xl md:text-6xl lg:text-7xl" />
+    </motion.div>
   );
 }
+
+// Update FAQItem component for better performance and consistent styling
+function FAQItem({ question, answer, isOpen, onToggle, onClose }: { 
+  question: string; 
+  answer: string; 
+  isOpen: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <motion.div
+      className="bg-dark/50 backdrop-blur-sm rounded-lg overflow-hidden cursor-pointer shadow-glow hover:shadow-glow-hover transition-all"
+      onClick={() => {
+        if (isOpen) {
+          onClose();
+        } else {
+          onToggle();
+        }
+      }}
+      whileHover={{ scale: 1.01 }}
+      layout="position"
+      layoutDependency={isOpen}
+      transition={{ layout: { duration: 0.2 } }}
+    >
+      <div className="p-6 flex items-start justify-between gap-4">
+        <div className="flex items-start gap-4 flex-1">
+          <FaQuestionCircle className="text-primary text-xl flex-shrink-0 mt-1" />
+          <h3 className="text-white font-bold text-lg">{question}</h3>
+        </div>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="text-primary"
+        >
+          <FaChevronDown />
+        </motion.div>
+      </div>
+      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96' : 'max-h-0'}`}>
+        <div className="p-6 pt-0 pl-16">
+          <p className="text-base md:text-lg text-gray-300">{answer}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// Update key motion components to avoid unnecessary animations
+function MotionSection({ 
+  children, 
+  className, 
+  delay = 0 
+}: { 
+  children: React.ReactNode; 
+  className?: string; 
+  delay?: number 
+}) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.5, delay }}
+      className={`py-24 relative ${className || ''}`}
+    >
+      {children}
+    </motion.section>
+  );
+}
+
+// GridBackground component based on Marketplace
+function GridBackground() {
+  return (
+    <div className="fixed inset-0 z-0 overflow-hidden">
+      {/* Grid Lines - Same as Marketplace */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `
+          linear-gradient(to right, rgba(255,107,0,0.1) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255,107,0,0.1) 1px, transparent 1px)
+        `,
+        backgroundSize: '4rem 4rem',
+      }} />
+      
+      {/* Floating Elements */}
+      <motion.div
+        className="absolute top-20 left-20 w-32 h-32 bg-primary/5 rounded-full blur-xl"
+        animate={{
+          opacity: [0.5, 0.8, 0.5],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      
+      <motion.div
+        className="absolute bottom-40 right-20 w-40 h-40 bg-primary/5 rounded-full blur-xl"
+        animate={{
+          opacity: [0.5, 0.8, 0.5],
+          scale: [1.2, 1, 1.2],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1
+        }}
+      />
+      
+      <motion.div
+        className="absolute top-40 right-40 w-24 h-24 bg-primary/5 rounded-full blur-xl"
+        animate={{
+          opacity: [0.5, 0.8, 0.5],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.5
+        }}
+      />
+    </div>
+  );
+}
+
+// Space elements with parallax effects using library icons
+function SpaceElements() {
+  return (
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      {/* Planet with rings */}
+      <Parallax translateY={[-50, 50]} className="absolute top-[10%] right-[15%]">
+        <IoIosPlanet className="w-32 h-32 text-primary/50" />
+      </Parallax>
+      
+      {/* Moon */}
+      <Parallax translateY={[20, -20]} className="absolute top-[35%] left-[5%]">
+        <FaMoon className="w-16 h-16 text-gray-400/50" />
+      </Parallax>
+      
+      {/* Spaceship */}
+      <Parallax translateX={[30, -30]} translateY={[20, -20]} className="absolute top-[20%] left-[30%]">
+        <RiSpaceShipFill className="w-16 h-16 text-primary/50 rotate-45" />
+      </Parallax>
+      
+      {/* Space Station */}
+      <Parallax translateY={[-30, 30]} className="absolute bottom-[35%] right-[20%]">
+        <FaSatellite className="w-24 h-24 text-gray-400/50" />
+      </Parallax>
+      
+      {/* Rocket */}
+      <Parallax translateY={[60, -60]} className="absolute bottom-[25%] left-[15%]">
+        <IoMdRocket className="w-20 h-20 text-primary/50 rotate-45" />
+      </Parallax>
+      
+      {/* Another planet */}
+      <Parallax translateY={[40, -40]} className="absolute top-[55%] right-[30%]">
+        <FaGlobeAmericas className="w-24 h-24 text-blue-400/50" />
+      </Parallax>
+      
+      {/* Add more space elements spread across the screen */}
+      <Parallax translateY={[-20, 20]} className="absolute top-[70%] left-[40%]">
+        <IoIosPlanet className="w-20 h-20 text-blue-300/50" />
+      </Parallax>
+      
+      <Parallax translateY={[30, -30]} className="absolute top-[15%] left-[60%]">
+        <FaSatellite className="w-16 h-16 text-gray-400/50 rotate-45" />
+      </Parallax>
+      
+      <Parallax translateY={[-40, 40]} className="absolute bottom-[15%] right-[5%]">
+        <IoMdRocket className="w-16 h-16 text-primary/50 rotate-12" />
+      </Parallax>
+    </div>
+  );
+}
+
+export default function IGFVPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  // FAQ state
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+
+  // Use lighter animations with lower performance impact
+  const headerParallax = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
+  const opacityProgress = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
+
+  return (
+    <ParallaxProvider>
+      <div ref={containerRef} className="relative min-h-screen bg-dark">
+        {/* Marketplace-style background */}
+        <GridBackground />
+        
+        {/* Space elements with parallax */}
+        <SpaceElements />
+
+        {/* Main Content - increase z-index to ensure it's above background */}
+        <div className="relative z-20">
+          {/* Hero Section - Centered */}
+          <section className="h-screen flex flex-col items-center justify-center px-4">
+            <motion.div 
+              className="text-center hardware-accelerated"
+              style={{ y: headerParallax }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <h1 className="flex items-center justify-center gap-4 text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+                <span>Interstellar</span>
+                <AnimatedShip />
+                <span>Goodfellas</span>
+              </h1>
+              
+              <motion.p 
+                className="text-gray-300 text-xl md:text-2xl max-w-4xl mx-auto mb-12"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 1 }}
+              >
+                Charting Peaceful Frontiers in Elite: Dangerous
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center"
+              >
+                <a 
+                  href="https://discord.gg/igfv"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
+                >
+                  <FaDiscord className="text-xl group-hover:scale-110 transition-transform" />
+                  <span>Join Our Community</span>
+                </a>
+                <a 
+                  href="https://inara.cz/elite/squadron/9569/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-3 bg-dark hover:bg-dark-light text-white rounded-lg border border-primary transition-colors flex items-center justify-center gap-2 group"
+                >
+                  <FaExternalLinkAlt className="text-lg group-hover:scale-110 transition-transform" />
+                  <span>Squadron Profile</span>
+                </a>
+              </motion.div>
+            </motion.div>
+          </section>
+
+          {/* Consistent max width container for all content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hardware-accelerated">
+            {/* Introduction Section - Consistent text size */}
+            <section className="py-24 relative">
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="w-full hardware-accelerated"
+              >
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8">Who We Are</h2>
+                
+                <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow mb-12">
+                  <p className="text-base md:text-lg text-gray-300 mb-6">
+                    Welcome to Interstellar Goodfellas, a peaceful squadron dedicated to exploration and colonization in Elite: Dangerous. 
+                    Our community is a melting pot of pilots—from bright-eyed newcomers to battle-hardened veterans—united by a passion 
+                    for discovery, mutual support, and strategic innovation.
+                  </p>
+                  
+                  <p className="text-base md:text-lg text-gray-300 mb-6">
+                    We are committed to building an inclusive haven where every pilot can thrive. Our mission is to guide you through 
+                    the complexities of space exploration with a focus on peaceful colonization. Whether you&apos;re charting unexplored 
+                    systems or returning to the stars, we stand together to advance in a universe defined by endless opportunity and 
+                    evolving challenges.
+                  </p>
+                  
+                  <p className="text-base md:text-lg text-gray-300">
+                    Our collective strength is built on shared experience and disciplined strategy. Keep your Inara profile updated to 
+                    help plan future routes and events. Follow our established PvP code (details available in our galaxy-intel channel) 
+                    and always coordinate with senior leadership before sharing server invites.
+                  </p>
+                </div>
+              </motion.div>
+            </section>
+
+            {/* Community Guidelines Section - Wider */}
+            <MotionSection className="will-change-transform">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-12 text-center">
+                Community Guidelines & Best Practices
+              </h2>
+              
+              <div className="w-full">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow"
+                >
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <span className="text-base md:text-lg text-gray-300">Keep your Inara profile updated to help plan future routes and events.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <span className="text-base md:text-lg text-gray-300">Follow the accepted PvP code (refer to galaxy-intel for details); when engaging in BGS activities, switch to the open channel.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <span className="text-base md:text-lg text-gray-300">New pilots should secure the recommended ships in order: Cobra Mk3, Python, then Anaconda—refer to ship-builds for more information.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <span className="text-base md:text-lg text-gray-300">Do not share the server invite without permission from Rear Admirals, Vice Admirals, or the Admiral to maintain our community&apos;s integrity.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <span className="text-base md:text-lg text-gray-300">Ensure your Discord name reflects your in-game identity for consistency.</span>
+                    </li>
+                  </ul>
+                </motion.div>
+              </div>
+            </MotionSection>
+
+            {/* Mission & Values Section */}
+            <section className="py-24 relative">
+              <motion.h2 
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-12 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                Mission & Values
+              </motion.h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+                {[
+                  {
+                    title: "Supporting New Pilots",
+                    description: "Dedicated mentorship program and resources to help new commanders find their path in the galaxy",
+                    icon: <FaHandsHelping className="w-8 h-8" />
+                  },
+                  {
+                    title: "Peaceful Expansion",
+                    description: "Focus on exploration, trade, and peaceful development of new colonial outposts",
+                    icon: <FaStar className="w-8 h-8" />
+                  },
+                  {
+                    title: "Community First",
+                    description: "Creating an inclusive environment where every commander can contribute and grow",
+                    icon: <FaUsers className="w-8 h-8" />
+                  }
+                ].map((value, index) => (
+                  <motion.div
+                    key={value.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.2 }}
+                    className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all"
+                  >
+                    <div className="text-primary mb-4">{value.icon}</div>
+                    <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
+                    <p className="text-base md:text-lg text-gray-400">{value.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section className="py-24 relative">
+              <motion.h2 
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-12 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                Frequently Asked Questions
+              </motion.h2>
+
+              <div className="w-full space-y-4">
+                {[
+                  {
+                    question: "What are the requirements to join IGFV?",
+                    answer: "We welcome commanders of all experience levels! The only requirements are a positive attitude, respect for fellow pilots, and a desire to contribute to our peaceful community."
+                  },
+                  {
+                    question: "Where is the squadron based?",
+                    answer: "Our home base is the fleet carrier Valhall, which serves as our mobile operations center. We also maintain presence in several key systems for trade and exploration."
+                  },
+                  {
+                    question: "What activities does IGFV focus on?",
+                    answer: "We specialize in exploration, trading, and peaceful expansion. Regular activities include exploration expeditions, trading convoys, mining operations, and community events."
+                  },
+                  {
+                    question: "How active do I need to be?",
+                    answer: "We understand that real life comes first. There are no minimum activity requirements - participate as much or as little as your schedule allows."
+                  },
+                  {
+                    question: "Do you offer training for new players?",
+                    answer: "Yes! Our mentorship program pairs new commanders with experienced pilots who provide personalized guidance on everything from basic flight controls to advanced exploration techniques."
+                  },
+                  {
+                    question: "What platforms do you support?",
+                    answer: "We welcome commanders from all platforms - PC, PlayStation, and Xbox. Our Discord server serves as the central hub for cross-platform coordination."
+                  }
+                ].map((faq, index) => (
+                  <FAQItem 
+                    key={faq.question} 
+                    question={faq.question} 
+                    answer={faq.answer}
+                    isOpen={openFAQ === index}
+                    onToggle={() => setOpenFAQ(index)}
+                    onClose={() => setOpenFAQ(null)}
+                  />
+                ))}
+              </div>
+            </section>
+
+            {/* Community Section */}
+            <section className="py-24 relative">
+              <motion.div 
+                style={{ opacity: opacityProgress }}
+                className="w-full"
+              >
+                <motion.h2 
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  Our Community
+                </motion.h2>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow mb-12"
+                >
+                  <p className="text-base md:text-lg text-gray-300 mb-6">
+                    Our squadron brings together commanders from all walks of life - university students exploring between classes, 
+                    working professionals unwinding after hours, and retired veterans sharing their wisdom of the cosmos.
+                  </p>
+
+                  <p className="text-base md:text-lg text-gray-300 mb-6">
+                    We celebrate this diversity, as it enriches our community and brings unique perspectives to our shared adventures. 
+                    Whether you have 15 minutes or 5 hours to play, there&apos;s always a place for you in our squadron.
+                  </p>
+
+                  <p className="text-base md:text-lg text-gray-300 mb-8">
+                    Join regular community events, from exploration expeditions to trading convoys, or simply enjoy casual flights 
+                    with fellow commanders. Our fleet carrier Valhall serves as both our home base and a symbol of our collaborative spirit.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a 
+                      href="https://discord.gg/igfv"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-8 py-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
+                    >
+                      <FaDiscord className="text-2xl group-hover:scale-110 transition-transform" />
+                      <span className="text-lg">Join Our Discord</span>
+                    </a>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </section>
+
+            {/* Getting Started Section */}
+            <section className="py-24 relative">
+              <motion.h2 
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-16 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                Getting Started with IGFV
+              </motion.h2>
+
+              <div className="w-full relative">
+                {/* Connection Line */}
+                <div className="absolute top-1/2 left-0 right-0 h-1 bg-primary/30 -translate-y-1/2 hidden md:block" />
+                
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                  {[
+                    {
+                      title: "1. Join Discord",
+                      content: "Connect with our community and find mentors",
+                      highlight: "First stop",
+                      icon: <FaDiscord className="w-8 h-8" />
+                    },
+                    {
+                      title: "2. Meet Mentor",
+                      content: "Get paired with an experienced guide",
+                      highlight: "Personal guidance",
+                      icon: <FaHandsHelping className="w-8 h-8" />
+                    },
+                    {
+                      title: "3. Choose Path",
+                      content: "Select your preferred career path",
+                      highlight: "Your journey",
+                      icon: <FaRocket className="w-8 h-8" />
+                    },
+                    {
+                      title: "4. Start Flying",
+                      content: "Join squadron activities and events",
+                      highlight: "Take off",
+                      icon: <FaSpaceShuttle className="w-8 h-8" />
+                    }
+                  ].map((step, index) => (
+                    <motion.div
+                      key={step.title}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 relative shadow-glow hover:shadow-glow-hover"
+                    >
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-dark rounded-full border-4 border-primary flex items-center justify-center text-primary">
+                        {step.icon}
+                      </div>
+                      <div className="bg-dark/30 rounded-lg p-4 mt-4">
+                        <h3 className="text-white font-bold text-xl mb-2 text-center">{step.title}</h3>
+                        <p className="text-base md:text-lg text-gray-300 text-center mb-3">{step.content}</p>
+                        <div className="text-primary text-sm bg-primary/10 text-center px-3 py-1 rounded-full">
+                          {step.highlight}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Reviews Section */}
+            <section className="py-16 relative">
+              <motion.h2 
+                className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-12 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                Commander Reviews
+              </motion.h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+                {[
+                  {
+                    text: "Found my home among the stars with IGFV. The mentorship program helped me grow from a rookie to a confident explorer.",
+                    author: "CMDR StarSeeker",
+                    role: "Explorer"
+                  },
+                  {
+                    text: "Great community that understands real-life commitments. Whether you have 30 minutes or 3 hours, you&apos;ll always find someone to fly with.",
+                    author: "CMDR NightRaven",
+                    role: "Trader"
+                  },
+                  {
+                    text: "The fleet carrier Valhall has become my second home. IGFV&apos;s peaceful approach to expansion aligns perfectly with my playstyle.",
+                    author: "CMDR VoidWanderer",
+                    role: "Colonist"
+                  }
+                ].map((review, index) => (
+                  <motion.div
+                    key={review.author}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.2 }}
+                    className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all"
+                  >
+                    <FaComments className="text-primary text-2xl mb-4" />
+                    <p className="text-base md:text-lg text-gray-300 mb-4 italic">&quot;{review.text}&quot;</p>
+                    <div className="text-white font-bold">{review.author}</div>
+                    <div className="text-primary text-sm">{review.role}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </ParallaxProvider>
+  );
+} 
