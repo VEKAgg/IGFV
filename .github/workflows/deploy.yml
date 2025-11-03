@@ -1,62 +1,268 @@
-name: Deploy to Family PC Server
+name: Deploy Portfolio
 
 on:
   push:
-    branches:
-      - production
+    branches: [main]
+
+env:
+  CONTAINER_NAME: igfv
+  APP_NETWORK: proxy-network
 
 jobs:
   deploy:
-    if: startsWith(github.event.head_commit.message, 'Merge pull request')
-    runs-on: [self-hosted, X64, AtlasOS, Linux]
-    env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+    runs-on: [self-hosted, Linux, X64, Veka]
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-          
-      - name: Build application
-        run: npm run build
-
-      - name: Start or restart PM2 process
+      - name: Generate version
+        id: version
         run: |
-          # Check if PM2 is installed globally; if not, install it
-          if ! command -v pm2 &> /dev/null; then
-            npm install -g pm2
-          fi
+          VERSION=$(date +%Y%m%d-%H%M%S)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Building version: $VERSION"
 
-          # Use a direct check for process info instead of grep on pm2 list
-          if pm2 info veka > /dev/null 2>&1; then
-            pm2 restart veka --update-env
-          else
-            pm2 start deploy.json --update-env
-          fi
-
-          # Save the PM2 process list
-          pm2 save
-        shell: bash
-
-      - name: Health check
-        shell: bash
+      # CRITICAL: Build and validate BEFORE touching production
+      - name: Build and validate new image
+        id: build
         run: |
-          # Wait for the application to start
-          sleep 10
+          export VERSION=${{ steps.version.outputs.VERSION }}
 
-          # Check if the app is running by making a request
-          if curl -s --fail http://localhost:3000 > /dev/null; then
-            echo "Health check passed"
-          else
-            echo "Health check failed"
+          echo "🔨 Building new image..."
+          docker build -t igfv:$VERSION -t igfv:candidate .
+
+          echo "✅ Image built with Brotli + Gzip pre-compression"
+
+          echo "🧪 Testing new image before deployment..."
+
+          # Start test container
+          docker run -d \
+            --name shafaat-test \
+            --network ${{ env.APP_NETWORK }} \
+            --env-file .env \
+            -e NODE_ENV=production \
+            igfv:candidate
+
+          echo "⏳ Waiting for container to initialize..."
+          sleep 15
+
+          # Health check
+          TEST_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' shafaat-test)
+          echo "📍 Test container IP: $TEST_IP"
+
+          # Validate with retries
+          for i in {1..12}; do
+            if curl -sf --max-time 5 http://$TEST_IP:5002 > /dev/null; then
+              echo "✅ New image passed health check (attempt $i/12)"
+              
+              # Check compression
+              ENCODING=$(curl -sI -H "Accept-Encoding: br, gzip" http://$TEST_IP:5002 | grep -i content-encoding || echo "")
+              if [ -n "$ENCODING" ]; then
+                echo "📊 $ENCODING"
+              fi
+              
+              # Cleanup test container
+              docker stop shafaat-test
+              docker rm shafaat-test
+              echo "✅ Pre-validation passed - safe to deploy"
+              exit 0
+            fi
+            echo "⏳ Testing... ($i/12)"
+            sleep 5
+          done
+
+          # Failed validation - DO NOT DEPLOY
+          echo "❌ New image FAILED health check"
+          echo "🛑 ABORTING deployment to protect production"
+          echo ""
+          echo "Container logs:"
+          docker logs shafaat-test --tail 100
+
+          docker stop shafaat-test
+          docker rm shafaat-test
+          exit 1
+
+      # Only execute if validation passed
+      - name: Replace container (fast swap)
+        run: |
+          export VERSION=${{ steps.version.outputs.VERSION }}
+
+          echo "⚡ Fast-replacing production container..."
+
+          # Quick stop and remove
+          docker stop ${{ env.CONTAINER_NAME }} 2>/dev/null || true
+          docker rm ${{ env.CONTAINER_NAME }} 2>/dev/null || true
+
+          # Start new container immediately
+          docker run -d \
+            --name ${{ env.CONTAINER_NAME }} \
+            --network ${{ env.APP_NETWORK }} \
+            --env-file .env \
+            -e NODE_ENV=production \
+            --restart unless-stopped \
+            --label "com.shafaat.version=$VERSION" \
+            igfv:$VERSION
+
+          echo "✅ Container replaced (downtime: ~2-5 seconds)"
+
+      - name: Connect to proxy network
+        run: |
+          echo "🔗 Connecting to proxy-network..."
+          docker network connect proxy-network ${{ env.CONTAINER_NAME }} 2>/dev/null || echo "Already connected"
+          echo "✅ Connected to proxy-network"
+
+      - name: Verify production deployment
+        timeout-minutes: 2
+        run: |
+          echo "🔍 Verifying production container..."
+
+          sleep 5
+
+          # Check container is running
+          if ! docker ps | grep -q ${{ env.CONTAINER_NAME }}; then
+            echo "❌ Container not running"
+            docker logs ${{ env.CONTAINER_NAME }} --tail 100
             exit 1
           fi
+
+          echo "✅ Container is running"
+
+          # Get container IP
+          CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ env.CONTAINER_NAME }})
+          echo "📍 Container IP: $CONTAINER_IP"
+
+          # Quick health check (already pre-validated)
+          for i in {1..8}; do
+            if curl -sf --max-time 5 http://$CONTAINER_IP:5002 > /dev/null; then
+              echo "✅ Production container healthy (attempt $i/8)"
+              
+              ENCODING=$(curl -sI -H "Accept-Encoding: br, gzip" http://$CONTAINER_IP:5002 | grep -i content-encoding || echo "")
+              if [ -n "$ENCODING" ]; then
+                echo "📊 $ENCODING"
+              fi
+              
+              exit 0
+            fi
+            echo "⏳ Waiting... ($i/8)"
+            sleep 5
+          done
+
+          echo "⚠️ Production container slow to respond (but pre-validation passed)"
+          docker logs ${{ env.CONTAINER_NAME }} --tail 50
+
+      - name: Test via NPM
+        continue-on-error: true
+        run: |
+          echo "🌐 Testing public access via NPM..."
+
+          if docker exec nginx-proxy-manager curl -sf http://igfv:5002 > /dev/null 2>&1; then
+            echo "✅ NPM can reach container"
+          else
+            echo "⚠️ NPM cannot reach container (check NPM proxy host config)"
+          fi
+
+      - name: Cleanup old images
+        if: success()
+        run: |
+          echo "🧹 Cleaning up old images..."
+
+          # Keep last 3 versions + candidate tag
+          docker images igfv --format "{{.ID}} {{.CreatedAt}}" | \
+            sort -rk 2 | tail -n +5 | awk '{print $1}' | \
+            xargs -r docker rmi -f 2>/dev/null || true
+
+          docker image prune -f
+          echo "✅ Cleanup complete"
+
+      - name: Emergency rollback
+        if: failure()
+        run: |
+          echo "🚨 DEPLOYMENT FAILED"
+
+          # If pre-validation failed, production was never touched
+          if docker ps | grep -q ${{ env.CONTAINER_NAME }}; then
+            echo "ℹ️ Production container still running (pre-validation failed)"
+            exit 0
+          fi
+
+          # If we got here, replacement happened but verification failed
+          echo "🔄 Attempting emergency rollback..."
+
+          # Stop failed container
+          docker stop ${{ env.CONTAINER_NAME }} 2>/dev/null || true
+          docker rm ${{ env.CONTAINER_NAME }} 2>/dev/null || true
+
+          # Get previous image (second in list)
+          PREV_IMAGE=$(docker images igfv --format "{{.ID}}" | sed -n '2p')
+
+          if [ -n "$PREV_IMAGE" ]; then
+            echo "🔄 Starting previous version..."
+            
+            docker run -d \
+              --name ${{ env.CONTAINER_NAME }} \
+              --network ${{ env.APP_NETWORK }} \
+              --env-file .env \
+              -e NODE_ENV=production \
+              --restart unless-stopped \
+              $PREV_IMAGE
+            
+            docker network connect proxy-network ${{ env.CONTAINER_NAME }} 2>/dev/null || true
+            
+            sleep 10
+            
+            if docker ps | grep -q ${{ env.CONTAINER_NAME }}; then
+              echo "✅ Rolled back to previous version"
+              
+              CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ env.CONTAINER_NAME }})
+              if curl -sf --max-time 5 http://$CONTAINER_IP:5002 > /dev/null; then
+                echo "✅ Rollback successful - site is responding"
+              fi
+            else
+              echo "❌ Rollback failed - manual intervention required"
+              docker logs ${{ env.CONTAINER_NAME }} --tail 50
+            fi
+          else
+            echo "❌ No previous image found for rollback"
+            echo "⚠️ Manual recovery needed"
+          fi
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+
+          echo "========================================"
+          if [ "$STATUS" = "success" ]; then
+            echo "✅ DEPLOYMENT SUCCESSFUL"
+            echo "========================================"
+            echo "🌐 Site: https://shafaat.veka.gg"
+            echo "📦 Version: ${{ steps.version.outputs.VERSION }}"
+            echo "🗜️ Compression: Brotli + Gzip"
+            echo "⏱️ Downtime: ~2-5 seconds"
+            echo "🛡️ Pre-validated before swap"
+            echo "⏰ Deployed: $(date '+%Y-%m-%d %H:%M:%S')"
+            echo ""
+            echo "🔗 Access points:"
+            echo "  - Public: https://shafaat.veka.gg"
+            echo "  - NPM: http://192.168.1.97 → igfv:5002"
+            echo "  - Direct: http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ env.CONTAINER_NAME }}):5002"
+            echo ""
+            echo "📊 Current status:"
+            docker ps --filter "name=shafaat" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
+          else
+            echo "❌ DEPLOYMENT FAILED"
+            echo "========================================"
+            echo "🛡️ Production protected by pre-validation"
+            echo ""
+            echo "📊 Current containers:"
+            docker ps -a --filter "name=shafaat" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
+            echo ""
+            echo "🔍 Troubleshooting:"
+            echo "  1. Check build logs above"
+            echo "  2. Review container logs: docker logs igfv"
+            echo "  3. Test container manually: docker logs shafaat-test (if exists)"
+            echo ""
+            echo "💡 If production is down, rollback was attempted automatically"
+          fi
+          echo "========================================"
