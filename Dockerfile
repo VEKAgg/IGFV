@@ -1,50 +1,38 @@
-# Multi-stage build for optimal image size
-FROM node:20-alpine AS builder
+FROM node:18-alpine AS builder
 
 WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production && \
-    npm cache clean --force
+COPY package*.json ./
+RUN npm ci
 
-# Copy source code
+# Copy source and build with pre-compression
 COPY . .
-
-# Build Next.js application
 RUN npm run build
 
-# Production stage - smaller runtime image
-FROM node:20-alpine
+# Check that compressed files were created
+RUN echo "Checking compressed files..." && \
+    find build -name "*.br" -o -name "*.gz" | head -5 || echo "Pre-compression may not be enabled"
+
+FROM node:18-alpine AS runner
 
 WORKDIR /app
 
-# Install dumb-init to handle signals properly
-RUN apk add --no-cache dumb-init
-
-# Copy only necessary files from builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package*.json ./
-
-# Create non-root user for security
+# Security: Non-root user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nextjs -u 1001
+    adduser -S sveltekit -u 1001
 
-USER nextjs
+# Copy everything from builder
+COPY --from=builder --chown=sveltekit:nodejs /app/build ./build
+COPY --from=builder --chown=sveltekit:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=sveltekit:nodejs /app/package.json ./
 
-# Expose port (matches package.json start script)
-EXPOSE 3001
+USER sveltekit
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3001', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+ENV NODE_ENV=production \
+    PORT=5002 \
+    ORIGIN=https://igfv.veka.gg
 
-# Use dumb-init to handle signals
-ENTRYPOINT ["/sbin/dumb-init", "--"]
+EXPOSE 5002
 
-# Start application
-CMD ["npm", "start"]
+CMD ["node", "build"]

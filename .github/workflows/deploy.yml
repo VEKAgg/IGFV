@@ -1,4 +1,4 @@
-name: Deploy Portfolio
+name: Deploy IGFV
 
 on:
   push:
@@ -38,7 +38,7 @@ jobs:
 
           # Start test container
           docker run -d \
-            --name shafaat-test \
+            --name igfv-test \
             --network ${{ env.APP_NETWORK }} \
             --env-file .env \
             -e NODE_ENV=production \
@@ -48,7 +48,7 @@ jobs:
           sleep 15
 
           # Health check
-          TEST_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' shafaat-test)
+          TEST_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' igfv-test)
           echo "📍 Test container IP: $TEST_IP"
 
           # Validate with retries
@@ -63,8 +63,8 @@ jobs:
               fi
               
               # Cleanup test container
-              docker stop shafaat-test
-              docker rm shafaat-test
+              docker stop igfv-test
+              docker rm igfv-test
               echo "✅ Pre-validation passed - safe to deploy"
               exit 0
             fi
@@ -77,10 +77,10 @@ jobs:
           echo "🛑 ABORTING deployment to protect production"
           echo ""
           echo "Container logs:"
-          docker logs shafaat-test --tail 100
+          docker logs igfv-test --tail 100
 
-          docker stop shafaat-test
-          docker rm shafaat-test
+          docker stop igfv-test
+          docker rm igfv-test
           exit 1
 
       # Only execute if validation passed
@@ -101,7 +101,7 @@ jobs:
             --env-file .env \
             -e NODE_ENV=production \
             --restart unless-stopped \
-            --label "com.shafaat.version=$VERSION" \
+            --label "com.igfv.version=$VERSION" \
             igfv:$VERSION
 
           echo "✅ Container replaced (downtime: ~2-5 seconds)"
@@ -236,7 +236,7 @@ jobs:
           if [ "$STATUS" = "success" ]; then
             echo "✅ DEPLOYMENT SUCCESSFUL"
             echo "========================================"
-            echo "🌐 Site: https://shafaat.veka.gg"
+            echo "🌐 Site: https://igfv.veka.gg"
             echo "📦 Version: ${{ steps.version.outputs.VERSION }}"
             echo "🗜️ Compression: Brotli + Gzip"
             echo "⏱️ Downtime: ~2-5 seconds"
@@ -244,24 +244,24 @@ jobs:
             echo "⏰ Deployed: $(date '+%Y-%m-%d %H:%M:%S')"
             echo ""
             echo "🔗 Access points:"
-            echo "  - Public: https://shafaat.veka.gg"
+            echo "  - Public: https://igfv.veka.gg"
             echo "  - NPM: http://192.168.1.97 → igfv:5002"
             echo "  - Direct: http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ env.CONTAINER_NAME }}):5002"
             echo ""
             echo "📊 Current status:"
-            docker ps --filter "name=shafaat" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
+            docker ps --filter "name=igfv" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
           else
             echo "❌ DEPLOYMENT FAILED"
             echo "========================================"
             echo "🛡️ Production protected by pre-validation"
             echo ""
             echo "📊 Current containers:"
-            docker ps -a --filter "name=shafaat" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
+            docker ps -a --filter "name=igfv" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
             echo ""
             echo "🔍 Troubleshooting:"
             echo "  1. Check build logs above"
             echo "  2. Review container logs: docker logs igfv"
-            echo "  3. Test container manually: docker logs shafaat-test (if exists)"
+            echo "  3. Test container manually: docker logs igfv-test (if exists)"
             echo ""
             echo "💡 If production is down, rollback was attempted automatically"
           fi
