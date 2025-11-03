@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { fetchFleetCarrierData } from '@/lib/inara';
 
+// Mark this page as dynamic to prevent static generation errors during build
+export const dynamic = 'force-dynamic';
+
 interface CarrierInfo {
   name: string;
   callsign: string;

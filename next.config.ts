@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_ENV: process.env.NODE_ENV,
   },
+  
   experimental: {
     serverActions: {
       allowedOrigins: [
