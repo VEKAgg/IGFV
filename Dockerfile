@@ -20,14 +20,14 @@ WORKDIR /app
 
 # Security: Non-root user
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S sveltekit -u 1001
+    adduser -S igfv -u 1001
 
 # Copy everything from builder
-COPY --from=builder --chown=sveltekit:nodejs /app/build ./build
-COPY --from=builder --chown=sveltekit:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=sveltekit:nodejs /app/package.json ./
+COPY --from=builder --chown=igfv:nodejs /app/build ./build
+COPY --from=builder --chown=igfv:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=igfv:nodejs /app/package.json ./
 
-USER sveltekit
+USER igfv
 
 ENV NODE_ENV=production \
     PORT=5002 \
@@ -36,3 +36,4 @@ ENV NODE_ENV=production \
 EXPOSE 5002
 
 CMD ["node", "build"]
+
