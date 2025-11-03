@@ -1,6 +1,17 @@
 import { cache } from 'react';
 
-const INARA_ENDPOINT = '/api/inara/proxy';
+const getInaraEndpoint = () => {
+  // During build time, use localhost. In production, use the actual domain.
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_SITE_URL) {
+    return `${process.env.NEXT_PUBLIC_SITE_URL}/api/inara/proxy`;
+  }
+  
+  // For local development and builds, construct a valid absolute URL
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  return `${baseUrl}/api/inara/proxy`;
+};
+
+const INARA_ENDPOINT = getInaraEndpoint();
 
 interface InaraResponse {
   header: {
