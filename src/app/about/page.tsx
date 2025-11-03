@@ -2,8 +2,52 @@
 
 import { FaHistory, FaUsers, FaSpaceShuttle, FaGlobeAmericas, FaRocket, FaClock } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+
+interface SquadronData {
+  memberCount?: number;
+  allyCount?: number;
+  enemyCount?: number;
+  allegiance?: string;
+}
 
 export default function AboutPage() {
+  const [squadData, setSquadData] = useState<SquadronData | null>(null);
+
+  useEffect(() => {
+    // Fetch squadron data from Inara via our API
+    const fetchSquadData = async () => {
+      try {
+        const response = await fetch('/api/inara/proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            header: {
+              appName: 'IGFV-Website',
+              appVersion: '1.0',
+            },
+            events: [
+              {
+                eventName: 'getSquadron',
+                eventTimestamp: new Date().toISOString(),
+                eventData: { squadronID: 9569 }, // IGFV Squadron ID
+              },
+            ],
+          }),
+        });
+
+        const data = await response.json();
+        if (data.events?.[0]?.eventData) {
+          setSquadData(data.events[0].eventData as SquadronData);
+        }
+      } catch (error) {
+        console.error('Failed to fetch squadron data:', error);
+      }
+    };
+
+    fetchSquadData();
+  }, []);
+
   const leadership = [
     { rank: 'Commander', name: 'Skalfinn', role: 'Founder & Leader' },
     { rank: 'Vice Admiral', name: 'Don Samen', role: 'Operations Director' },
@@ -170,7 +214,10 @@ export default function AboutPage() {
                 <span className="text-norway-red font-semibold">Founded:</span> 2019
               </p>
               <p>
-                <span className="text-norway-red font-semibold">Members:</span> 100+ active Commanders
+                <span className="text-norway-red font-semibold">Members:</span> {squadData?.memberCount ? `${squadData.memberCount} active Commanders` : '100+ active Commanders'}
+              </p>
+              <p>
+                <span className="text-norway-red font-semibold">Allies:</span> {squadData?.allyCount || '50+'}
               </p>
               <p>
                 <span className="text-norway-red font-semibold">Fleet Carrier:</span> Goodfellas Valhall

@@ -1,22 +1,51 @@
-'use client';
-
 import { FaSpaceShuttle, FaMapMarkerAlt, FaClock, FaShoppingCart, FaUsers, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { fetchFleetCarrierData } from '@/lib/inara';
 
-export default function FleetCarrierPage() {
-  // Fleet Carrier data
-  const carrier = {
+interface CarrierInfo {
+  name: string;
+  callsign: string;
+  type: string;
+  systemName: string;
+  bodyName: string;
+  ownerCmdr: string;
+  population: number;
+  inaraUrl: string;
+}
+
+// Fetch carrier data on server side
+async function getCarrierData(): Promise<CarrierInfo> {
+  const carrierData = await fetchFleetCarrierData(3700141952);
+  
+  if (carrierData && typeof carrierData === 'object') {
+    const data = carrierData as Record<string, unknown>;
+    return {
+      name: (data.carrierName as string) || 'Valhall',
+      callsign: (data.carrierIdentifier as string) || 'Goodfellas Valhall',
+      type: (data.carrierType as string) || 'Drake-Class',
+      systemName: (data.currentStarSystem as string) || 'Waungaze',
+      bodyName: (data.currentStation as string) || 'Waungaze A 3 A',
+      ownerCmdr: (data.ownerCommander as string) || 'Skalfinn',
+      population: (data.shipCount as number) || 0,
+      inaraUrl: 'https://inara.cz/elite/fleet-carrier/3700141952/',
+    };
+  }
+  
+  return {
     name: 'Valhall',
     callsign: 'Goodfellas Valhall',
     type: 'Drake-Class',
     systemName: 'Waungaze',
     bodyName: 'Waungaze A 3 A',
-    coordinates: { x: -1, y: 2, z: 3 }, // Placeholder
     ownerCmdr: 'Skalfinn',
     population: 45000,
-    inaraUrl: 'https://inara.cz/cmdr-fleet-carrier/9569',
+    inaraUrl: 'https://inara.cz/elite/fleet-carrier/3700141952/',
   };
+}
+
+export default async function FleetCarrierPage() {
+  const carrier = await getCarrierData();
 
   const services = [
     {

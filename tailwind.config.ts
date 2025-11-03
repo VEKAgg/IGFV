@@ -10,20 +10,31 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Primary Burgundy Red - Main accent color
+        primary: {
+          darkest: '#8C0923',
+          dark: '#9A0A27',
+          main: '#A90B2B',
+          light: '#BA0C2F',
+        },
+        // Navy & Slate background palette
+        dark: {
+          navy: '#00205B',
+          slate1: '#17346A',
+          slate2: '#2C4678',
+          slate3: '#3F5784',
+          bg: '#000814',
+        },
+        // Legacy colors (kept for backward compatibility)
         norway: {
           red: '#EF2B2D',
           white: '#FFFFFF',
           blue: '#002868',
         },
-        dark: {
-          DEFAULT: '#002868',
-          light: '#003C8F',
-          lighter: '#0050B5',
-        },
         accent: {
-          DEFAULT: '#EF2B2D',
-          dark: '#CC2526',
-          light: '#FF4244',
+          DEFAULT: '#A90B2B',
+          dark: '#8C0923',
+          light: '#BA0C2F',
         },
         background: "var(--background)",
         foreground: "var(--foreground)",

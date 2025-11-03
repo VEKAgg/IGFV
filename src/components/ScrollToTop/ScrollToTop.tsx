@@ -18,7 +18,7 @@ export default function ScrollToTop() {
     <button
       aria-label="Scroll to top"
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed right-4 bottom-6 z-50 w-12 h-12 rounded-full bg-norway-blue text-white shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+      className="fixed right-6 bottom-6 z-50 w-12 h-12 rounded-lg bg-primary-main text-white shadow-lg flex items-center justify-center hover:bg-primary-darkest transition-colors"
     >
       <FaChevronUp />
     </button>

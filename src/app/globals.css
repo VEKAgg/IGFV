@@ -47,7 +47,24 @@ html {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 0, 0, 0;
-  /* Norway flag palette (centralized tokens) */
+  
+  /* Primary Burgundy Red Palette */
+  --color-primary-darkest: 140, 9, 35; /* #8C0923 */
+  --color-primary-dark: 154, 10, 39; /* #9A0A27 */
+  --color-primary-main: 169, 11, 43; /* #A90B2B */
+  --color-primary-light: 186, 12, 47; /* #BA0C2F */
+  
+  /* Navy & Slate Background Palette */
+  --color-dark-navy: 0, 32, 91; /* #00205B */
+  --color-slate1: 23, 52, 106; /* #17346A */
+  --color-slate2: 44, 70, 120; /* #2C4678 */
+  --color-slate3: 63, 87, 132; /* #3F5784 */
+  --color-dark-bg: 0, 8, 20; /* #000814 */
+  
+  /* White */
+  --color-white: 255, 255, 255; /* #FFFFFF */
+  
+  /* Legacy Norway Colors (for backward compatibility) */
   --norway-red: 239, 43, 45; /* #EF2B2D */
   --norway-blue: 0, 40, 104; /* #002868 */
   --norway-white: 255, 255, 255; /* #FFFFFF */

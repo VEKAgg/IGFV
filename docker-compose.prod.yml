@@ -1,0 +1,145 @@
+version: '3.8'
+
+# Production Docker Compose Configuration
+# For full setup with Nginx Proxy Manager and optional services
+# Place in ~/igfv/docker-compose.prod.yml
+
+services:
+  # Main IGFV Next.js Application
+  igfv-web:
+    image: ghcr.io/vekagg/igfv:latest
+    container_name: igfv-web
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_ENV=production
+    env_file:
+      - .env.production
+    volumes:
+      # Optional: persistent logs
+      - ./logs:/app/logs
+      # Optional: persistent data
+      # - ./data:/app/data
+    networks:
+      - igfv-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - mongodb
+      - redis
+
+  # ===== Optional: MongoDB Database =====
+  mongodb:
+    image: mongo:7-alpine
+    container_name: igfv-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-changeme}
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - igfv-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===== Optional: Redis Cache =====
+  redis:
+    image: redis:7-alpine
+    container_name: igfv-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: 
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --requirepass
+      - ${REDIS_PASSWORD:-changeme}
+    volumes:
+      - redis_data:/data
+    networks:
+      - igfv-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ===== Nginx Proxy Manager =====
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    environment:
+      DB_MYSQL_HOST: npm-db
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: npm
+      DB_MYSQL_PASSWORD: ${NPM_DB_PASSWORD:-changeme}
+      DB_MYSQL_NAME: npm
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - igfv-network
+    depends_on:
+      - npm-db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:81"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ===== MySQL Database for Nginx Proxy Manager =====
+  npm-db:
+    image: mysql:8-alpine
+    container_name: npm-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${NPM_DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: npm
+      MYSQL_USER: npm
+      MYSQL_PASSWORD: ${NPM_DB_PASSWORD:-changeme}
+    volumes:
+      - npm_db:/var/lib/mysql
+    networks:
+      - igfv-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  igfv-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  redis_data:
+    driver: local
+  npm_data:
+    driver: local
+  npm_letsencrypt:
+    driver: local
+  npm_db:
+    driver: local

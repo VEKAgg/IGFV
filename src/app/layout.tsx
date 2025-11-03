@@ -29,7 +29,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/veka-tabbar-logo.svg" sizes="any" />
       </head>
-  <body className={`${inter.className} bg-black text-norway-white`}>
+  <body className={`${inter.className} bg-dark-bg text-white`}>
           <div className="flex flex-col min-h-screen relative">
             {/* Grid Background - visible on all pages */}
             <div className="fixed inset-0 z-0 bg-grid pointer-events-none" />

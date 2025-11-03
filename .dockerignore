@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.npm
+.eslintcache
+.next
+out
+.cache
+.env
+.env.local
+.env.*.local
+.DS_Store
+.git
+.gitignore
+README.md
+*.md
+.prettierrc
+.editorconfig

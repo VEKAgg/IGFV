@@ -6,7 +6,7 @@ import { FaSpaceShuttle, FaDiscord, FaExternalLinkAlt, FaUsers, FaHandsHelping, 
 import { IoIosPlanet, IoMdRocket } from 'react-icons/io';
 import { RiSpaceShipFill } from 'react-icons/ri';
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
-import DiscordLive from '@/components/Discord/DiscordLive';
+import ScrollDown from '@/components/ScrollDown/ScrollDown';
 
 // Animated ship component that oscillates horizontally
 function AnimatedShip() {
@@ -53,7 +53,7 @@ function FAQItem({ question, answer, isOpen, onToggle, onClose }: {
 }) {
   return (
     <motion.div
-      className="bg-dark/50 backdrop-blur-sm rounded-lg overflow-hidden cursor-pointer shadow-glow hover:shadow-glow-hover transition-all"
+      className="bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg overflow-hidden cursor-pointer shadow-glow hover:shadow-glow-hover transition-all hover:border-primary-main/60"
       onClick={() => {
         if (isOpen) {
           onClose();
@@ -68,13 +68,13 @@ function FAQItem({ question, answer, isOpen, onToggle, onClose }: {
     >
       <div className="p-6 flex items-start justify-between gap-4">
         <div className="flex items-start gap-4 flex-1">
-          <FaQuestionCircle className="text-primary text-xl flex-shrink-0 mt-1" />
+          <FaQuestionCircle className="text-primary-light text-xl flex-shrink-0 mt-1" />
           <h3 className="text-white font-bold text-lg">{question}</h3>
         </div>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="text-primary"
+          className="text-primary-light"
         >
           <FaChevronDown />
         </motion.div>
@@ -111,18 +111,48 @@ function MotionSection({
   );
 }
 
-// GridBackground component based on Marketplace
+// GridBackground component with red cursor effect
 function GridBackground() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
     <div className="fixed inset-0 z-0 overflow-hidden">
-      {/* Grid Lines - Same as Marketplace */}
-      <div className="absolute inset-0" style={{
-        backgroundImage: `
-          linear-gradient(to right, rgba(0,40,104,0.12) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(0,40,104,0.12) 1px, transparent 1px)
-        `,
-        backgroundSize: '4rem 4rem',
-      }} />
+      {/* Single Grid Lines - Red around cursor */}
+      <div 
+        className="absolute inset-0" 
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(169, 11, 43, 0.12) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(169, 11, 43, 0.12) 1px, transparent 1px)
+          `,
+          backgroundSize: '4rem 4rem',
+          position: 'relative',
+        }}
+      />
+      
+      {/* Red glow effect around cursor - visible only on grid */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          x: mousePosition.x - 120,
+          y: mousePosition.y - 120,
+          width: '240px',
+          height: '240px',
+          background: 'radial-gradient(circle, rgba(169, 11, 43, 0.4) 0%, rgba(169, 11, 43, 0.2) 40%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'blur(30px)',
+          mixBlendMode: 'screen',
+        }}
+      />
       
       {/* Floating Elements */}
       <motion.div
@@ -245,7 +275,7 @@ export default function IGFVPage() {
         {/* Main Content - increase z-index to ensure it's above background */}
         <div className="relative z-20">
           {/* Hero Section - Centered */}
-          <section className="h-screen flex flex-col items-center justify-center px-4">
+          <section className="h-screen flex flex-col items-center justify-center px-4 relative">
             <motion.div 
               className="text-center hardware-accelerated"
               style={{ y: headerParallax }}
@@ -278,7 +308,7 @@ export default function IGFVPage() {
                   href="https://discord.gg/igfv"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-8 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
+                  className="px-8 py-3 bg-primary-main hover:bg-primary-darkest text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
                 >
                   <FaDiscord className="text-xl group-hover:scale-110 transition-transform" />
                   <span>Join Our Community</span>
@@ -287,74 +317,100 @@ export default function IGFVPage() {
                   href="https://inara.cz/elite/squadron/9569/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-8 py-3 bg-dark hover:bg-dark-light text-white rounded-lg border border-primary transition-colors flex items-center justify-center gap-2 group"
+                  className="px-8 py-3 bg-dark-navy hover:bg-dark-slate1 text-white rounded-lg border border-primary-main transition-colors flex items-center justify-center gap-2 group"
                 >
                   <FaExternalLinkAlt className="text-lg group-hover:scale-110 transition-transform" />
                   <span>Squadron Profile</span>
                 </a>
               </motion.div>
             </motion.div>
+            
+            {/* Scroll Down Indicator */}
+            <ScrollDown />
           </section>
 
-          {/* Live Strip: member count + featured news (above the fold engagement) */}
-          <section className="bg-dark/40 backdrop-blur-sm py-6">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="px-4 py-2 bg-norway-red text-norway-white rounded-md font-semibold">LIVE</div>
-                <div className="text-white">
-                  <div className="text-sm text-gray-200">Active members</div>
-                  <div className="text-2xl font-bold"><DiscordLive /></div>
-                </div>
-              </div>
-
-              <div className="flex-1">
-                <h3 className="text-white font-semibold mb-3">Quick Links</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <a href="/about" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
-                    <h4 className="text-norway-white font-bold">About</h4>
-                    <p className="text-gray-300 text-sm">Who we are and what we do.</p>
-                  </a>
-                  <a href="/resources" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
-                    <h4 className="text-norway-white font-bold">Resources</h4>
-                    <p className="text-gray-300 text-sm">Guides, builds, and useful links.</p>
-                  </a>
-                  <a href="/events" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
-                    <h4 className="text-norway-white font-bold">Events</h4>
-                    <p className="text-gray-300 text-sm">Upcoming ops and schedules.</p>
-                  </a>
-                  <a href="/gallery" className="block bg-dark/60 rounded-lg p-4 hover:shadow-glow transition">
-                    <h4 className="text-norway-white font-bold">Gallery</h4>
-                    <p className="text-gray-300 text-sm">Screenshots & member submissions.</p>
-                  </a>
-                </div>
-              </div>
-              {/* Discord widget (desktop only) */}
-              <div className="hidden lg:block ml-6">
-                <div className="w-[350px] h-[500px] bg-dark/50 rounded-md p-4 shadow-glow">
-                  <h4 className="text-white font-bold mb-2">Community Panel</h4>
-                  <div className="mb-4">
-                    <div className="text-sm text-gray-200">Active members</div>
-                    <div className="text-2xl font-bold"><DiscordLive /></div>
+          {/* Live Strip: Quick Links + Discord Embed */}
+          <section className="py-12 border-t border-b border-primary-main/30">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h3 className="text-white font-bold text-2xl mb-6 flex items-center gap-3">
+                <div className="w-1 h-8 bg-primary-main rounded" />
+                Quick Navigation
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <motion.a 
+                  href="/about" 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="group bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-6 transition-all shadow-glow hover:shadow-glow-hover hover:border-primary-main/60"
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="text-4xl font-bold text-primary-main opacity-20">01</div>
+                    <div className="text-primary-light group-hover:text-white transition-colors">
+                      <FaUsers className="w-8 h-8" />
+                    </div>
                   </div>
-
-                  <div className="mb-4">
-                    <h5 className="text-sm text-gray-300 mb-2">Announcements</h5>
-                    <ul className="text-gray-400 text-sm space-y-1">
-                      <li>Welcome new pilots!</li>
-                      <li>Carrier Valhall: refuel at Maco&apos;s Reach</li>
-                      <li>Event: Exploration Sprint Saturday</li>
-                    </ul>
+                  <h4 className="text-white font-bold text-lg mb-2">About</h4>
+                  <p className="text-gray-400 text-sm">Our story & mission</p>
+                </motion.a>
+                
+                <motion.a 
+                  href="/fleet-carrier"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="group bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-6 transition-all shadow-glow hover:shadow-glow-hover hover:border-primary-main/60"
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="text-4xl font-bold text-primary-main opacity-20">02</div>
+                    <div className="text-primary-light group-hover:text-white transition-colors">
+                      <FaRocket className="w-8 h-8" />
+                    </div>
                   </div>
-
-                  <a
-                    href="https://discord.gg/igfv"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block mt-2 px-4 py-2 bg-norway-red text-norway-white rounded-md font-semibold hover:opacity-95 transition"
-                  >
-                    Open Discord
-                  </a>
-                </div>
+                  <h4 className="text-white font-bold text-lg mb-2">Fleet Carrier</h4>
+                  <p className="text-gray-400 text-sm">Valhall details</p>
+                </motion.a>
+                
+                <motion.a 
+                  href="/events" 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="group bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-6 transition-all shadow-glow hover:shadow-glow-hover hover:border-primary-main/60"
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="text-4xl font-bold text-primary-main opacity-20">03</div>
+                    <div className="text-primary-light group-hover:text-white transition-colors">
+                      <FaStar className="w-8 h-8" />
+                    </div>
+                  </div>
+                  <h4 className="text-white font-bold text-lg mb-2">Events</h4>
+                  <p className="text-gray-400 text-sm">Upcoming ops</p>
+                </motion.a>
+                
+                <motion.a 
+                  href="/gallery" 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  className="group bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-6 transition-all shadow-glow hover:shadow-glow-hover hover:border-primary-main/60"
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="text-4xl font-bold text-primary-main opacity-20">04</div>
+                    <div className="text-primary-light group-hover:text-white transition-colors">
+                      <FaComments className="w-8 h-8" />
+                    </div>
+                  </div>
+                  <h4 className="text-white font-bold text-lg mb-2">Gallery</h4>
+                  <p className="text-gray-400 text-sm">Screenshots</p>
+                </motion.a>
               </div>
             </div>
           </section>
@@ -372,7 +428,7 @@ export default function IGFVPage() {
               >
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8">Who We Are</h2>
                 
-                <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow mb-12">
+                <div className="bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-8 shadow-glow mb-12">
                   <p className="text-base md:text-lg text-gray-300 mb-6">
                     Welcome to Interstellar Goodfellas, a peaceful squadron dedicated to exploration and colonization in Elite: Dangerous. 
                     Our community is a melting pot of pilots—from bright-eyed newcomers to battle-hardened veterans—united by a passion 
@@ -406,27 +462,27 @@ export default function IGFVPage() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow"
+                  className="bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-8 shadow-glow"
                 >
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
                       <span className="text-base md:text-lg text-gray-300">Keep your Inara profile updated to help plan future routes and events.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
                       <span className="text-base md:text-lg text-gray-300">Follow the accepted PvP code (refer to galaxy-intel for details); when engaging in BGS activities, switch to the open channel.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
                       <span className="text-base md:text-lg text-gray-300">New pilots should secure the recommended ships in order: Cobra Mk3, Python, then Anaconda—refer to ship-builds for more information.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
                       <span className="text-base md:text-lg text-gray-300">Do not share the server invite without permission from Rear Admirals, Vice Admirals, or the Admiral to maintain our community&apos;s integrity.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary mt-1 flex-shrink-0" />
+                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
                       <span className="text-base md:text-lg text-gray-300">Ensure your Discord name reflects your in-game identity for consistency.</span>
                     </li>
                   </ul>
@@ -469,9 +525,9 @@ export default function IGFVPage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.2 }}
-                    className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all"
+                    className="bg-gradient-to-br from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all hover:border-primary-main/60"
                   >
-                    <div className="text-primary mb-4">{value.icon}</div>
+                    <div className="text-primary-light mb-4">{value.icon}</div>
                     <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
                     <p className="text-base md:text-lg text-gray-400">{value.description}</p>
                   </motion.div>
@@ -583,7 +639,7 @@ export default function IGFVPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow mb-12"
+                  className="bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-8 shadow-glow mb-12"
                 >
                   <p className="text-base md:text-lg text-gray-300 mb-6">
                     Our squadron brings together commanders from all walks of life - university students exploring between classes, 
@@ -605,7 +661,7 @@ export default function IGFVPage() {
                       href="https://discord.gg/igfv"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-8 py-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
+                      className="px-8 py-4 bg-primary-main hover:bg-primary-darkest text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
                     >
                       <FaDiscord className="text-2xl group-hover:scale-110 transition-transform" />
                       <span className="text-lg">Join Our Discord</span>
@@ -623,58 +679,53 @@ export default function IGFVPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                Getting Started with IGFV
+                Your Journey With Us
               </motion.h2>
 
               <div className="w-full relative">
-                {/* Connection Line */}
-                <div className="absolute top-1/2 left-0 right-0 h-1 bg-primary/30 -translate-y-1/2 hidden md:block" />
-                
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   {[
                     {
-                      title: "1. Join Discord",
-                      content: "Connect with our community and find mentors",
-                      highlight: "First stop",
+                      number: "01",
+                      title: "Join Discord",
+                      description: "Connect with our community and find experienced mentors ready to guide you",
                       icon: <FaDiscord className="w-8 h-8" />
                     },
                     {
-                      title: "2. Meet Mentor",
-                      content: "Get paired with an experienced guide",
-                      highlight: "Personal guidance",
+                      number: "02",
+                      title: "Meet Your Mentor",
+                      description: "Get paired with an experienced pilot who understands your playstyle",
                       icon: <FaHandsHelping className="w-8 h-8" />
                     },
                     {
-                      title: "3. Choose Path",
-                      content: "Select your preferred career path",
-                      highlight: "Your journey",
+                      number: "03",
+                      title: "Choose Your Path",
+                      description: "Select from exploration, trading, mining, or combat careers",
                       icon: <FaRocket className="w-8 h-8" />
                     },
                     {
-                      title: "4. Start Flying",
-                      content: "Join squadron activities and events",
-                      highlight: "Take off",
+                      number: "04",
+                      title: "Start Flying",
+                      description: "Join operations, expeditions, and events with fellow commanders",
                       icon: <FaSpaceShuttle className="w-8 h-8" />
                     }
                   ].map((step, index) => (
                     <motion.div
-                      key={step.title}
+                      key={step.number}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: index * 0.1 }}
-                      className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 relative shadow-glow hover:shadow-glow-hover"
+                      className="bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-6 shadow-glow hover:shadow-glow-hover hover:border-primary-main/60 transition-all group"
                     >
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-dark rounded-full border-4 border-primary flex items-center justify-center text-primary">
-                        {step.icon}
-                      </div>
-                      <div className="bg-dark/30 rounded-lg p-4 mt-4">
-                        <h3 className="text-white font-bold text-xl mb-2 text-center">{step.title}</h3>
-                        <p className="text-base md:text-lg text-gray-300 text-center mb-3">{step.content}</p>
-                        <div className="text-primary text-sm bg-primary/10 text-center px-3 py-1 rounded-full">
-                          {step.highlight}
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="text-4xl font-bold text-primary-main opacity-20">{step.number}</div>
+                        <div className="text-primary-light group-hover:text-white transition-colors">
+                          {step.icon}
                         </div>
                       </div>
+                      <h3 className="text-white font-bold text-lg mb-2">{step.title}</h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -689,39 +740,54 @@ export default function IGFVPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                Commander Reviews
+                Community Highlights
               </motion.h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
                 {[
                   {
-                    text: "Found my home among the stars with IGFV. The mentorship program helped me grow from a rookie to a confident explorer.",
-                    author: "CMDR StarSeeker",
-                    role: "Explorer"
+                    title: "Deep Space Exploration",
+                    description: "Mapping uncharted territories across the Orion Arm",
+                    category: "Exploration"
                   },
                   {
-                    text: "Great community that understands real-life commitments. Whether you have 30 minutes or 3 hours, you&apos;ll always find someone to fly with.",
-                    author: "CMDR NightRaven",
-                    role: "Trader"
+                    title: "Fleet Operations",
+                    description: "Coordinated mining and trading with the Valhall carrier",
+                    category: "Operations"
                   },
                   {
-                    text: "The fleet carrier Valhall has become my second home. IGFV&apos;s peaceful approach to expansion aligns perfectly with my playstyle.",
-                    author: "CMDR VoidWanderer",
-                    role: "Colonist"
+                    title: "Community Milestone",
+                    description: "Celebrating 100+ active commanders in IGFV",
+                    category: "Community"
                   }
-                ].map((review, index) => (
+                ].map((item, index) => (
                   <motion.div
-                    key={review.author}
+                    key={item.title}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.2 }}
-                    className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all"
+                    className="bg-gradient-to-br from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg overflow-hidden shadow-glow hover:shadow-glow-hover transition-all hover:border-primary-main/60 group"
                   >
-                    <FaComments className="text-primary text-2xl mb-4" />
-                    <p className="text-base md:text-lg text-gray-300 mb-4 italic">&quot;{review.text}&quot;</p>
-                    <div className="text-white font-bold">{review.author}</div>
-                    <div className="text-primary text-sm">{review.role}</div>
+                    {/* Screenshot Placeholder */}
+                    <div className="w-full h-40 bg-dark-slate2 flex items-center justify-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary-main/20 to-transparent" />
+                      <div className="text-center z-10">
+                        <FaComments className="text-primary-light text-4xl mb-2 mx-auto opacity-50 group-hover:opacity-100 transition-opacity" />
+                        <p className="text-gray-400 text-xs">[Screenshot]</p>
+                      </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="p-6">
+                      <div className="inline-block mb-3">
+                        <span className="text-xs font-bold text-primary-light bg-primary-main/20 px-3 py-1 rounded-full border border-primary-main/30">
+                          {item.category}
+                        </span>
+                      </div>
+                      <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
+                      <p className="text-gray-400 text-sm">{item.description}</p>
+                    </div>
                   </motion.div>
                 ))}
               </div>
