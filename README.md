@@ -65,16 +65,23 @@ The app is automatically deployed via GitHub Actions when you push to `main`:
 2. GitHub Actions runs on self-hosted runner
 3. Docker image is built and tested
 4. Container is deployed with zero-downtime swap
+5. Environment variables are passed directly from GitHub secrets
 
 ### Manual Docker Build
 
 ```bash
+# Build the image
 docker build -t igfv:latest .
+
+# Run with environment variable
 docker run -d \
   --name igfv \
-  --env-file .env \
+  -e INARA_API_KEY=your_api_key_here \
   -p 5002:5002 \
   igfv:latest
+
+# Or use docker-compose with .env file
+docker-compose up -d
 ```
 
 ## 🔧 Development Commands
