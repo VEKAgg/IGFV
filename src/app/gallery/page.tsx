@@ -71,7 +71,7 @@ export default function GalleryPage() {
   ];
 
   return (
-    <div className="min-h-screen py-12">
+    <div className="min-h-screen py-12 pt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <motion.div
@@ -80,12 +80,12 @@ export default function GalleryPage() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <div className="bg-gradient-to-r from-norway-red/20 to-norway-blue/20 border border-norway-red/30 rounded-lg p-8 md:p-12">
+          <div className="bg-gradient-to-r from-primary-main/20 to-primary-main/5 border border-primary-main/30 rounded-lg p-8 md:p-12 shadow-glow">
             <div className="flex items-center gap-4 mb-4">
-              <FaImages className="text-4xl md:text-5xl text-norway-red" />
+              <FaImages className="text-4xl md:text-5xl text-primary-main" />
               <h1 className="text-4xl md:text-5xl font-bold text-white">Gallery</h1>
             </div>
-            <p className="text-lg text-gray-300">Screenshots and photos from squadron operations, exploration, and community events.</p>
+            <p className="text-lg text-gray-400">Screenshots and photos from squadron operations, exploration, and community events.</p>
           </div>
         </motion.div>
 
@@ -106,15 +106,15 @@ export default function GalleryPage() {
                 transition={{ duration: 0.4, delay: 0.05 * idx }}
                 className="group cursor-pointer"
               >
-                <div className={`bg-gradient-to-br ${gallery.color} to-dark/50 border border-norway-red/20 rounded-lg p-6 h-full shadow-glow hover:shadow-glow-hover hover:border-norway-red/60 transition-all`}>
+                <div className={`bg-gradient-to-br ${gallery.color} to-dark/50 border border-primary-main/20 rounded-lg p-6 h-full shadow-glow hover:shadow-glow-hover hover:border-primary-main/60 transition-all`}>
                   <div className="flex items-start justify-between mb-4">
                     <h3 className="text-xl font-bold text-white flex-1">{gallery.title}</h3>
-                    <span className="ml-2 px-3 py-1 bg-norway-red/20 text-norway-red text-sm font-bold rounded-lg whitespace-nowrap">
+                    <span className="ml-2 px-3 py-1 bg-primary-main/20 text-primary-light text-sm font-bold rounded-lg whitespace-nowrap">
                       {gallery.images} photos
                     </span>
                   </div>
                   <p className="text-gray-400 mb-4 text-sm">{gallery.description}</p>
-                  <div className="flex items-center gap-2 text-norway-red text-sm font-semibold group-hover:gap-3 transition-all">
+                  <div className="flex items-center gap-2 text-primary-main group-hover:text-white text-sm font-semibold group-hover:gap-3 transition-all">
                     <span>View Collection</span>
                     <FaExternalLinkAlt className="text-xs opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
@@ -139,23 +139,23 @@ export default function GalleryPage() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.05 * idx }}
-                className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow border border-norway-red/20 hover:border-norway-red/60 transition-all hover:bg-dark/60"
+                className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow border border-primary-main/20 hover:border-primary-main/60 transition-all hover:bg-dark/60 group"
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-white mb-2">{upload.title}</h3>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-gray-400">
                       <span className="flex items-center gap-1">
-                        <FaUser className="text-norway-red" />
+                        <FaUser className="text-primary-main group-hover:text-white transition-colors" />
                         CMDR {upload.author}
                       </span>
                       <span className="flex items-center gap-1">
-                        <FaCalendarAlt className="text-norway-red" />
+                        <FaCalendarAlt className="text-primary-main group-hover:text-white transition-colors" />
                         {new Date(upload.date).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
-                  <span className="px-3 py-1 bg-norway-blue/20 text-norway-blue text-xs font-semibold rounded-lg whitespace-nowrap">
+                  <span className="px-3 py-1 bg-primary-main/20 text-primary-light text-xs font-semibold rounded-lg whitespace-nowrap">
                     {upload.category}
                   </span>
                 </div>
@@ -169,10 +169,10 @@ export default function GalleryPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-norway-blue/20"
+          className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-primary-main/20"
         >
           <h2 className="text-2xl font-bold text-white mb-6">Submit Your Screenshots</h2>
-          <p className="text-gray-300 mb-6">
+          <p className="text-gray-400 mb-6">
             Have amazing screenshots from your Elite Dangerous adventures? Share them with the community!
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -189,8 +189,8 @@ export default function GalleryPage() {
               <p className="text-gray-400 text-sm">Your submission appears in community gallery instantly!</p>
             </div>
           </div>
-          <div className="p-4 bg-norway-red/10 rounded-lg border border-norway-red/30">
-            <p className="text-gray-300 text-sm">
+          <div className="p-4 bg-primary-main/10 rounded-lg border border-primary-main/30">
+            <p className="text-gray-400 text-sm">
               📸 <strong>Guidelines:</strong> High-res screenshots (1080p+), no real-world content, credit original photographers.
             </p>
           </div>

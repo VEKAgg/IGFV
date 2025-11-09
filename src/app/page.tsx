@@ -261,7 +261,6 @@ export default function IGFVPage() {
 
   // Use lighter animations with lower performance impact
   const headerParallax = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
-  const opacityProgress = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
 
   return (
     <ParallaxProvider>
@@ -619,58 +618,6 @@ export default function IGFVPage() {
               </div>
             </section>
 
-            {/* Community Section */}
-            <section className="py-24 relative">
-              <motion.div 
-                style={{ opacity: opacityProgress }}
-                className="w-full"
-              >
-                <motion.h2 
-                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                >
-                  Our Community
-                </motion.h2>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 }}
-                  className="bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-8 shadow-glow mb-12"
-                >
-                  <p className="text-base md:text-lg text-gray-300 mb-6">
-                    Our squadron brings together commanders from all walks of life - university students exploring between classes, 
-                    working professionals unwinding after hours, and retired veterans sharing their wisdom of the cosmos.
-                  </p>
-
-                  <p className="text-base md:text-lg text-gray-300 mb-6">
-                    We celebrate this diversity, as it enriches our community and brings unique perspectives to our shared adventures. 
-                    Whether you have 15 minutes or 5 hours to play, there&apos;s always a place for you in our squadron.
-                  </p>
-
-                  <p className="text-base md:text-lg text-gray-300 mb-8">
-                    Join regular community events, from exploration expeditions to trading convoys, or simply enjoy casual flights 
-                    with fellow commanders. Our fleet carrier Valhall serves as both our home base and a symbol of our collaborative spirit.
-                  </p>
-
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a 
-                      href="https://discord.gg/igfv"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-8 py-4 bg-primary-main hover:bg-primary-darkest text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
-                    >
-                      <FaDiscord className="text-2xl group-hover:scale-110 transition-transform" />
-                      <span className="text-lg">Join Our Discord</span>
-                    </a>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </section>
-
             {/* Getting Started Section */}
             <section className="py-24 relative">
               <motion.h2 
@@ -740,56 +687,19 @@ export default function IGFVPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
               >
-                Community Highlights
+                Join Us Today
               </motion.h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-                {[
-                  {
-                    title: "Deep Space Exploration",
-                    description: "Mapping uncharted territories across the Orion Arm",
-                    category: "Exploration"
-                  },
-                  {
-                    title: "Fleet Operations",
-                    description: "Coordinated mining and trading with the Valhall carrier",
-                    category: "Operations"
-                  },
-                  {
-                    title: "Community Milestone",
-                    description: "Celebrating 100+ active commanders in IGFV",
-                    category: "Community"
-                  }
-                ].map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.2 }}
-                    className="bg-gradient-to-br from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg overflow-hidden shadow-glow hover:shadow-glow-hover transition-all hover:border-primary-main/60 group"
-                  >
-                    {/* Screenshot Placeholder */}
-                    <div className="w-full h-40 bg-dark-slate2 flex items-center justify-center relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary-main/20 to-transparent" />
-                      <div className="text-center z-10">
-                        <FaComments className="text-primary-light text-4xl mb-2 mx-auto opacity-50 group-hover:opacity-100 transition-opacity" />
-                        <p className="text-gray-400 text-xs">[Screenshot]</p>
-                      </div>
-                    </div>
-                    
-                    {/* Content */}
-                    <div className="p-6">
-                      <div className="inline-block mb-3">
-                        <span className="text-xs font-bold text-primary-light bg-primary-main/20 px-3 py-1 rounded-full border border-primary-main/30">
-                          {item.category}
-                        </span>
-                      </div>
-                      <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
-                      <p className="text-gray-400 text-sm">{item.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a 
+                  href="https://discord.gg/invite/Jvrgy6EEQn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-4 bg-primary-main hover:bg-primary-darkest text-white rounded-lg transition-colors shadow-glow hover:shadow-glow-hover flex items-center justify-center gap-2 group"
+                >
+                  <FaDiscord className="text-2xl group-hover:scale-110 transition-transform" />
+                  <span className="text-lg">Join Our Discord</span>
+                </a>
               </div>
             </section>
           </div>
