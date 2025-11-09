@@ -78,7 +78,7 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen py-12">
+    <div className="min-h-screen py-12 pt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <motion.div
@@ -87,12 +87,12 @@ export default function AboutPage() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <div className="bg-gradient-to-r from-norway-red/20 to-norway-blue/20 border border-norway-red/30 rounded-lg p-8 md:p-12">
+          <div className="bg-gradient-to-r from-primary-main/20 to-primary-main/5 border border-primary-main/30 rounded-lg p-8 md:p-12 shadow-glow">
             <div className="flex items-center gap-4 mb-4">
-              <FaHistory className="text-4xl md:text-5xl text-norway-red" />
+              <FaHistory className="text-4xl md:text-5xl text-primary-main" />
               <h1 className="text-4xl md:text-5xl font-bold text-white">About IGFV</h1>
             </div>
-            <p className="text-lg text-gray-300">Founded in 2019, Interstellar Goodfellas is focused on community, colonization, and peaceful cooperation.</p>
+            <p className="text-lg text-gray-400">Founded in 2019, Interstellar Goodfellas is focused on community, colonization, and peaceful cooperation.</p>
           </div>
         </motion.div>
 
@@ -103,10 +103,10 @@ export default function AboutPage() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mb-12"
         >
-          <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-norway-blue/20 mb-8">
+          <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-primary-main/20">
             <h2 className="text-3xl font-bold text-white mb-6">Our Mission</h2>
-            <p className="text-gray-300 text-lg leading-relaxed">
-              We operate the fleet carrier <span className="text-norway-red font-bold">Goodfellas Valhall</span> as a mobile hub for exploration, trading, mining, and Background Simulation operations. Our focus is on community building, peaceful expansion, and providing a welcoming environment for commanders of all experience levels.
+            <p className="text-gray-400 text-lg leading-relaxed">
+              We operate the fleet carrier <span className="text-primary-main font-bold">Goodfellas Valhall</span> as a mobile hub for exploration, trading, mining, and Background Simulation operations. Our focus is on community building, peaceful expansion, and providing a welcoming environment for commanders of all experience levels.
             </p>
           </div>
         </motion.div>
@@ -128,10 +128,10 @@ export default function AboutPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.05 * idx }}
-                  className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all border border-norway-red/10"
+                  className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all border border-primary-main/20 hover:border-primary-main/60 group"
                 >
                   <div className="flex items-start gap-4">
-                    <Icon className="text-norway-red text-2xl flex-shrink-0 mt-1" />
+                    <Icon className="text-primary-main group-hover:text-white text-2xl flex-shrink-0 mt-1 transition-colors" />
                     <div>
                       <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
                       <p className="text-gray-400">{value.description}</p>
@@ -151,7 +151,7 @@ export default function AboutPage() {
           className="mb-12"
         >
           <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-            <FaUsers className="text-norway-red" />
+            <FaUsers className="text-primary-main" />
             Leadership
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -161,9 +161,9 @@ export default function AboutPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.1 * idx }}
-                className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow border-l-4 border-norway-red text-center"
+                className="bg-dark/50 backdrop-blur-sm rounded-lg p-6 shadow-glow border-l-4 border-primary-main text-center hover:shadow-glow-hover transition-all"
               >
-                <span className="inline-block px-3 py-1 bg-norway-red/20 text-norway-red text-sm font-semibold rounded-full mb-3">
+                <span className="inline-block px-3 py-1 bg-primary-main/20 text-primary-light text-sm font-semibold rounded-full mb-3">
                   {leader.rank}
                 </span>
                 <h3 className="text-xl font-bold text-white mb-1">CMDR {leader.name}</h3>
@@ -180,50 +180,50 @@ export default function AboutPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
-          <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-norway-blue/20">
+          <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-primary-main/20 hover:border-primary-main/60 transition-all group">
             <div className="flex items-center gap-3 mb-4">
-              <FaRocket className="text-norway-red text-2xl" />
+              <FaRocket className="text-primary-main group-hover:text-white text-2xl transition-colors" />
               <h3 className="text-2xl font-bold text-white">Focus Areas</h3>
             </div>
-            <ul className="space-y-3 text-gray-300">
+            <ul className="space-y-3 text-gray-400">
               <li className="flex items-center gap-2">
-                <span className="text-norway-red">→</span> Deep space exploration
+                <span className="text-primary-main">→</span> Deep space exploration
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-norway-red">→</span> Colonization efforts
+                <span className="text-primary-main">→</span> Colonization efforts
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-norway-red">→</span> Trade & mining operations
+                <span className="text-primary-main">→</span> Trade & mining operations
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-norway-red">→</span> Cooperative BGS play
+                <span className="text-primary-main">→</span> Cooperative BGS play
               </li>
               <li className="flex items-center gap-2">
-                <span className="text-norway-red">→</span> Background Simulation strategy
+                <span className="text-primary-main">→</span> Background Simulation strategy
               </li>
             </ul>
           </div>
 
-          <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-norway-red/20">
+          <div className="bg-dark/50 backdrop-blur-sm rounded-lg p-8 shadow-glow border border-primary-main/20 hover:border-primary-main/60 transition-all group">
             <div className="flex items-center gap-3 mb-4">
-              <FaClock className="text-norway-blue text-2xl" />
+              <FaClock className="text-primary-main group-hover:text-white text-2xl transition-colors" />
               <h3 className="text-2xl font-bold text-white">Activity</h3>
             </div>
-            <div className="space-y-3 text-gray-300">
+            <div className="space-y-3 text-gray-400">
               <p>
-                <span className="text-norway-red font-semibold">Founded:</span> 2019
+                <span className="text-primary-light font-semibold">Founded:</span> 2019
               </p>
               <p>
-                <span className="text-norway-red font-semibold">Members:</span> {squadData?.memberCount ? `${squadData.memberCount} active Commanders` : '100+ active Commanders'}
+                <span className="text-primary-light font-semibold">Members:</span> {squadData?.memberCount ? `${squadData.memberCount} active Commanders` : '100+ active Commanders'}
               </p>
               <p>
-                <span className="text-norway-red font-semibold">Allies:</span> {squadData?.allyCount || '50+'}
+                <span className="text-primary-light font-semibold">Allies:</span> {squadData?.allyCount || '50+'}
               </p>
               <p>
-                <span className="text-norway-red font-semibold">Fleet Carrier:</span> Goodfellas Valhall
+                <span className="text-primary-light font-semibold">Fleet Carrier:</span> Goodfellas Valhall
               </p>
               <p>
-                <span className="text-norway-red font-semibold">Timezones:</span> Global coverage (EU, NA, AU)
+                <span className="text-primary-light font-semibold">Timezones:</span> Global coverage (EU, NA, AU)
               </p>
               <p className="text-sm text-gray-400 mt-4">
                 💡 Most active during evenings (UTC+0 / UTC+1 timezone)
