@@ -16,12 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create .env file
-        run: |
-          echo "Creating .env file from secrets..."
-          echo "INARA_API_KEY=${{ secrets.INARA_API_KEY }}" > .env
-          echo "✅ .env file created"
-
       - name: Generate version
         id: version
         run: |
@@ -46,7 +40,7 @@ jobs:
           docker run -d \
             --name igfv-test \
             --network ${{ env.APP_NETWORK }} \
-            --env-file .env \
+            -e INARA_API_KEY=${{ secrets.INARA_API_KEY }} \
             igfv:candidate
 
           echo "⏳ Waiting for IGFV to initialize..."
@@ -101,7 +95,7 @@ jobs:
           docker run -d \
             --name ${{ env.CONTAINER_NAME }} \
             --network ${{ env.APP_NETWORK }} \
-            --env-file .env \
+            -e INARA_API_KEY=${{ secrets.INARA_API_KEY }} \
             --restart unless-stopped \
             --label "com.igfv.version=$VERSION" \
             igfv:$VERSION
@@ -202,7 +196,7 @@ jobs:
             docker run -d \
               --name ${{ env.CONTAINER_NAME }} \
               --network ${{ env.APP_NETWORK }} \
-              --env-file .env \
+              -e INARA_API_KEY=${{ secrets.INARA_API_KEY }} \
               --restart unless-stopped \
               $PREV_IMAGE
             
