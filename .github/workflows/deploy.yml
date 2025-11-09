@@ -16,6 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: |
+          echo "Creating .env file from secrets..."
+          echo "INARA_API_KEY=${{ secrets.INARA_API_KEY }}" > .env
+          echo "✅ .env file created"
+
       - name: Generate version
         id: version
         run: |
@@ -41,8 +47,6 @@ jobs:
             --name igfv-test \
             --network ${{ env.APP_NETWORK }} \
             --env-file .env \
-            -e NODE_ENV=production \
-            -e NEXT_TELEMETRY_DISABLED=1 \
             igfv:candidate
 
           echo "⏳ Waiting for IGFV to initialize..."
@@ -98,8 +102,6 @@ jobs:
             --name ${{ env.CONTAINER_NAME }} \
             --network ${{ env.APP_NETWORK }} \
             --env-file .env \
-            -e NODE_ENV=production \
-            -e NEXT_TELEMETRY_DISABLED=1 \
             --restart unless-stopped \
             --label "com.igfv.version=$VERSION" \
             igfv:$VERSION
@@ -201,8 +203,6 @@ jobs:
               --name ${{ env.CONTAINER_NAME }} \
               --network ${{ env.APP_NETWORK }} \
               --env-file .env \
-              -e NODE_ENV=production \
-              -e NEXT_TELEMETRY_DISABLED=1 \
               --restart unless-stopped \
               $PREV_IMAGE
             

@@ -12,12 +12,9 @@ export const Header: React.FC = () => {
 
   const navItems = [
     { href: '/about', label: 'About' },
-    { href: '/fleet-carrier', label: 'Fleet Carrier' },
-    { href: '/operations', label: 'Operations' },
-    { href: '/news', label: 'News' },
-    { href: '/resources', label: 'Resources' },
-    { href: '/events', label: 'Events' },
+    { href: '/guides', label: 'Guides' },
     { href: '/gallery', label: 'Gallery' },
+    { href: '/partners', label: 'Partners' },
   ];
 
   const isActive = (href: string) => {
@@ -39,7 +36,7 @@ export const Header: React.FC = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-white hover:text-primary-light transition-colors ${isActive(item.href) ? 'underline underline-offset-2' : ''}`}
+                className={`text-white hover:underline hover:decoration-primary-main hover:underline-offset-4 transition-all ${isActive(item.href) ? 'underline decoration-primary-main underline-offset-4' : ''}`}
               >
                 {item.label}
               </Link>
@@ -73,7 +70,7 @@ export const Header: React.FC = () => {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-white hover:bg-primary-main/20 hover:text-primary-light ${isActive(item.href) ? 'bg-primary-main/20' : ''}`}
+                  className={`block px-3 py-2 rounded-md text-white hover:bg-primary-main/20 hover:underline hover:decoration-primary-main hover:underline-offset-4 ${isActive(item.href) ? 'bg-primary-main/20 underline decoration-primary-main underline-offset-4' : ''}`}
                 >
                   {item.label}
                 </Link>
