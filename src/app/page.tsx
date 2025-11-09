@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useAnimation, useInView } from 'framer-motion';
-import { FaSpaceShuttle, FaDiscord, FaExternalLinkAlt, FaUsers, FaHandsHelping, FaStar, FaQuestionCircle, FaComments, FaRocket, FaChevronDown, FaCheck, FaMoon, FaGlobeAmericas, FaSatellite } from 'react-icons/fa';
+import { FaSpaceShuttle, FaDiscord, FaExternalLinkAlt, FaUsers, FaHandsHelping, FaStar, FaQuestionCircle, FaComments, FaRocket, FaChevronDown, FaMoon, FaGlobeAmericas, FaSatellite } from 'react-icons/fa';
 import { IoIosPlanet, IoMdRocket } from 'react-icons/io';
 import { RiSpaceShipFill } from 'react-icons/ri';
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
@@ -85,29 +85,6 @@ function FAQItem({ question, answer, isOpen, onToggle, onClose }: {
         </div>
       </div>
     </motion.div>
-  );
-}
-
-// Update key motion components to avoid unnecessary animations
-function MotionSection({ 
-  children, 
-  className, 
-  delay = 0 
-}: { 
-  children: React.ReactNode; 
-  className?: string; 
-  delay?: number 
-}) {
-  return (
-    <motion.section
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.5, delay }}
-      className={`py-24 relative ${className || ''}`}
-    >
-      {children}
-    </motion.section>
   );
 }
 
@@ -448,90 +425,6 @@ export default function IGFVPage() {
                   </p>
                 </div>
               </motion.div>
-            </section>
-
-            {/* Community Guidelines Section - Wider */}
-            <MotionSection className="will-change-transform">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-12 text-center">
-                Community Guidelines & Best Practices
-              </h2>
-              
-              <div className="w-full">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  className="bg-gradient-to-r from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-8 shadow-glow"
-                >
-                  <ul className="space-y-4">
-                    <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
-                      <span className="text-base md:text-lg text-gray-300">Keep your Inara profile updated to help plan future routes and events.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
-                      <span className="text-base md:text-lg text-gray-300">Follow the accepted PvP code (refer to galaxy-intel for details); when engaging in BGS activities, switch to the open channel.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
-                      <span className="text-base md:text-lg text-gray-300">New pilots should secure the recommended ships in order: Cobra Mk3, Python, then Anaconda—refer to ship-builds for more information.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
-                      <span className="text-base md:text-lg text-gray-300">Do not share the server invite without permission from Rear Admirals, Vice Admirals, or the Admiral to maintain our community&apos;s integrity.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <FaCheck className="text-primary-light mt-1 flex-shrink-0" />
-                      <span className="text-base md:text-lg text-gray-300">Ensure your Discord name reflects your in-game identity for consistency.</span>
-                    </li>
-                  </ul>
-                </motion.div>
-              </div>
-            </MotionSection>
-
-            {/* Mission & Values Section */}
-            <section className="py-24 relative">
-              <motion.h2 
-                className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-12 text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                Mission & Values
-              </motion.h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-                {[
-                  {
-                    title: "Supporting New Pilots",
-                    description: "Dedicated mentorship program and resources to help new commanders find their path in the galaxy",
-                    icon: <FaHandsHelping className="w-8 h-8" />
-                  },
-                  {
-                    title: "Peaceful Expansion",
-                    description: "Focus on exploration, trade, and peaceful development of new colonial outposts",
-                    icon: <FaStar className="w-8 h-8" />
-                  },
-                  {
-                    title: "Community First",
-                    description: "Creating an inclusive environment where every commander can contribute and grow",
-                    icon: <FaUsers className="w-8 h-8" />
-                  }
-                ].map((value, index) => (
-                  <motion.div
-                    key={value.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.2 }}
-                    className="bg-gradient-to-br from-primary-main/20 to-transparent border border-primary-main/30 rounded-lg p-6 shadow-glow hover:shadow-glow-hover transition-all hover:border-primary-main/60"
-                  >
-                    <div className="text-primary-light mb-4">{value.icon}</div>
-                    <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
-                    <p className="text-base md:text-lg text-gray-400">{value.description}</p>
-                  </motion.div>
-                ))}
-              </div>
             </section>
 
             {/* Squadron Stats Section */}
