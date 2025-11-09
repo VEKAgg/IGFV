@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   env: {
     NEXT_PUBLIC_ENV: process.env.NODE_ENV,
   },
-  
+
   experimental: {
     serverActions: {
       allowedOrigins: [
@@ -19,10 +20,10 @@ const nextConfig: NextConfig = {
   webpack: (config) => {
     return config;
   },
-  
+
   // Optimize production builds
   productionBrowserSourceMaps: false,
-  
+
   // Configure allowed origins for CORS
   headers: async () => {
     return [
