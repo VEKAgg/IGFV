@@ -62,17 +62,16 @@ npm run lint         # ESLint check
 ```
 
 ### Docker Deployment
-- **Dockerfile**: Currently references SvelteKit artifacts (legacy, needs update for Next.js)
+- **Dockerfile**: Multi-stage build with Node.js 18 Alpine, runs on port 5002
 - **Docker Compose**: Exposes port 5002, connects to `proxy-network`
-- **CI/CD**: `.github/workflows/deploy.yml` builds, validates, then swaps containers
-  - Self-hosted runner on Linux
-  - Pre-validation with health checks before production swap
-  - Zero-downtime deployment strategy
+- **CI/CD**: `.github/workflows/deploy.yml` - self-hosted runner deployment
+  - Creates `.env` from GitHub secrets (`INARA_API_KEY`)
+  - Builds and validates image before deployment
+  - Zero-downtime container swap with health checks
+  - Automatic rollback on failure
 
 ### Environment Variables
-- `NODE_ENV`: `production` | `development`
-- `NEXT_PUBLIC_SITE_URL`: Base URL for API endpoints
-- `INARA_API_KEY`: Required for Inara proxy (server-side only)
+- `INARA_API_KEY`: Required for Inara API proxy (server-side only)
 - Port: **3001** for dev, **5002** for Docker production
 
 ## Project-Specific Conventions
@@ -86,7 +85,7 @@ npm run lint         # ESLint check
 ## Common Gotchas
 
 - **Port Confusion**: App runs on 3001 locally, not 3000
-- **Dockerfile Mismatch**: References SvelteKit but project is Next.js
 - **API Proxies**: Always use server-side proxies for external APIs (Discord, Inara)
 - **Cache Invalidation**: Both server and client caches use 60s TTL - adjust if needed
 - **Client Components**: Page.tsx uses extensive client-side animations - keep in mind bundle size
+- **Environment**: Only `INARA_API_KEY` is required - no complex env configs needed
