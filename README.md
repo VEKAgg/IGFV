@@ -1,167 +1,102 @@
-# Interstellar Goodfellas (IGFV) — Website
+# IGFV - Interstellar Goodfellas Squadron Website# IGFV - Interstellar Goodfellas Elite Dangerous Squadron Website# Interstellar Goodfellas (IGFV) — Website
+
+
 
 Professional squadron website built with Next.js for the Interstellar Goodfellas Elite Dangerous squadron.
 
-## 🌟 Features
+
+
+## 🌟 FeaturesProfessional squadron website built with Next.js, featuring community engagement, fleet carrier management, and exploration coordination.The official website for the Interstellar Goodfellas Elite Dangerous squadron. Built with Next.js, React, and Tailwind CSS.
+
+
 
 - **Community Hub** - Member profiles, guidelines, and best practices
-- **Live Discord Integration** - Real-time member counter powered by Discord API
-- **Fleet Carrier Info** - Valhall details, services, and jump schedule
-- **Operations Board** - Active missions, BGS targets, and expeditions
-- **Squadron News** - Latest updates and announcements
+
+- **Fleet Carrier Management** - Valhall details and operations
+
+- **Event Coordination** - Planned expeditions and operations## 🌟 Features## Features
+
 - **Gallery** - Community screenshots and achievements
-- **Responsive Design** - Works on mobile, tablet, and desktop
 
-## 🛠️ Tech Stack
+- **Discord Integration** - Live community widget embed
 
-| Component | Technology |
-|-----------|-----------|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript + React 19 |
-| Styling | Tailwind CSS |
-| Animations | Framer Motion |
-| Icons | react-icons |
-| API Caching | Server-side proxies with TTL |
-| Deployment | Docker + GitHub Actions |
+- **Responsive Design** - Mobile-first, works on all devices
 
-## � Quick Start
+- **Performance Optimized** - Sub-second load times with CDN- **Community Hub** - Member profiles, guidelines, and best practices- **Live Discord Integration** - Real-time member counter powered by Discord API
+
+
+
+## 🛠️ Tech Stack- **Fleet Carrier Management** - Valhall details and operations  - **Fleet Carrier Info** - Valhall details, services, and jump schedule
+
+
+
+- **Frontend:** Next.js 15, React 19, TypeScript- **Event Coordination** - Planned expeditions and operations- **Operations Board** - Active missions, BGS targets, and expeditions
+
+- **Styling:** Tailwind CSS (burgundy/navy theme)
+
+- **Animations:** Framer Motion- **Gallery** - Community screenshots and achievements- **Squadron News** - Latest updates and announcements
+
+- **Icons:** React Icons
+
+- **Deployment:** Docker, Nginx, Cloudflare- **Discord Integration** - Live community widget embed- **Responsive Design** - Works on mobile, tablet, and desktop
+
+- **CI/CD:** GitHub Actions
+
+- **Responsive Design** - Mobile-first, works on all devices- **Norwegian Theme** - Custom color scheme inspired by the flag
+
+## 🚀 Quick Start
+
+- **Performance Optimized** - Sub-second load times with CDN
 
 ### Local Development
 
-1. **Clone and install:**
+## Tech Stack
+
 ```bash
-git clone https://github.com/VEKAgg/IGFV.git
-cd IGFV
-npm install
+
+npm install## 🛠️ Tech Stack
+
+npm run dev          # http://localhost:3001
+
+```| Component | Technology |
+
+
+
+### Docker- **Frontend:** Next.js 15, React 19, TypeScript|-----------|-----------|
+
+
+
+```bash- **Styling:** Tailwind CSS with burgundy/navy theme| Framework | Next.js 15 (App Router) |
+
+docker-compose up -d                    # Local
+
+docker-compose -f docker-compose.prod.yml up -d  # Production- **Animations:** Framer Motion| Language | TypeScript + React 19 |
+
 ```
 
-2. **Set up environment:**
-```bash
-cp .env.example .env.local
-# Edit .env.local and add your INARA_API_KEY
-```
+- **Icons:** React Icons| Styling | Tailwind CSS |
 
-3. **Run development server:**
-```bash
-npm run dev
-# Opens on http://localhost:3001
-```
+### Build & Deploy
 
-## 📋 Environment Variables
-
-Only one environment variable is required:
+- **Deployment:** Docker, Nginx, Cloudflare| Animations | Framer Motion |
 
 ```bash
-INARA_API_KEY=your_api_key_here
-```
 
-Get your API key from [Inara Settings](https://inara.cz/settings-api/)
+npm run lint         # Check code quality- **CI/CD:** GitHub Actions| Icons | react-icons |
 
-## 🐳 Docker Deployment
-
-The app is automatically deployed via GitHub Actions when you push to `main`:
-
-1. Push changes to main branch
-2. GitHub Actions runs on self-hosted runner
-3. Docker image is built and tested
-4. Container is deployed with zero-downtime swap
-5. Environment variables are passed directly from GitHub secrets
-
-### Manual Docker Build
-
-```bash
-# Build the image
-docker build -t igfv:latest .
-
-# Run with environment variable
-docker run -d \
-  --name igfv \
-  -e INARA_API_KEY=your_api_key_here \
-  -p 5002:5002 \
-  igfv:latest
-
-# Or use docker-compose with .env file
-docker-compose up -d
-```
-
-## 🔧 Development Commands
-
-```bash
-npm run dev          # Start dev server (port 3001)
 npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-```
 
-## 📁 Project Structure
+npm start            # Start production server| API Caching | Server-side proxies with TTL |
 
 ```
-IGFV/
-├── src/
-│   ├── app/              # Next.js App Router pages
-│   │   ├── about/        # About page
-│   │   ├── gallery/      # Gallery page
-│   │   ├── guides/       # Guides & operations
-│   │   ├── partners/     # Squadron partners
-│   │   └── page.tsx      # Homepage
-│   ├── components/       # React components
-│   │   ├── Header/       # Navigation header
-│   │   ├── Footer/       # Site footer
-│   │   ├── Discord/      # Discord widget
-│   │   └── Motion/       # Animation wrappers
-│   ├── lib/              # Utilities
-│   │   └── inara.ts      # Inara API integration
-│   └── pages/api/        # API routes
-│       ├── discord/      # Discord proxy
-│       └── inara/        # Inara proxy
-├── public/               # Static assets
-├── .github/workflows/    # CI/CD pipelines
-└── Dockerfile           # Container definition
-```
 
-## 🎨 Color Scheme
+## 🚀 Quick Start
 
-- **Primary**: Burgundy Red (`#A90B2B`)
-- **Secondary**: Navy Blue (`#00205B`)
-- **Background**: Dark (`#000814`)
+## 📋 Environment
 
-## 🚢 Deployment Flow
+## Quick Start
 
-```
-Push to main
-    ↓
-GitHub Actions (self-hosted runner)
-    ↓
-Build Docker image
-    ↓
-Health check validation
-    ↓
-Deploy container (zero-downtime swap)
-    ↓
-Live on production
-```
-
-### GitHub Secrets Required
-
-Add this secret to your GitHub repository:
-
-- `INARA_API_KEY` - Your Inara API key
-
-## � License
-
-This project is private and maintained by the Interstellar Goodfellas squadron.
-
-## 🤝 Contributing
-
-For squadron members: Please follow the contribution guidelines in the Discord `#dev-discussion` channel.
-
----
-
-**Squadron**: Interstellar Goodfellas (IGFV)  
-**Founded**: 2019  
-**Fleet Carrier**: Goodfellas Valhall  
-**Discord**: https://discord.gg/invite/Jvrgy6EEQn
-
+**Development** (.env.local):
 
 ```### Local Development
 
