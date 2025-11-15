@@ -41,6 +41,136 @@ html {
   .shadow-glow-hover {
     box-shadow: 0 0 20px rgba(255, 126, 0, 0.2);
   }
+
+  /* Global Hover Effects */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+  }
+
+  .hover-scale {
+    transition: transform 0.3s ease;
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  .hover-scale-sm {
+    transition: transform 0.3s ease;
+  }
+  
+  .hover-scale-sm:hover {
+    transform: scale(1.02);
+  }
+
+  .hover-glow-primary {
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .hover-glow-primary:hover {
+    box-shadow: 0 0 20px rgba(169, 11, 43, 0.4);
+    border-color: rgba(169, 11, 43, 0.8);
+  }
+
+  .hover-glow-red {
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .hover-glow-red:hover {
+    box-shadow: 0 0 25px rgba(169, 11, 43, 0.5);
+  }
+
+  .hover-brightness {
+    transition: filter 0.3s ease;
+  }
+  
+  .hover-brightness:hover {
+    filter: brightness(1.2);
+  }
+
+  .hover-opacity {
+    transition: opacity 0.3s ease;
+  }
+  
+  .hover-opacity:hover {
+    opacity: 0.8;
+  }
+
+  .hover-bg-primary {
+    transition: background-color 0.3s ease;
+  }
+  
+  .hover-bg-primary:hover {
+    background-color: rgba(169, 11, 43, 0.2);
+  }
+
+  .hover-border-glow {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .hover-border-glow:hover {
+    border-color: rgb(169, 11, 43);
+    box-shadow: 0 0 15px rgba(169, 11, 43, 0.3);
+  }
+
+  .hover-text-primary {
+    transition: color 0.3s ease;
+  }
+  
+  .hover-text-primary:hover {
+    color: rgb(169, 11, 43);
+  }
+
+  .hover-slide-right {
+    transition: transform 0.3s ease;
+  }
+  
+  .hover-slide-right:hover {
+    transform: translateX(5px);
+  }
+
+  .hover-rotate {
+    transition: transform 0.3s ease;
+  }
+  
+  .hover-rotate:hover {
+    transform: rotate(5deg);
+  }
+
+  /* Combo hover effects for cards */
+  .card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 25px rgba(169, 11, 43, 0.3);
+    border-color: rgba(169, 11, 43, 0.6);
+  }
+
+  /* Button hover effect */
+  .btn-hover {
+    transition: all 0.3s ease;
+  }
+  
+  .btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(169, 11, 43, 0.4);
+  }
+
+  /* Icon hover effect */
+  .icon-hover {
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .icon-hover:hover {
+    color: rgb(255, 255, 255);
+    transform: scale(1.1);
+  }
 }
 
 :root {
