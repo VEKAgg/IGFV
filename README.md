@@ -686,3 +686,14 @@ If you want, I can now:
 3) Add the Inara integration example call and wiring to a simple admin page.
 
 Tell me which you'd like next and I'll continue. 
+
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=VEKAgg%2FIGFV&type=timeline&logscale=&legend=bottom-right">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=VEKAgg/IGFV&type=timeline&theme=dark&logscale&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=VEKAgg/IGFV&type=timeline&logscale&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=VEKAgg/IGFV&type=timeline&logscale&legend=bottom-right" />
+ </picture>
+</a>
