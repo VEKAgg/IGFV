@@ -14,21 +14,22 @@ Professional squadron website built with Next.js for the Interstellar Goodfellas
 
 ## 🛠️ Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript + React 19 |
-| Styling | Tailwind CSS |
-| Animations | Framer Motion |
-| Icons | react-icons |
+| Component   | Technology                   |
+| ----------- | ---------------------------- |
+| Framework   | Next.js 15 (App Router)      |
+| Language    | TypeScript + React 19        |
+| Styling     | Tailwind CSS                 |
+| Animations  | Framer Motion                |
+| Icons       | react-icons                  |
 | API Caching | Server-side proxies with TTL |
-| Deployment | Docker + GitHub Actions |
+| Deployment  | Docker + GitHub Actions      |
 
 ## � Quick Start
 
 ### Local Development
 
 1. **Clone and install:**
+
 ```bash
 git clone https://github.com/VEKAgg/IGFV.git
 cd IGFV
@@ -36,12 +37,14 @@ npm install
 ```
 
 2. **Set up environment:**
+
 ```bash
 cp .env.example .env.local
 # Edit .env.local and add your INARA_API_KEY
 ```
 
 3. **Run development server:**
+
 ```bash
 npm run dev
 # Opens on http://localhost:3001
@@ -162,7 +165,6 @@ For squadron members: Please follow the contribution guidelines in the Discord `
 **Fleet Carrier**: Goodfellas Valhall  
 **Discord**: https://discord.gg/invite/Jvrgy6EEQn
 
-
 ```### Local Development
 
 NODE_ENV=development
@@ -171,7 +173,7 @@ NEXT_PUBLIC_ENV=development### Prerequisites
 
 ```
 
-```bash- Node.js 18+
+````bash- Node.js 18+
 
 **Production** (.env.production):
 
@@ -221,7 +223,7 @@ See `.env.example` and `.env.production.example` for all options.npm run dev```p
 
    git push origin main  # Automatic deployment```bash# Build for production
 
-   ```
+````
 
 # Local testingnpm run build
 
@@ -229,33 +231,27 @@ See `.env.example` and `.env.production.example` for all options.npm run dev```p
 
 docker-compose up -dnpm start
 
-**Cost:** $5-20/month + domain  
+**Cost:** $5-20/month + domain
 
 **Setup Time:** 4-5 hours
 
-
-
 Full instructions: See `DEPLOYMENT_GUIDE.md`# View logs# Lint and type-check
-
-
 
 ## 📝 Commandsdocker-compose logs -f igfv-webnpm run lint
 
+`bash`
 
+npm run dev # Dev server
 
-```bash```
+npm run build # Production build# Stop
 
-npm run dev              # Dev server
+npm start # Start production
 
-npm run build            # Production build# Stop
+npm run lint # Check codedocker-compose downOpen [http://localhost:3000](http://localhost:3000) in your browser.
 
-npm start                # Start production
+npm run lint --fix # Fix issues
 
-npm run lint             # Check codedocker-compose downOpen [http://localhost:3000](http://localhost:3000) in your browser.
-
-npm run lint --fix       # Fix issues
-
-```
+````
 
 docker-compose up -d     # Start containers
 
@@ -283,7 +279,7 @@ npm run lintINARA_API_KEY=your_inara_api_key_here
 
 ## 🐛 Troubleshooting
 
-```
+````
 
 **Container won't start:**
 
@@ -297,11 +293,9 @@ docker-compose up -d
 
 ```
 
-
-
 **Build fails:**# Start production1. Register on [Inara.cz](https://inara.cz)
 
-```bash
+````bash
 
 npm run lint    # Check for errorsnpm start2. Visit Settings → [API Keys](https://inara.cz/settings-api/)
 
@@ -309,7 +303,7 @@ rm -rf .next    # Clear cache
 
 npm run build   # Try again```3. Create a new API key (give it a name like "IGFV Website")
 
-```
+````
 
 4. Copy the API key and add to `.env.local`
 
@@ -327,7 +321,7 @@ npm run build   # Try again```3. Create a new API key (give it a name like "IGFV
 
 ## 📄 Key Files
 
-```## Project Structure
+````## Project Structure
 
 | File | Purpose |
 
@@ -373,7 +367,7 @@ REDIS_URL=redis://:password@redis:6379│   ├── resources/page.tsx        
 
 NEXTAUTH_SECRET=your_secret_here│   ├── events/page.tsx           # Events calendar
 
-**Status:** ✅ Production Ready  
+**Status:** ✅ Production Ready
 
 **Updated:** November 3, 2025  NEXTAUTH_URL=https://igfv.yourdomain.com│   ├── gallery/page.tsx          # Image gallery
 
@@ -547,7 +541,7 @@ docker-compose logs -f   # View logsnpm run build
 
 ```vercel deploy
 
-```
+````
 
 ## 🐛 Troubleshooting
 
@@ -555,7 +549,7 @@ docker-compose logs -f   # View logsnpm run build
 
 ### Container won't start```dockerfile
 
-```bashFROM node:18-alpine
+````bashFROM node:18-alpine
 
 docker-compose logs igfv-webWORKDIR /app
 
@@ -665,7 +659,7 @@ Change port in docker-compose.yml or use different port
 
 - After-action reports
 
-**Status:** ✅ Production Ready  
+**Status:** ✅ Production Ready
 
 **Last Updated:** November 3, 2025  See [ROADMAP.md](./ROADMAP.md) for full details.
 
@@ -681,11 +675,11 @@ Notes
 - If you prefer the app-only router, the same server routes can be implemented as server actions or edge functions.
 
 If you want, I can now:
-1) Implement server-side proxy caching with Redis (requires installing and configuring Redis). 
-2) Enhance Members roster search and UI. 
+1) Implement server-side proxy caching with Redis (requires installing and configuring Redis).
+2) Enhance Members roster search and UI.
 3) Add the Inara integration example call and wiring to a simple admin page.
 
-Tell me which you'd like next and I'll continue. 
+Tell me which you'd like next and I'll continue.
 
 
 ## Star History
@@ -697,3 +691,4 @@ Tell me which you'd like next and I'll continue.
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=VEKAgg/IGFV&type=timeline&logscale&legend=bottom-right" />
  </picture>
 </a>
+````

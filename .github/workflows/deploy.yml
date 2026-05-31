@@ -1,13 +1,13 @@
-name: Deploy FH6
+name: Deploy IGFV
 
 on:
   push:
     branches: [main]
 
 env:
-  CONTAINER_NAME: fh6
+  CONTAINER_NAME: igfv
   APP_PORT: 5060
-  DOMAIN: fh6.veka.gg
+  DOMAIN: igfv.veka.gg
   NETWORK: proxy-network
 
 jobs:
@@ -114,11 +114,11 @@ jobs:
             -e ORIGIN=https://${{ env.DOMAIN }} \
             --restart unless-stopped \
             --label "traefik.enable=true" \
-            --label "traefik.http.routers.FH6.rule=Host(\`${{ env.DOMAIN }}\`)" \
-            --label "traefik.http.routers.FH6.entrypoints=tunnel" \
-            --label "traefik.http.services.FH6.loadbalancer.server.port=${{ env.APP_PORT }}" \
-            --label "traefik.http.routers.FH6.middlewares=secure-headers@file" \
-            --label "com.FH6.version=$VERSION" \
+            --label "traefik.http.routers.igfv.rule=Host(\`${{ env.DOMAIN }}\`)" \
+            --label "traefik.http.routers.igfv.entrypoints=tunnel" \
+            --label "traefik.http.services.igfv.loadbalancer.server.port=${{ env.APP_PORT }}" \
+            --label "traefik.http.routers.igfv.middlewares=secure-headers@file" \
+            --label "com.igfv.version=$VERSION" \
             ${{ env.CONTAINER_NAME }}:$VERSION
 
           echo "Container started (expected downtime: ~2-5 seconds)"
@@ -194,11 +194,11 @@ jobs:
             -e ORIGIN=https://${{ env.DOMAIN }} \
             --restart unless-stopped \
             --label "traefik.enable=true" \
-            --label "traefik.http.routers.FH6.rule=Host(\`${{ env.DOMAIN }}\`)" \
-            --label "traefik.http.routers.FH6.entrypoints=tunnel" \
-            --label "traefik.http.services.FH6.loadbalancer.server.port=${{ env.APP_PORT }}" \
-            --label "traefik.http.routers.FH6.middlewares=secure-headers@file" \
-            --label "com.FH6.version=$PREV_TAG" \
+            --label "traefik.http.routers.igfv.rule=Host(\`${{ env.DOMAIN }}\`)" \
+            --label "traefik.http.routers.igfv.entrypoints=tunnel" \
+            --label "traefik.http.services.igfv.loadbalancer.server.port=${{ env.APP_PORT }}" \
+            --label "traefik.http.routers.igfv.middlewares=secure-headers@file" \
+            --label "com.igfv.version=$PREV_TAG" \
             ${{ env.CONTAINER_NAME }}:$PREV_TAG
 
           sleep 10
