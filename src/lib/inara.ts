@@ -1,148 +1,111 @@
-import { cache } from 'react';
-
 const INARA_ENDPOINT = '/api/inara/proxy';
 
-interface InaraResponse {
-  header: {
-    appName: string;
-    appVersion: string;
-    requestTimestamp: string;
-    resultStatus: string;
-  };
-  events: Array<{
-    eventStatus: string;
-    eventData?: Record<string, unknown>;
-  }>;
+const inflightRequests = new Map<string, Promise<unknown>>();
+
+async function dedupedFetch<T>(key: string, fetcher: () => Promise<T>): Promise<T> {
+	const existing = inflightRequests.get(key);
+	if (existing) return existing as Promise<T>;
+	const promise = fetcher().finally(() => inflightRequests.delete(key));
+	inflightRequests.set(key, promise);
+	return promise;
 }
 
-// Cache squadron data for 1 hour to reduce API calls
-export const fetchSquadronData = cache(async (squadronId: number) => {
-  if (!squadronId) {
-    console.warn('Squadron ID not provided');
-    return null;
-  }
+interface InaraResponse {
+	header: {
+		appName: string;
+		appVersion: string;
+		requestTimestamp: string;
+		resultStatus: string;
+	};
+	events: Array<{
+		eventStatus: string;
+		eventData?: Record<string, unknown>;
+	}>;
+}
 
-  try {
-    const response = await fetch(INARA_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        header: {
-          appName: 'IGFV-Website',
-          appVersion: '1.0',
-        },
-        events: [
-          {
-            eventName: 'getSquadron',
-            eventTimestamp: new Date().toISOString(),
-            eventData: { squadronID: squadronId },
-          },
-        ],
-      }),
-    });
+export async function fetchSquadronData(squadronId: number) {
+	if (!squadronId) return null;
+	return dedupedFetch(`squadron-${squadronId}`, async () => {
+		try {
+			const response = await fetch(INARA_ENDPOINT, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					header: { appName: 'IGFV-Website', appVersion: '1.0' },
+					events: [
+						{
+							eventName: 'getSquadron',
+							eventTimestamp: new Date().toISOString(),
+							eventData: { squadronID: squadronId }
+						}
+					]
+				})
+			});
+			if (!response.ok) return null;
+			const data: InaraResponse = await response.json();
+			if (data.header.resultStatus === 'OK' && data.events[0]?.eventData)
+				return data.events[0].eventData;
+			return null;
+		} catch {
+			return null;
+		}
+	});
+}
 
-    if (!response.ok) {
-      console.error('Inara API error:', response.status);
-      return null;
-    }
+export async function fetchFleetCarrierData(carrierId: number) {
+	if (!carrierId) return null;
+	return dedupedFetch(`carrier-${carrierId}`, async () => {
+		try {
+			const response = await fetch(INARA_ENDPOINT, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					header: { appName: 'IGFV-Website', appVersion: '1.0' },
+					events: [
+						{
+							eventName: 'getFleetCarrier',
+							eventTimestamp: new Date().toISOString(),
+							eventData: { carrierID: carrierId }
+						}
+					]
+				})
+			});
+			if (!response.ok) return null;
+			const data: InaraResponse = await response.json();
+			if (data.header.resultStatus === 'OK' && data.events[0]?.eventData)
+				return data.events[0].eventData;
+			return null;
+		} catch {
+			return null;
+		}
+	});
+}
 
-    const data: InaraResponse = await response.json();
-
-    if (data.header.resultStatus === 'OK' && data.events[0]?.eventData) {
-      return data.events[0].eventData;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Failed to fetch squadron data from Inara:', error);
-    return null;
-  }
-});
-
-// Fetch fleet carrier details
-export const fetchFleetCarrierData = cache(async (carrierId: number) => {
-  if (!carrierId) {
-    console.warn('Carrier ID not provided');
-    return null;
-  }
-
-  try {
-    const response = await fetch(INARA_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        header: {
-          appName: 'IGFV-Website',
-          appVersion: '1.0',
-        },
-        events: [
-          {
-            eventName: 'getFleetCarrier',
-            eventTimestamp: new Date().toISOString(),
-            eventData: { carrierID: carrierId },
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      console.error('Inara API error:', response.status);
-      return null;
-    }
-
-    const data: InaraResponse = await response.json();
-
-    if (data.header.resultStatus === 'OK' && data.events[0]?.eventData) {
-      return data.events[0].eventData;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Failed to fetch fleet carrier data from Inara:', error);
-    return null;
-  }
-});
-
-// Fetch commander profile
-export const fetchCommanderProfile = cache(async (commanderName: string) => {
-  if (!commanderName) {
-    console.warn('Commander name not provided');
-    return null;
-  }
-
-  try {
-    const response = await fetch(INARA_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        header: {
-          appName: 'IGFV-Website',
-          appVersion: '1.0',
-        },
-        events: [
-          {
-            eventName: 'getCommanderProfile',
-            eventTimestamp: new Date().toISOString(),
-            eventData: { commanderName },
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      console.error('Inara API error:', response.status);
-      return null;
-    }
-
-    const data: InaraResponse = await response.json();
-
-    if (data.header.resultStatus === 'OK' && data.events[0]?.eventData) {
-      return data.events[0].eventData;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Failed to fetch commander profile from Inara:', error);
-    return null;
-  }
-});
+export async function fetchCommanderProfile(commanderName: string) {
+	if (!commanderName) return null;
+	return dedupedFetch(`commander-${commanderName}`, async () => {
+		try {
+			const response = await fetch(INARA_ENDPOINT, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					header: { appName: 'IGFV-Website', appVersion: '1.0' },
+					events: [
+						{
+							eventName: 'getCommanderProfile',
+							eventTimestamp: new Date().toISOString(),
+							eventData: { commanderName }
+						}
+					]
+				})
+			});
+			if (!response.ok) return null;
+			const data: InaraResponse = await response.json();
+			if (data.header.resultStatus === 'OK' && data.events[0]?.eventData)
+				return data.events[0].eventData;
+			return null;
+		} catch {
+			return null;
+		}
+	});
+}

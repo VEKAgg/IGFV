@@ -1,31 +1,38 @@
-FROM node:18-alpine AS deps
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+# syntax=docker/dockerfile:1
 
-FROM node:18-alpine AS builder
+# ── Build stage ────────────────────────────────────────────────────────────────
+FROM node:24-alpine AS builder
+
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+
+RUN corepack enable
+
+# Layer-cache deps separately from source
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+# Reads "packageManager": "pnpm@x.y.z" from package.json and downloads that exact version
+RUN corepack install
+RUN pnpm install --frozen-lockfile
+
 COPY . .
-RUN npm run build
 
-FROM node:18-alpine AS runner
+RUN pnpm build
+
+# ── Runtime stage ──────────────────────────────────────────────────────────────
+FROM node:24-alpine
+
 WORKDIR /app
 
+# Copy built assets
+COPY --from=builder /app/build ./build
+
+ENV PORT=5060
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV HOSTNAME="0.0.0.0"
-ENV PORT=5002
 
-RUN addgroup -g 1001 -S nodejs && \
-  adduser -S nextjs -u 1001
+EXPOSE 5060
 
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:5060 || exit 1
 
-USER nextjs
+CMD ["node", "build/index.js"]
 
-EXPOSE 5002
 
-CMD ["node", "server.js"]
