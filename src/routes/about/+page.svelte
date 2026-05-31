@@ -16,6 +16,7 @@
 		FireSolid,
 		SpaceShuttleSolid
 	} from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
 </script>
 
 <!-- Hero Section -->
@@ -612,7 +613,7 @@
 			</p>
 			<div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
 				<a
-					href="/join"
+					href={resolve('/join')}
 					class="inline-flex items-center gap-2 rounded-lg bg-primary-main px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-primary-light hover:shadow-glow-hover"
 				>
 					<HandshakeSolid class="h-5 w-5" />
@@ -621,7 +622,7 @@
 				<a
 					href="https://discord.gg/igfv"
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener noreferrer external"
 					class="inline-flex items-center gap-2 rounded-lg border border-primary-main/50 px-8 py-3 font-semibold text-primary-light transition-all duration-300 hover:bg-primary-main/10 hover:shadow-glow-hover"
 				>
 					Join Our Discord

@@ -4,7 +4,6 @@
 		BookSolid,
 		StarSolid,
 		CheckSolid,
-		UsersSolid,
 		RocketSolid,
 		FireSolid,
 		HammerSolid,

@@ -122,7 +122,7 @@
 		</h2>
 	</div>
 	<div class="mx-auto max-w-4xl space-y-8">
-		{#each news as article, i}
+		{#each news as article, i (article.title)}
 			<article use:inview={{ delay: i * 100 }} class="inview-hidden group">
 				<div
 					class="bg-dark/50 rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"

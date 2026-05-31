@@ -25,7 +25,7 @@
 				<a
 					href={link.href}
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener noreferrer external"
 					class="text-gray-400 transition-colors hover:text-white"
 					aria-label={link.label}
 				>

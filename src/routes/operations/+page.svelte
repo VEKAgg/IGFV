@@ -4,14 +4,10 @@
 		RocketSolid,
 		StarSolid,
 		CheckSolid,
-		ClockSolid,
 		UsersSolid,
 		CalendarAltSolid,
-		HammerSolid,
-		FireSolid,
 		CompassSolid,
-		SpaceShuttleSolid,
-		HandsHelpingSolid
+		SpaceShuttleSolid
 	} from 'svelte-awesome-icons';
 </script>
 

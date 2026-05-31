@@ -5,14 +5,12 @@
 		StarSolid,
 		ClockSolid,
 		GlobeAmericasSolid,
-		CheckSolid,
-		RocketSolid,
 		HandshakeSolid,
 		FireSolid,
 		ExternalLinkAltSolid,
-		HammerSolid,
 		CompassSolid
 	} from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
 </script>
 
 <!-- Hero Section -->
@@ -438,7 +436,7 @@
 				discovery.
 			</p>
 			<a
-				href="/join"
+				href={resolve('/join')}
 				class="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary-main px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-primary-light hover:shadow-glow-hover"
 			>
 				<HandshakeSolid class="h-5 w-5" />

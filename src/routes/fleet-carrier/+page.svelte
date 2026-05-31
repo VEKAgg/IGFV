@@ -6,9 +6,6 @@
 		UsersSolid,
 		CheckSolid,
 		ClockSolid,
-		StarSolid,
-		RocketSolid,
-		GlobeAmericasSolid,
 		FireSolid,
 		ToolboxSolid,
 		HammerSolid

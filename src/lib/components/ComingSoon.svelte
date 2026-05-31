@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { RocketSolid, GamepadSolid, CodeSolid } from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
 
 	let {
 		title = 'Coming Soon',
@@ -39,6 +40,7 @@
 			<div class="h-3 overflow-hidden rounded-full bg-dark-slate1">
 				<div
 					class="animate-progress h-full rounded-full bg-gradient-to-r from-primary-main to-orange-400"
+					style="--progress-target: {progress}%"
 				></div>
 			</div>
 		</div>
@@ -48,7 +50,7 @@
 
 		<!-- Return Link -->
 		<a
-			href="/"
+			href={resolve('/')}
 			class="inline-flex items-center gap-2 rounded-md bg-primary-main px-6 py-3 text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light hover:shadow-glow-hover"
 		>
 			Return to Base
@@ -84,7 +86,7 @@
 			width: 10%;
 		}
 		to {
-			width: 70%;
+			width: var(--progress-target, 70%);
 		}
 	}
 

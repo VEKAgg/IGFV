@@ -3,11 +3,7 @@
 	import {
 		HandshakeSolid,
 		StarSolid,
-		CheckSolid,
-		UsersSolid,
-		RocketSolid,
 		GlobeAmericasSolid,
-		ExternalLinkAltSolid,
 		DiscordBrands,
 		CalendarAltSolid,
 		FireSolid

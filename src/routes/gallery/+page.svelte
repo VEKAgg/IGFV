@@ -5,15 +5,12 @@
 		ImageSolid,
 		StarSolid,
 		CalendarAltSolid,
-		ClockSolid,
 		UserSolid,
 		CheckSolid,
 		SpaceShuttleSolid,
 		CompassSolid,
 		FireSolid,
 		HammerSolid,
-		UsersSolid,
-		RocketSolid,
 		DiscordBrands
 	} from 'svelte-awesome-icons';
 </script>

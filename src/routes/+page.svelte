@@ -18,6 +18,7 @@
 		UserAstronautSolid
 	} from 'svelte-awesome-icons';
 	import ScrollDown from '$lib/components/ScrollDown.svelte';
+	import { resolve } from '$app/paths';
 
 	// ─── Cursor tracking ───
 	let mouseX = $state(0);
@@ -97,20 +98,29 @@
 			num: '01',
 			title: 'About',
 			subtitle: 'Learn our story and mission',
-			icon: UserAstronautSolid
+			icon: UserAstronautSolid,
+			href: resolve('/about')
 		},
 		{
 			num: '02',
 			title: 'Fleet Carrier',
 			subtitle: 'Explore our fleet operations',
-			icon: ShipSolid
+			icon: ShipSolid,
+			href: resolve('/fleet-carrier')
 		},
-		{ num: '03', title: 'Events', subtitle: 'See upcoming activities', icon: StarSolid },
+		{
+			num: '03',
+			title: 'Events',
+			subtitle: 'See upcoming activities',
+			icon: StarSolid,
+			href: resolve('/events')
+		},
 		{
 			num: '04',
 			title: 'Gallery',
 			subtitle: 'Browse screenshots & media',
-			icon: ExternalLinkAltSolid
+			icon: ExternalLinkAltSolid,
+			href: resolve('/gallery')
 		}
 	];
 
@@ -390,7 +400,7 @@
 		<div use:staggerContainer class="stagger-grid grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 			{#each quickNavs as nav, i (nav.title)}
 				<a
-					href="/about"
+					href={nav.href}
 					class="stagger-item group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/40 hover:bg-white/10"
 					style="--item-delay: {i * 0.15}s;"
 				>

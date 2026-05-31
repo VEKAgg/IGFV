@@ -7,8 +7,7 @@
 		CheckSolid,
 		MapMarkerAltSolid,
 		StarSolid,
-		RocketSolid,
-		DiscordBrands
+		RocketSolid
 	} from 'svelte-awesome-icons';
 </script>
 

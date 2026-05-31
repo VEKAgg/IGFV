@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { BarsSolid, XmarkSolid } from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
 
 	let mobileOpen = $state(false);
 
 	const navLinks = [
-		{ href: '/about', label: 'About' },
-		{ href: '/guides', label: 'Guides' },
-		{ href: '/gallery', label: 'Gallery' },
-		{ href: '/partners', label: 'Partners' }
+		{ href: resolve('/about'), label: 'About' },
+		{ href: resolve('/guides'), label: 'Guides' },
+		{ href: resolve('/gallery'), label: 'Gallery' },
+		{ href: resolve('/partners'), label: 'Partners' }
 	];
 
 	function toggleMobile() {
@@ -25,7 +26,7 @@
 >
 	<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 		<!-- Logo -->
-		<a href="/" class="flex items-center gap-2" onclick={closeMobile}>
+		<a href={resolve('/')} class="flex items-center gap-2" onclick={closeMobile}>
 			<span class="text-2xl font-bold tracking-widest text-primary-main">IGFV</span>
 		</a>
 
@@ -46,7 +47,7 @@
 			<a
 				href="https://discord.gg/igfv"
 				target="_blank"
-				rel="noopener noreferrer"
+				rel="noopener noreferrer external"
 				class="rounded-md bg-primary-main px-4 py-2 text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light hover:shadow-glow-hover"
 			>
 				Discord
@@ -84,7 +85,7 @@
 				<a
 					href="https://discord.gg/igfv"
 					target="_blank"
-					rel="noopener noreferrer"
+					rel="noopener noreferrer external"
 					class="mt-2 rounded-md bg-primary-main px-4 py-2 text-center text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light"
 					onclick={closeMobile}
 				>

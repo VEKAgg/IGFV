@@ -1,13 +1,6 @@
 <script lang="ts">
 	import { inview } from '$lib/actions/inview';
-	import {
-		RocketSolid,
-		CheckSolid,
-		DiscordBrands,
-		StarSolid,
-		UserSolid,
-		HandshakeSolid
-	} from 'svelte-awesome-icons';
+	import { RocketSolid, CheckSolid, DiscordBrands, StarSolid } from 'svelte-awesome-icons';
 </script>
 
 <!-- Hero Section -->
