@@ -1,16 +1,20 @@
-name: Deploy IGFV
+name: Deploy FH6
 
 on:
   push:
     branches: [main]
 
 env:
-  CONTAINER_NAME: igfv
-  APP_NETWORK: proxy-network
+  CONTAINER_NAME: fh6
+  APP_PORT: 5060
+  DOMAIN: fh6.veka.gg
+  NETWORK: proxy-network
 
 jobs:
   deploy:
-    runs-on: [self-hosted, Linux, X64, Veka]
+    name: Deploy → Production
+    runs-on: [self-hosted, Linux, X64, veka]
+    environment: production
 
     steps:
       - name: Checkout
@@ -21,243 +25,216 @@ jobs:
         run: |
           VERSION=$(date +%Y%m%d-%H%M%S)
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "📦 Building version: $VERSION"
+          echo "Building version: $VERSION"
 
-      # CRITICAL: Build and validate BEFORE touching production
-      - name: Build and validate new image
-        id: build
+      # Always remove any leftover test container before we start,
+      # so a previous failed run never blocks a new deployment.
+      - name: Pre-flight cleanup
         run: |
-          export VERSION=${{ steps.version.outputs.VERSION }}
+          if docker ps -a --format '{{.Names}}' | grep -q "^${{ env.CONTAINER_NAME }}-test$"; then
+            echo "Stale test container found -- removing before deployment"
+            docker stop ${{ env.CONTAINER_NAME }}-test 2>/dev/null || true
+            docker rm   ${{ env.CONTAINER_NAME }}-test 2>/dev/null || true
+          fi
+          docker image prune -f
 
-          echo "🔨 Building IGFV image..."
-          docker build -t igfv:$VERSION -t igfv:candidate .
+      - name: Build image
+        run: |
+          VERSION=${{ steps.version.outputs.VERSION }}
+          echo "Building image ${{ env.CONTAINER_NAME }}:$VERSION ..."
+          docker build -t ${{ env.CONTAINER_NAME }}:$VERSION .
 
-          echo "✅ IGFV image built successfully"
+      # Run the new image in a temporary container and health-check it
+      # before touching the live container. On any failure the test
+      # container is always stopped and removed so nothing is left behind.
+      - name: Validate image (pre-swap health check)
+        id: validate
+        run: |
+          VERSION=${{ steps.version.outputs.VERSION }}
 
-          echo "🧪 Testing new image before deployment..."
+          cleanup_test() {
+            docker stop ${{ env.CONTAINER_NAME }}-test 2>/dev/null || true
+            docker rm   ${{ env.CONTAINER_NAME }}-test 2>/dev/null || true
+          }
 
-          # Start test container
+          echo "Starting test container..."
           docker run -d \
-            --name igfv-test \
-            --network ${{ env.APP_NETWORK }} \
-            -e INARA_API_KEY=${{ secrets.INARA_API_KEY }} \
-            igfv:candidate
+            --name ${{ env.CONTAINER_NAME }}-test \
+            --network ${{ env.NETWORK }} \
+            -e NODE_ENV=production \
+            -e ORIGIN=https://${{ env.DOMAIN }} \
+            ${{ env.CONTAINER_NAME }}:$VERSION
 
-          echo "⏳ Waiting for IGFV to initialize..."
-          sleep 20
+          # Give the process a moment to crash fast if it is going to
+          sleep 5
 
-          # Health check
-          TEST_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' igfv-test)
-          echo "📍 Test container IP: $TEST_IP"
+          for i in $(seq 1 12); do
+            # Bail immediately if the container already died
+            if ! docker ps --format '{{.Names}}' | grep -q "^${{ env.CONTAINER_NAME }}-test$"; then
+              echo "Container crashed during startup"
+              docker logs ${{ env.CONTAINER_NAME }}-test --tail 100 2>/dev/null || true
+              cleanup_test
+              exit 1
+            fi
 
-          # Validate with retries
-          for i in {1..15}; do
-            if curl -sf --max-time 10 http://$TEST_IP:5002 > /dev/null; then
-              echo "✅ New image passed health check (attempt $i/15)"
-              
-              # Check response headers
-              echo "📊 Response headers:"
-              curl -sI http://$TEST_IP:5002 | grep -E "(HTTP|Content-Type|X-Powered-By)" || true
-              
-              # Cleanup test container
-              docker stop igfv-test
-              docker rm igfv-test
-              echo "✅ Pre-validation passed - safe to deploy"
+            if docker exec ${{ env.CONTAINER_NAME }}-test \
+                wget -q --spider http://127.0.0.1:${{ env.APP_PORT }} 2>/dev/null; then
+              echo "Health check passed on attempt $i"
+              cleanup_test
               exit 0
             fi
-            echo "⏳ Testing... ($i/15)"
+
+            echo "Waiting for health check... ($i/12)"
             sleep 5
           done
 
-          # Failed validation - DO NOT DEPLOY
-          echo "❌ New image FAILED health check"
-          echo "🛑 ABORTING deployment to protect production"
-          echo ""
-          echo "Container logs:"
-          docker logs igfv-test --tail 100
-
-          docker stop igfv-test
-          docker rm igfv-test
+          echo "Health check timed out -- aborting"
+          docker logs ${{ env.CONTAINER_NAME }}-test --tail 100
+          cleanup_test
           exit 1
 
-      # Only execute if validation passed
-      - name: Replace container (fast swap)
+      # Stop the live container, spin up the new one, then verify it.
+      # If verification fails, emergency_rollback runs automatically.
+      - name: Swap live container
+        id: swap
         run: |
-          export VERSION=${{ steps.version.outputs.VERSION }}
+          VERSION=${{ steps.version.outputs.VERSION }}
 
-          echo "⚡ Fast-replacing production container..."
-
-          # Quick stop and remove
+          echo "Stopping and removing old container..."
           docker stop ${{ env.CONTAINER_NAME }} 2>/dev/null || true
-          docker rm ${{ env.CONTAINER_NAME }} 2>/dev/null || true
+          docker rm   ${{ env.CONTAINER_NAME }} 2>/dev/null || true
 
-          # Start new container immediately
+          sleep 3
+
+          echo "Starting new container (version $VERSION)..."
           docker run -d \
             --name ${{ env.CONTAINER_NAME }} \
-            --network ${{ env.APP_NETWORK }} \
-            -e INARA_API_KEY=${{ secrets.INARA_API_KEY }} \
+            --network ${{ env.NETWORK }} \
+            -e NODE_ENV=production \
+            -e ORIGIN=https://${{ env.DOMAIN }} \
             --restart unless-stopped \
-            --label "com.igfv.version=$VERSION" \
-            igfv:$VERSION
+            --label "traefik.enable=true" \
+            --label "traefik.http.routers.FH6.rule=Host(\`${{ env.DOMAIN }}\`)" \
+            --label "traefik.http.routers.FH6.entrypoints=tunnel" \
+            --label "traefik.http.services.FH6.loadbalancer.server.port=${{ env.APP_PORT }}" \
+            --label "traefik.http.routers.FH6.middlewares=secure-headers@file" \
+            --label "com.FH6.version=$VERSION" \
+            ${{ env.CONTAINER_NAME }}:$VERSION
 
-          echo "✅ Container replaced (downtime: ~2-5 seconds)"
+          echo "Container started (expected downtime: ~2-5 seconds)"
 
-      - name: Connect to proxy network
+      - name: Verify live container
+        timeout-minutes: 2
         run: |
-          echo "🔗 Connecting to proxy-network..."
-          docker network connect proxy-network ${{ env.CONTAINER_NAME }} 2>/dev/null || echo "Already connected"
-          echo "✅ Connected to proxy-network"
+          sleep 5
 
-      - name: Verify production deployment
-        timeout-minutes: 3
-        run: |
-          echo "🔍 Verifying production container..."
-
-          sleep 8
-
-          # Check container is running
-          if ! docker ps | grep -q ${{ env.CONTAINER_NAME }}; then
-            echo "❌ Container not running"
-            docker logs ${{ env.CONTAINER_NAME }} --tail 100
+          if ! docker ps --format '{{.Names}}' | grep -q "^${{ env.CONTAINER_NAME }}$"; then
+            echo "Container not running after swap"
+            docker logs ${{ env.CONTAINER_NAME }} --tail 100 2>/dev/null || true
             exit 1
           fi
 
-          echo "✅ Container is running"
+          for i in $(seq 1 6); do
+            if ! docker ps --format '{{.Names}}' | grep -q "^${{ env.CONTAINER_NAME }}$"; then
+              echo "Container crashed post-swap"
+              docker logs ${{ env.CONTAINER_NAME }} --tail 100 2>/dev/null || true
+              exit 1
+            fi
 
-          # Get container IP
-          CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ env.CONTAINER_NAME }})
-          echo "📍 Container IP: $CONTAINER_IP"
-
-          # Quick health check (already pre-validated)
-          for i in {1..10}; do
-            if curl -sf --max-time 10 http://$CONTAINER_IP:5002 > /dev/null; then
-              echo "✅ Production container healthy (attempt $i/10)"
-              
-              echo "📊 Server info:"
-              curl -sI http://$CONTAINER_IP:5002 | grep -E "(HTTP|X-Powered-By)" || true
-              
+            if docker exec ${{ env.CONTAINER_NAME }} \
+                wget -q --spider http://127.0.0.1:${{ env.APP_PORT }} 2>/dev/null; then
+              echo "Live container healthy"
               exit 0
             fi
-            echo "⏳ Waiting... ($i/10)"
-            sleep 6
+
+            echo "Waiting... ($i/6)"
+            sleep 5
           done
 
-          echo "⚠️ Production container slow to respond (but pre-validation passed)"
-          docker logs ${{ env.CONTAINER_NAME }} --tail 50
+          # Pre-validation already passed, so a slow start is a warning,
+          # not a hard failure -- but log it clearly.
+          echo "WARNING: live container slow to respond; pre-validation did pass"
 
-      - name: Test via NPM
-        continue-on-error: true
-        run: |
-          echo "🌐 Testing public access via NPM..."
-
-          if docker exec nginx-proxy-manager curl -sf http://igfv:5002 > /dev/null 2>&1; then
-            echo "✅ NPM can reach container"
-          else
-            echo "⚠️ NPM cannot reach container (check NPM proxy host config)"
-          fi
-
-      - name: Cleanup old images
-        if: success()
-        run: |
-          echo "🧹 Cleaning up old images..."
-
-          # Keep last 3 versions + candidate tag
-          docker images igfv --format "{{.ID}} {{.CreatedAt}}" | \
-            sort -rk 2 | tail -n +5 | awk '{print $1}' | \
-            xargs -r docker rmi -f 2>/dev/null || true
-
-          docker image prune -f
-          echo "✅ Cleanup complete"
-
+      # Rollback: restart the previous tagged image with full Traefik labels
+      # so the site is actually reachable after rollback, not just running.
+      # Must run BEFORE cleanup so the previous image is still available.
       - name: Emergency rollback
         if: failure()
         run: |
-          echo "🚨 DEPLOYMENT FAILED"
-
-          # If pre-validation failed, production was never touched
-          if docker ps | grep -q ${{ env.CONTAINER_NAME }}; then
-            echo "ℹ️ Production container still running (pre-validation failed)"
+          if [ "${{ steps.swap.outcome }}" != "success" ] && [ "${{ steps.swap.outcome }}" != "failure" ]; then
+            echo "Failure was pre-swap (build or validation) -- live container untouched, no rollback needed"
             exit 0
           fi
 
-          # If we got here, replacement happened but verification failed
-          echo "🔄 Attempting emergency rollback..."
+          echo "Post-swap failure detected -- attempting rollback..."
 
-          # Stop failed container
+          # Clean up the failed live container if it exists
           docker stop ${{ env.CONTAINER_NAME }} 2>/dev/null || true
-          docker rm ${{ env.CONTAINER_NAME }} 2>/dev/null || true
+          docker rm   ${{ env.CONTAINER_NAME }} 2>/dev/null || true
 
-          # Get previous image (second in list)
-          PREV_IMAGE=$(docker images igfv --format "{{.ID}}" | sed -n '2p')
+          # Also clean up any stale test container that may have been left
+          docker stop ${{ env.CONTAINER_NAME }}-test 2>/dev/null || true
+          docker rm   ${{ env.CONTAINER_NAME }}-test 2>/dev/null || true
 
-          if [ -n "$PREV_IMAGE" ]; then
-            echo "🔄 Starting previous version..."
-            
-            docker run -d \
-              --name ${{ env.CONTAINER_NAME }} \
-              --network ${{ env.APP_NETWORK }} \
-              -e INARA_API_KEY=${{ secrets.INARA_API_KEY }} \
-              --restart unless-stopped \
-              $PREV_IMAGE
-            
-            docker network connect proxy-network ${{ env.CONTAINER_NAME }} 2>/dev/null || true
-            
-            sleep 15
-            
-            if docker ps | grep -q ${{ env.CONTAINER_NAME }}; then
-              echo "✅ Rolled back to previous version"
-              
-              CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ env.CONTAINER_NAME }})
-              if curl -sf --max-time 10 http://$CONTAINER_IP:5002 > /dev/null; then
-                echo "✅ Rollback successful - site is responding"
-              fi
-            else
-              echo "❌ Rollback failed - manual intervention required"
-              docker logs ${{ env.CONTAINER_NAME }} --tail 50
-            fi
-          else
-            echo "❌ No previous image found for rollback"
-            echo "⚠️ Manual recovery needed"
+          # Find the second-most-recent tag (the one before this deployment)
+          PREV_TAG=$(docker images ${{ env.CONTAINER_NAME }} \
+            --format '{{.Tag}}' \
+            | sed -n '2p')
+
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous image found -- manual intervention required"
+            exit 1
           fi
 
-      - name: Deployment summary
+          echo "Rolling back to ${{ env.CONTAINER_NAME }}:$PREV_TAG ..."
+          docker run -d \
+            --name ${{ env.CONTAINER_NAME }} \
+            --network ${{ env.NETWORK }} \
+            -e NODE_ENV=production \
+            -e ORIGIN=https://${{ env.DOMAIN }} \
+            --restart unless-stopped \
+            --label "traefik.enable=true" \
+            --label "traefik.http.routers.FH6.rule=Host(\`${{ env.DOMAIN }}\`)" \
+            --label "traefik.http.routers.FH6.entrypoints=tunnel" \
+            --label "traefik.http.services.FH6.loadbalancer.server.port=${{ env.APP_PORT }}" \
+            --label "traefik.http.routers.FH6.middlewares=secure-headers@file" \
+            --label "com.FH6.version=$PREV_TAG" \
+            ${{ env.CONTAINER_NAME }}:$PREV_TAG
+
+          sleep 10
+
+          if docker ps --format '{{.Names}}' | grep -q "^${{ env.CONTAINER_NAME }}$"; then
+            echo "Rollback successful -- running $PREV_TAG"
+          else
+            echo "Rollback container also failed -- manual intervention required"
+            docker logs ${{ env.CONTAINER_NAME }} --tail 100 2>/dev/null || true
+            exit 1
+          fi
+
+      # Keep the 3 most recent images, prune the rest.
+      # Runs after rollback so the previous image is still available if needed.
+      - name: Cleanup old images
         if: always()
         run: |
-          STATUS="${{ job.status }}"
+          docker images ${{ env.CONTAINER_NAME }} \
+            --format '{{.Tag}}' \
+            | tail -n +4 \
+            | xargs -I{} docker rmi ${{ env.CONTAINER_NAME }}:{} 2>/dev/null || true
+          docker image prune -f
+          docker builder prune -f
 
+      - name: Summary
+        if: always()
+        run: |
           echo "========================================"
-          if [ "$STATUS" = "success" ]; then
-            echo "✅ NEXT.JS DEPLOYMENT SUCCESSFUL"
-            echo "========================================"
-            echo "🌐 Site: https://igfv.veka.gg"
-            echo "📦 Version: ${{ steps.version.outputs.VERSION }}"
-            echo "⚡ Framework: Next.js"
-            echo "⏱️ Downtime: ~2-5 seconds"
-            echo "🛡️ Pre-validated before swap"
-            echo "⏰ Deployed: $(date '+%Y-%m-%d %H:%M:%S')"
-            echo ""
-            echo "🔗 Access points:"
-            echo "  - Public: https://igfv.veka.gg"
-            echo "  - NPM: http://192.168.1.97 → igfv:5002"
-            echo "  - Direct: http://$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ env.CONTAINER_NAME }}):5002"
-            echo ""
-            echo "📊 Current status:"
-            docker ps --filter "name=igfv" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "DEPLOYMENT SUCCESSFUL"
+            echo "Version : ${{ steps.version.outputs.VERSION }}"
+            echo "URL     : https://${{ env.DOMAIN }}"
+            docker ps --filter "name=${{ env.CONTAINER_NAME }}" \
+              --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
           else
-            echo "❌ DEPLOYMENT FAILED"
-            echo "========================================"
-            echo "🛡️ Production protected by pre-validation"
-            echo ""
-            echo "📊 Current containers:"
-            docker ps -a --filter "name=igfv" --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
-            echo ""
-            echo "🔍 Troubleshooting:"
-            echo "  1. Check build logs above"
-            echo "  2. Review container logs: docker logs igfv"
-            echo "  3. Test container manually: docker logs igfv-test (if exists)"
-            echo "  4. Verify .next folder was created during build"
-            echo ""
-            echo "💡 If production is down, rollback was attempted automatically"
+            echo "DEPLOYMENT FAILED"
+            docker ps -a --filter "name=${{ env.CONTAINER_NAME }}"
           fi
           echo "========================================"
-
