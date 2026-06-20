@@ -1,60 +1,81 @@
 <script lang="ts">
-	import { RocketSolid, GamepadSolid, CodeSolid } from 'svelte-awesome-icons';
+	import { RocketSolid, SpaceShuttleSolid, BoltSolid } from 'svelte-awesome-icons';
 	import { resolve } from '$app/paths';
 
 	let {
-		title = 'Coming Soon',
-		message = 'This feature is currently in development...',
-		progress = 70,
-		progressLabel = 'Progress: 70% - Debugging final boss encounter'
-	} = $props();
+		featureName = 'Galactic Trade Ledger Sync',
+		whyItMatters = 'Automatically maps cargo loops and Tritium fuel depots directly from Inara and elite logs.',
+		alternativeRoute = '/fleet-carrier',
+		alternativeLabel = 'View Carrier Logistics',
+		completionEst = '3311-08-01 (Estimated)'
+	} = $props<{
+		featureName?: string;
+		whyItMatters?: string;
+		alternativeRoute?: string;
+		alternativeLabel?: string;
+		completionEst?: string;
+	}>();
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-dark-bg px-4">
-	<div class="flex max-w-lg flex-col items-center gap-8 text-center">
-		<!-- Animated Icons -->
+<div class="relative flex min-h-[calc(100vh-4rem)] items-center justify-center bg-dark-bg px-4 overflow-hidden">
+	<!-- Gradient glow background -->
+	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+
+	<div class="relative z-10 flex max-w-xl flex-col items-center gap-8 text-center rounded-xl border border-white/10 bg-[#000d22]/90 p-8 shadow-glow sm:p-12">
+		<!-- Operational Drydock Graphic -->
 		<div class="flex items-center gap-6">
-			<div class="animate-bob">
-				<RocketSolid class="h-10 w-10 text-primary-main" />
+			<div class="animate-bob text-primary-light">
+				<SpaceShuttleSolid class="h-10 w-10 rotate-90" />
 			</div>
-			<div class="animate-pulse-slow">
-				<GamepadSolid class="h-10 w-10 text-norway-blue" />
-			</div>
-			<div class="animate-bob animation-delay-500">
-				<CodeSolid class="h-10 w-10 text-orange-400" />
+			<span class="h-6 w-px bg-white/15"></span>
+			<div class="animate-pulse text-gray-500">
+				<RocketSolid class="h-8 w-8" />
 			</div>
 		</div>
 
-		<!-- Heading -->
-		<h1
-			class="bg-gradient-to-r from-orange-400 to-red-600 bg-clip-text text-4xl font-extrabold tracking-widest text-transparent uppercase sm:text-5xl"
-		>
-			{title}
-		</h1>
+		<!-- Status Label -->
+		<div>
+			<div class="mb-3 inline-flex items-center gap-1.5 rounded bg-primary-main/15 px-2.5 py-0.5 text-[10px] font-bold text-primary-light uppercase tracking-widest border border-primary-main/20">
+				System Status: Drydock Maintenance
+			</div>
+			<h1 class="text-3xl font-extrabold tracking-wider text-white uppercase sm:text-4xl">
+				{featureName} <span class="text-primary-main">Incoming</span>
+			</h1>
+		</div>
 
-		<!-- Message -->
-		<p class="max-w-md text-lg text-gray-400">{message}</p>
-
-		<!-- Progress Bar -->
-		<div class="w-full max-w-sm">
-			<div class="h-3 overflow-hidden rounded-full bg-dark-slate1">
-				<div
-					class="animate-progress h-full rounded-full bg-gradient-to-r from-primary-main to-orange-400"
-					style="--progress-target: {progress}%"
-				></div>
+		<!-- Explanations -->
+		<div class="space-y-4 text-xs sm:text-sm leading-relaxed text-gray-400 font-sans border-t border-b border-white/5 py-6">
+			<div>
+				<span class="text-[9px] uppercase font-bold text-primary-light font-mono block mb-1">Target Capability:</span>
+				<p class="text-gray-300">{whyItMatters}</p>
+			</div>
+			<div>
+				<span class="text-[9px] uppercase font-bold text-gray-500 font-mono block mb-1">Target Rollout Timeline:</span>
+				<p class="text-gray-300 font-mono">{completionEst}</p>
 			</div>
 		</div>
 
-		<!-- Progress Label -->
-		<p class="font-mono text-sm text-gray-500">{progressLabel}</p>
+		<!-- Recovery instructions -->
+		<div>
+			<p class="text-xs text-gray-500 mb-6 font-sans">
+				In the meantime, head back to active flight coordinates or read our logistics dashboards.
+			</p>
 
-		<!-- Return Link -->
-		<a
-			href={resolve('/')}
-			class="inline-flex items-center gap-2 rounded-md bg-primary-main px-6 py-3 text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light hover:shadow-glow-hover"
-		>
-			Return to Base
-		</a>
+			<div class="flex flex-col gap-3 sm:flex-row justify-center">
+				<a
+					href={resolve('/')}
+					class="inline-flex items-center justify-center gap-2 rounded bg-primary-main px-6 py-3 text-xs font-bold text-white uppercase tracking-wider hover:bg-primary-light"
+				>
+					Return to Base
+				</a>
+				<a
+					href={resolve(alternativeRoute)}
+					class="inline-flex items-center justify-center gap-2 rounded border border-white/10 bg-white/5 px-6 py-3 text-xs font-bold text-white uppercase tracking-wider hover:bg-white/10"
+				>
+					{alternativeLabel}
+				</a>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -65,44 +86,11 @@
 			transform: translateY(0);
 		}
 		50% {
-			transform: translateY(-10px);
-		}
-	}
-
-	@keyframes pulse-slow {
-		0%,
-		100% {
-			opacity: 1;
-			transform: scale(1);
-		}
-		50% {
-			opacity: 0.7;
-			transform: scale(1.1);
-		}
-	}
-
-	@keyframes progress-grow {
-		from {
-			width: 10%;
-		}
-		to {
-			width: var(--progress-target, 70%);
+			transform: translateY(-8px);
 		}
 	}
 
 	.animate-bob {
-		animation: bob 2s ease-in-out infinite;
-	}
-
-	.animate-pulse-slow {
-		animation: pulse-slow 2.5s ease-in-out infinite;
-	}
-
-	.animation-delay-500 {
-		animation-delay: 500ms;
-	}
-
-	.animate-progress {
-		animation: progress-grow 2.5s ease-out forwards;
+		animation: bob 2.5s ease-in-out infinite;
 	}
 </style>

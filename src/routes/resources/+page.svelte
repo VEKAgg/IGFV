@@ -11,355 +11,145 @@
 		FireSolid,
 		GlobeAmericasSolid,
 		ToolboxSolid,
-		QuestionCircleSolid
+		QuestionCircleSolid,
+		WrenchSolid
 	} from 'svelte-awesome-icons';
+	import { externalResources } from '$lib/data/resources';
+	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
+
+	// Filters
+	const newCommanderToolkit = externalResources.filter(r => r.isNewCommanderTool);
+
+	// Group remaining resources by category
+	const categories = [
+		'Required Tools',
+		'Recommended Tools',
+		'Squadron Workflow',
+		'Exploration',
+		'Trade & Mining',
+		'Research & Discovery'
+	];
+
+	function getResourcesByCategory(cat: string) {
+		return externalResources.filter(r => r.category === cat);
+	}
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20">
-	<div
-		class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"
-	></div>
-	<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
+	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
-				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-sm text-primary-light"
+				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-xs text-primary-light font-semibold uppercase tracking-wider"
 			>
-				<BookSolid class="h-4 w-4" />
-				<span>Resources & Guides</span>
+				<WrenchSolid class="h-4 w-4" />
+				<span>Galactic Toolkit</span>
 			</div>
-			<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-				Resources & <span class="text-primary-main">Guides</span>
+			<h1 class="text-4xl font-bold tracking-tight text-white uppercase sm:text-5xl lg:text-6xl">
+				Third-Party <span class="text-primary-main">Resources</span>
 			</h1>
-			<p class="mt-6 text-lg leading-relaxed text-gray-300">
-				A curated collection of learning resources, external tools, and helpful guides to enhance
-				your Elite Dangerous experience as part of IGFV.
+			<p class="mt-6 text-sm sm:text-base leading-relaxed text-gray-300">
+				Third-party tools are a critical part of the Elite Dangerous flight ecosystem. We have indexed and categorized the best tools to help you sync profiles, plan builds, and coordinate fleet logistics.
 			</p>
 		</div>
 	</div>
 </section>
 
-<!-- Learning Resources -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-	<div use:inview class="inview-hidden">
-		<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-			Learning <span class="text-primary-main">Resources</span>
+<!-- NEW COMMANDER TOOLKIT (Highlighted at the top!) -->
+<section class="mx-auto max-w-7xl px-4 py-12 sm:py-16">
+	<div use:inview class="inview-hidden mb-8 border-b border-white/5 pb-4">
+		<h2 class="text-2xl font-bold text-white uppercase tracking-wider">
+			New Commander <span class="text-primary-main">Toolkit</span>
 		</h2>
+		<p class="text-xs text-gray-400 mt-1">If you are new to the squadron, set up these three essential tools first to integrate with our network</p>
 	</div>
-	<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-		<div use:inview={{ delay: 100 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-				>
-					<CompassSolid class="h-5 w-5" />
+
+	<div class="grid gap-6 md:grid-cols-3">
+		{#each newCommanderToolkit as tool, i}
+			<div use:inview={{ delay: i * 100 }} class="inview-hidden">
+				<div class="bg-gradient-to-br from-primary-main/5 via-[#000d22]/95 to-primary-main/10 h-full rounded-xl border-2 border-primary-main/20 p-6 flex flex-col justify-between shadow-glow">
+					<div>
+						<div class="mb-4 flex items-center justify-between">
+							<span class="inline-flex rounded bg-primary-main/20 px-2.5 py-0.5 text-[10px] font-bold text-primary-light uppercase tracking-wider border border-primary-main/30">
+								Step {i + 1}
+							</span>
+							<span class="text-[10px] text-green-400 uppercase font-bold tracking-wide font-mono">Highly Critical</span>
+						</div>
+						<h3 class="text-lg font-bold text-white uppercase mb-2 tracking-wide">{tool.title}</h3>
+						<p class="text-xs text-gray-300 leading-relaxed mb-4">{tool.description}</p>
+						
+						<div class="border-t border-white/5 pt-3">
+							<span class="text-[10px] uppercase font-bold text-primary-light font-mono block mb-1">Squadron Utility:</span>
+							<p class="text-xs text-gray-400 leading-relaxed">{tool.squadronUtility}</p>
+						</div>
+					</div>
+
+					<a 
+						href={tool.url} 
+						target="_blank" 
+						rel="noopener noreferrer" 
+						class="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary-main px-4 py-2.5 text-xs font-bold text-white hover:bg-primary-light uppercase tracking-wider"
+					>
+						<span>Get Setup</span>
+						<ExternalLinkAltSolid class="size-3.5" />
+					</a>
 				</div>
-				<h3 class="mb-3 text-lg font-bold text-white">Exploration Guide</h3>
-				<ul class="space-y-2 text-sm text-gray-400">
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Recommended exploration
-						ship builds (Asp Explorer, Krait Phantom, Anaconda)
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Full Spectrum System
-						Scanner (FSS) and Detailed Surface Scanner (DSS) usage
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Neutron star and
-						white dwarf boosting techniques
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Exploration data
-						selling and first discovery bonuses
-					</li>
-				</ul>
 			</div>
-		</div>
-		<div use:inview={{ delay: 150 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-				>
-					<HammerSolid class="h-5 w-5" />
-				</div>
-				<h3 class="mb-3 text-lg font-bold text-white">BGS Operations Guide</h3>
-				<ul class="space-y-2 text-sm text-gray-400">
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Understanding the
-						Background Simulation and faction influence
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Influence mechanics:
-						trade, missions, exploration, and combat
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Conflict zone tactics
-						and war/retreat mechanics
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Using Inara and
-						EDDB to track faction influence
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div use:inview={{ delay: 200 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-				>
-					<ToolboxSolid class="h-5 w-5" />
-				</div>
-				<h3 class="mb-3 text-lg font-bold text-white">Engineering & Crafting</h3>
-				<ul class="space-y-2 text-sm text-gray-400">
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Engineer unlock
-						requirements and locations
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Material farming:
-						encoded, manufactured, and raw materials
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Ship optimization:
-						balancing speed, jump range, and combat capability
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Recommended loadouts
-						for different playstyles
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div use:inview={{ delay: 250 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-				>
-					<FireSolid class="h-5 w-5" />
-				</div>
-				<h3 class="mb-3 text-lg font-bold text-white">Trading & Mining</h3>
-				<ul class="space-y-2 text-sm text-gray-400">
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Profitable trade
-						route planning with Inara and EDDB
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Core mining vs.
-						laser mining: techniques and equipment
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Best mining locations
-						and current market prices
-					</li>
-					<li class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-primary-main" /> Fleet carrier trading:
-						buy low, sell high strategy
-					</li>
-				</ul>
-			</div>
+		{/each}
+	</div>
+</section>
+
+<!-- CATEGORIZED TOOLS (Solid panel listings) -->
+<section class="border-t border-white/5 bg-[#000814]/90 py-12 sm:py-16 px-4">
+	<div class="mx-auto max-w-7xl">
+		<h2 use:inview class="inview-hidden text-2xl font-bold text-white uppercase tracking-wider mb-12 text-center">
+			Galactic Database <span class="text-primary-main">& Utilities</span>
+		</h2>
+
+		<div class="space-y-16">
+			{#each categories as category}
+				{@const resources = getResourcesByCategory(category)}
+				{#if resources.length > 0}
+					<div use:inview class="inview-hidden">
+						<div class="mb-6 border-b border-white/5 pb-2">
+							<h3 class="text-base font-bold text-white uppercase tracking-widest">{category}</h3>
+						</div>
+						<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+							{#each resources as tool}
+								<div class="rounded-xl border border-white/10 bg-[#000d22]/90 p-6 flex flex-col justify-between hover:border-primary-main/20 transition-colors">
+									<div>
+										<h4 class="text-sm font-bold text-white uppercase mb-2 tracking-wide">{tool.title}</h4>
+										<p class="text-xs text-gray-400 leading-relaxed mb-4">{tool.description}</p>
+										
+										<div class="border-t border-white/5 pt-3">
+											<span class="text-[9px] uppercase font-bold text-gray-500 tracking-wider block mb-1">Squadron Context:</span>
+											<p class="text-xs text-gray-500 leading-relaxed font-sans">{tool.squadronUtility}</p>
+										</div>
+									</div>
+
+									<a 
+										href={tool.url} 
+										target="_blank" 
+										rel="noopener noreferrer" 
+										class="mt-6 inline-flex items-center justify-center gap-2 rounded border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-gray-300 hover:bg-white/10 hover:text-white"
+									>
+										<span>Access Tool</span>
+										<ExternalLinkAltSolid class="size-3" />
+									</a>
+								</div>
+							{/each}
+						</div>
+					</div>
+				{/if}
+			{/each}
 		</div>
 	</div>
 </section>
 
-<!-- External Tools & Databases -->
-<section
-	class="border-t border-primary-main/20 bg-gradient-to-b from-dark-bg via-primary-main/5 to-dark-bg"
->
-	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-		<div use:inview class="inview-hidden">
-			<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-				External Tools & <span class="text-primary-main">Databases</span>
-			</h2>
-		</div>
-		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-			<div use:inview={{ delay: 100 }} class="inview-hidden group">
-				<a
-					href="https://inara.cz"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="bg-dark/50 block h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-				>
-					<div
-						class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-					>
-						<GlobeAmericasSolid class="h-5 w-5" />
-					</div>
-					<h3 class="mb-2 text-lg font-bold text-white">Inara</h3>
-					<p class="text-sm text-gray-400">
-						The essential Elite Dangerous companion. Track squadron stats, find trade routes, check
-						commodity prices, and manage your CMDR profile.
-					</p>
-					<div class="mt-4 flex items-center gap-1 text-xs text-primary-light">
-						<span>Visit Inara</span>
-						<ExternalLinkAltSolid class="h-3 w-3" />
-					</div>
-				</a>
-			</div>
-			<div use:inview={{ delay: 150 }} class="inview-hidden group">
-				<a
-					href="https://eddb.io"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="bg-dark/50 block h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-				>
-					<div
-						class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-					>
-						<GlobeAmericasSolid class="h-5 w-5" />
-					</div>
-					<h3 class="mb-2 text-lg font-bold text-white">EDDB</h3>
-					<p class="text-sm text-gray-400">
-						The Elite Dangerous Database. Find stations, systems, commodities, and shipyard
-						information across the galaxy.
-					</p>
-					<div class="mt-4 flex items-center gap-1 text-xs text-primary-light">
-						<span>Visit EDDB</span>
-						<ExternalLinkAltSolid class="h-3 w-3" />
-					</div>
-				</a>
-			</div>
-			<div use:inview={{ delay: 200 }} class="inview-hidden group">
-				<a
-					href="https://edsy.page"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="bg-dark/50 block h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-				>
-					<div
-						class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-					>
-						<FireSolid class="h-5 w-5" />
-					</div>
-					<h3 class="mb-2 text-lg font-bold text-white">EDSY</h3>
-					<p class="text-sm text-gray-400">
-						Advanced ship outfitting and engineering planner. Design, optimize, and share ship
-						builds.
-					</p>
-					<div class="mt-4 flex items-center gap-1 text-xs text-primary-light">
-						<span>Visit EDSY</span>
-						<ExternalLinkAltSolid class="h-3 w-3" />
-					</div>
-				</a>
-			</div>
-			<div use:inview={{ delay: 250 }} class="inview-hidden group">
-				<a
-					href="https://canonn.science"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="bg-dark/50 block h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-				>
-					<div
-						class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-					>
-						<StarSolid class="h-5 w-5" />
-					</div>
-					<h3 class="mb-2 text-lg font-bold text-white">Canonn Research</h3>
-					<p class="text-sm text-gray-400">
-						Research network dedicated to uncovering the mysteries of the Elite Dangerous galaxy
-						through scientific investigation.
-					</p>
-					<div class="mt-4 flex items-center gap-1 text-xs text-primary-light">
-						<span>Visit Canonn</span>
-						<ExternalLinkAltSolid class="h-3 w-3" />
-					</div>
-				</a>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- Need Help? -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-	<div use:inview class="inview-hidden">
-		<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-			Need <span class="text-primary-main">Help</span>?
-		</h2>
-	</div>
-	<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-		<div use:inview={{ delay: 100 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-				>
-					<QuestionCircleSolid class="h-6 w-6" />
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Ask on Discord</h3>
-				<p class="text-sm text-gray-400">
-					Our community is always ready to help. Post your questions in the <span
-						class="font-medium text-primary-light">#help</span
-					> channel and you'll get answers quickly.
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 200 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-				>
-					<BookSolid class="h-6 w-6" />
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Read the Guides</h3>
-				<p class="text-sm text-gray-400">
-					Check our community guides section for in-depth tutorials on exploration, BGS,
-					engineering, and more.
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 300 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light"
-				>
-					<RocketSolid class="h-6 w-6" />
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">One-on-One Mentorship</h3>
-				<p class="text-sm text-gray-400">
-					New to the game? Request a mentor and get personalized guidance from experienced
-					commanders.
-				</p>
-			</div>
-		</div>
-	</div>
-	<div use:inview={{ delay: 200 }} class="inview-hidden mt-8">
-		<div class="rounded-lg border border-amber-500/30 bg-amber-500/5 p-6 backdrop-blur-sm">
-			<div class="flex items-start gap-3">
-				<StarSolid class="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-400" />
-				<div>
-					<h3 class="font-semibold text-white">Pro Tip</h3>
-					<p class="mt-1 text-sm text-gray-400">
-						Bookmark the <a
-							href="https://elite-dangerous.fandom.com/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-primary-light hover:underline">Elite Dangerous Wiki</a
-						>
-						and the
-						<a
-							href="https://forums.frontier.co.uk/"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-primary-light hover:underline">official forums</a
-						>—they're invaluable resources for both new and veteran commanders. Also, don't forget
-						to join the <span class="font-medium text-primary-light">#help</span> channel on our Discord
-						for real-time assistance.
-					</p>
-				</div>
-			</div>
-		</div>
+<!-- Onboarding Panel at the bottom -->
+<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+	<div class="mx-auto max-w-6xl">
+		<NewCommandersStart />
 	</div>
 </section>

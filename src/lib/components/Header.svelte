@@ -2,14 +2,20 @@
 	import { page } from '$app/stores';
 	import { BarsSolid, XmarkSolid } from 'svelte-awesome-icons';
 	import { resolve } from '$app/paths';
+	import DiscordLive from './DiscordLive.svelte';
 
 	let mobileOpen = $state(false);
 
 	const navLinks = [
 		{ href: resolve('/about'), label: 'About' },
+		{ href: resolve('/operations'), label: 'Operations' },
+		{ href: resolve('/fleet-carrier'), label: 'Carrier' },
+		{ href: resolve('/news'), label: 'News' },
+		{ href: resolve('/resources'), label: 'Resources' },
 		{ href: resolve('/guides'), label: 'Guides' },
 		{ href: resolve('/gallery'), label: 'Gallery' },
-		{ href: resolve('/partners'), label: 'Partners' }
+		{ href: resolve('/rules'), label: 'Rules' },
+		{ href: resolve('/join'), label: 'Join' }
 	];
 
 	function toggleMobile() {
@@ -31,11 +37,11 @@
 		</a>
 
 		<!-- Desktop Nav -->
-		<nav class="hidden items-center gap-8 md:flex">
+		<nav class="hidden items-center gap-4 lg:gap-6 md:flex">
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
-					class="relative text-sm font-medium tracking-wider text-gray-300 uppercase transition-colors hover:text-white"
+					class="relative text-xs lg:text-sm font-medium tracking-wider text-gray-300 uppercase transition-colors hover:text-white"
 					class:active-link={$page.url.pathname === link.href}
 				>
 					{link.label}
@@ -44,14 +50,7 @@
 					{/if}
 				</a>
 			{/each}
-			<a
-				href="https://discord.gg/igfv"
-				target="_blank"
-				rel="noopener noreferrer external"
-				class="rounded-md bg-primary-main px-4 py-2 text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light hover:shadow-glow-hover"
-			>
-				Discord
-			</a>
+			<DiscordLive showLabel={false} />
 		</nav>
 
 		<!-- Mobile Hamburger -->
@@ -82,15 +81,7 @@
 						{link.label}
 					</a>
 				{/each}
-				<a
-					href="https://discord.gg/igfv"
-					target="_blank"
-					rel="noopener noreferrer external"
-					class="mt-2 rounded-md bg-primary-main px-4 py-2 text-center text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light"
-					onclick={closeMobile}
-				>
-					Discord
-				</a>
+				<DiscordLive />
 			</nav>
 		</div>
 	{/if}

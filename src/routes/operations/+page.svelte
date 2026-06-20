@@ -7,385 +7,204 @@
 		UsersSolid,
 		CalendarAltSolid,
 		CompassSolid,
-		SpaceShuttleSolid
+		SpaceShuttleSolid,
+		ShieldAltSolid,
+		ExclamationTriangleSolid,
+		UserAstronautSolid
 	} from 'svelte-awesome-icons';
+	import { operations } from '$lib/data/operations';
+	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
+	import CurrentFocus from '$lib/components/UI/CurrentFocus.svelte';
+
+	// Filter tabs
+	let activeTab = $state<'active' | 'upcoming' | 'completed'>('active');
+
+	const enrichedOps = operations.map(op => {
+		let roles = 'All pilots';
+		let help = 'Join Discord and report to wing commander.';
+		let beginnerFriendly = true;
+		let tags: string[] = [];
+
+		if (op.id === 'op-001') {
+			roles = 'Explorers, Cartographers';
+			help = 'Equip a Detailed Surface Scanner (DSS) and map systems adjacent to Vulcan Nebula.';
+			beginnerFriendly = true;
+			tags = ['expedition', 'logistics', 'open-to-new-pilots'];
+		} else if (op.id === 'op-002') {
+			roles = 'Combat Pilots, Escorts';
+			help = 'Meet in LHS 3447 resource extraction sites and wing up to suppress pirate incursions.';
+			beginnerFriendly = true;
+			tags = ['combat', 'security', 'open-to-new-pilots'];
+		} else if (op.id === 'op-003') {
+			roles = 'Cargo Haulers, Logistics Crew';
+			help = 'Procure Tritium from nearby markets and deliver to ISS Valhall storage depot.';
+			beginnerFriendly = true;
+			tags = ['logistics', 'trade', 'open-to-new-pilots'];
+		} else if (op.id === 'op-004') {
+			roles = 'Long-Range Explorers';
+			help = 'Help establish safe path points and scan market rates along the transit connection stations.';
+			beginnerFriendly = false;
+			tags = ['expedition', 'navigation'];
+		} else if (op.id === 'op-005') {
+			roles = 'AX Combat Pilots, Engineers';
+			help = 'Warp to planetary outposts and engage Thargoid interceptors in defensive wings.';
+			beginnerFriendly = false;
+			tags = ['combat', 'anti-xeno', 'urgent'];
+		} else if (op.id === 'op-006') {
+			roles = 'All Active Pilots';
+			help = 'Scan and log high-value worlds within 1,000 light-years of the Bubble.';
+			beginnerFriendly = true;
+			tags = ['expedition', 'community-goal'];
+		}
+
+		return {
+			...op,
+			roles,
+			help,
+			beginnerFriendly,
+			tags
+		};
+	});
+
+	let filteredOps = $derived(enrichedOps.filter(op => op.status === activeTab));
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20">
-	<div
-		class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"
-	></div>
-	<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
+	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
-				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-sm text-primary-light"
+				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-xs text-primary-light font-semibold uppercase tracking-wider"
 			>
 				<RocketSolid class="h-4 w-4" />
-				<span>Operations Board</span>
+				<span>Mission Control Center</span>
 			</div>
-			<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-				Operations <span class="text-primary-main">Board</span>
+			<h1 class="text-4xl font-bold tracking-tight text-white uppercase sm:text-5xl lg:text-6xl">
+				Tactical <span class="text-primary-main">Mission</span> Board
 			</h1>
-			<p class="mt-6 text-lg leading-relaxed text-gray-300">
-				Track ongoing operations, upcoming fleet carrier jumps, and find opportunities to contribute
-				to squadron activities.
+			<p class="mt-6 text-sm sm:text-base leading-relaxed text-gray-300">
+				Monitor ongoing squadron operations, check logistics goals, and find active wing missions to contribute to the Goodfellas presence in the galaxy.
 			</p>
 		</div>
 	</div>
 </section>
 
-<!-- Active Operations -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-	<div use:inview class="inview-hidden">
-		<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-			Active <span class="text-primary-main">Operations</span>
-		</h2>
+<!-- Current Focus & Live status indicator -->
+<section class="mx-auto max-w-7xl px-4 py-8">
+	<div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-8">
+		<h2 class="text-xl font-bold text-white uppercase tracking-wider">Tactical Focus</h2>
+		<DataStatusPanel state="live" source="Squadron Registry API" />
 	</div>
-	<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-		<div use:inview={{ delay: 100 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-center justify-between">
-					<div
-						class="inline-block rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-400"
-					>
-						Active
-					</div>
-					<span class="flex items-center gap-1 text-xs text-gray-500"
-						><CalendarAltSolid class="h-3 w-3" /> Started Mar 1, 3311</span
-					>
-				</div>
-				<h3 class="mb-3 text-xl font-bold text-white">Colonia Expedition</h3>
-				<div class="mb-3">
-					<div class="flex items-center justify-between text-xs text-gray-400">
-						<span>Progress</span>
-						<span>65%</span>
-					</div>
-					<div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-dark-slate1">
-						<div
-							class="h-full w-[65%] rounded-full bg-primary-main transition-all duration-700"
-						></div>
-					</div>
-				</div>
-				<div class="space-y-1.5 text-sm text-gray-400">
-					<p class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-green-400" /> Chart course to Colonia
-					</p>
-					<p class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-green-400" /> 6/8 waypoints reached
-					</p>
-					<p class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-green-400" /> Exploration data collected
-					</p>
-					<p class="flex items-start gap-2">
-						<span
-							class="mt-0.5 inline-block h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-gray-500"
-						></span> Final approach to Colonia
-					</p>
-				</div>
-				<div class="mt-4 border-t border-primary-main/10 pt-3 text-xs text-gray-500">
-					<p class="flex items-center gap-1"><UsersSolid class="h-3 w-3" /> Commander: Don Samen</p>
-				</div>
-			</div>
-		</div>
-		<div use:inview={{ delay: 150 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-center justify-between">
-					<div
-						class="inline-block rounded-full bg-blue-500/10 px-3 py-0.5 text-xs font-medium text-blue-400"
-					>
-						Active
-					</div>
-					<span class="flex items-center gap-1 text-xs text-gray-500"
-						><CalendarAltSolid class="h-3 w-3" /> Started Mar 5, 3311</span
-					>
-				</div>
-				<h3 class="mb-3 text-xl font-bold text-white">HIP 12345 BGS Campaign</h3>
-				<div class="mb-3">
-					<div class="flex items-center justify-between text-xs text-gray-400">
-						<span>Progress</span>
-						<span>40%</span>
-					</div>
-					<div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-dark-slate1">
-						<div class="h-full w-[40%] rounded-full bg-blue-500 transition-all duration-700"></div>
-					</div>
-				</div>
-				<div class="space-y-1.5 text-sm text-gray-400">
-					<p class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-green-400" /> Initial influence established
-					</p>
-					<p class="flex items-start gap-2">
-						<span
-							class="mt-0.5 inline-block h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-gray-500"
-						></span> Run trade missions
-					</p>
-					<p class="flex items-start gap-2">
-						<span
-							class="mt-0.5 inline-block h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-gray-500"
-						></span> Complete exploration data
-					</p>
-					<p class="flex items-start gap-2">
-						<span
-							class="mt-0.5 inline-block h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-gray-500"
-						></span> Combat support if needed
-					</p>
-				</div>
-				<div class="mt-4 border-t border-primary-main/10 pt-3 text-xs text-gray-500">
-					<p class="flex items-center gap-1">
-						<UsersSolid class="h-3 w-3" /> Commander: Twisted VorteK
-					</p>
-				</div>
-			</div>
-		</div>
-		<div use:inview={{ delay: 200 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-center justify-between">
-					<div
-						class="inline-block rounded-full bg-amber-500/10 px-3 py-0.5 text-xs font-medium text-amber-400"
-					>
-						Planning
-					</div>
-					<span class="flex items-center gap-1 text-xs text-gray-500"
-						><CalendarAltSolid class="h-3 w-3" /> Planned for Apr 1</span
-					>
-				</div>
-				<h3 class="mb-3 text-xl font-bold text-white">Deep Space Mining Expedition</h3>
-				<div class="mb-3">
-					<div class="flex items-center justify-between text-xs text-gray-400">
-						<span>Progress</span>
-						<span>10%</span>
-					</div>
-					<div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-dark-slate1">
-						<div class="h-full w-[10%] rounded-full bg-amber-500 transition-all duration-700"></div>
-					</div>
-				</div>
-				<div class="space-y-1.5 text-sm text-gray-400">
-					<p class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-green-400" /> Scout potential mining
-						sites
-					</p>
-					<p class="flex items-start gap-2">
-						<span
-							class="mt-0.5 inline-block h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-gray-500"
-						></span> Organize mining wings
-					</p>
-					<p class="flex items-start gap-2">
-						<span
-							class="mt-0.5 inline-block h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-gray-500"
-						></span> Process and sell resources
-					</p>
-				</div>
-				<div class="mt-4 border-t border-primary-main/10 pt-3 text-xs text-gray-500">
-					<p class="flex items-center gap-1"><UsersSolid class="h-3 w-3" /> Commander: TBD</p>
-				</div>
-			</div>
-		</div>
-		<div use:inview={{ delay: 250 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-center justify-between">
-					<div
-						class="inline-block rounded-full bg-purple-500/10 px-3 py-0.5 text-xs font-medium text-purple-400"
-					>
-						Recruiting
-					</div>
-					<span class="flex items-center gap-1 text-xs text-gray-500"
-						><CalendarAltSolid class="h-3 w-3" /> Open</span
-					>
-				</div>
-				<h3 class="mb-3 text-xl font-bold text-white">Squadron Recruitment Drive</h3>
-				<div class="mb-3">
-					<div class="flex items-center justify-between text-xs text-gray-400">
-						<span>Progress</span>
-						<span>75%</span>
-					</div>
-					<div class="mt-1 h-2 w-full overflow-hidden rounded-full bg-dark-slate1">
-						<div
-							class="h-full w-[75%] rounded-full bg-purple-500 transition-all duration-700"
-						></div>
-					</div>
-				</div>
-				<div class="space-y-1.5 text-sm text-gray-400">
-					<p class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-green-400" /> Social media presence
-						established
-					</p>
-					<p class="flex items-start gap-2">
-						<CheckSolid class="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-green-400" /> Recruitment posts active
-					</p>
-					<p class="flex items-start gap-2">
-						<span
-							class="mt-0.5 inline-block h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-gray-500"
-						></span> Welcome new members
-					</p>
-				</div>
-				<div class="mt-4 border-t border-primary-main/10 pt-3 text-xs text-gray-500">
-					<p class="flex items-center gap-1">
-						<UsersSolid class="h-3 w-3" /> Commander: Twisted VorteK
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
+	<CurrentFocus />
 </section>
 
-<!-- Fleet Carrier Jump Schedule -->
-<section
-	class="border-t border-primary-main/20 bg-gradient-to-b from-dark-bg via-primary-main/5 to-dark-bg"
->
-	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-		<div use:inview class="inview-hidden">
-			<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-				Fleet Carrier Jump <span class="text-primary-main">Schedule</span>
-			</h2>
-		</div>
-		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-			<div use:inview={{ delay: 100 }} class="inview-hidden group">
-				<div
-					class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
+<!-- Mission board board view -->
+<section class="mx-auto max-w-7xl px-4 py-12 sm:py-16">
+	
+	<!-- Filter Tabs -->
+	<div class="mb-12 flex justify-center">
+		<div class="inline-flex rounded-lg border border-white/10 bg-[#000d22]/90 p-1">
+			{#each [
+				{ id: 'active', label: 'Active Missions' },
+				{ id: 'upcoming', label: 'Upcoming Plans' },
+				{ id: 'completed', label: 'Archived / Complete' }
+			] as tab}
+				<button
+					onclick={() => activeTab = tab.id as any}
+					class="rounded-md px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all {activeTab === tab.id 
+						? 'bg-primary-main text-white shadow-md' 
+						: 'text-gray-400 hover:text-white'}"
 				>
-					<div class="mb-3 flex items-center gap-2">
-						<SpaceShuttleSolid class="h-5 w-5 text-primary-main" />
-						<h3 class="font-bold text-white">Jump #1</h3>
-					</div>
-					<div class="space-y-2 text-sm text-gray-400">
-						<p class="flex items-center gap-2">
-							<CalendarAltSolid class="h-4 w-4 text-primary-main" /> March 20, 3311 — 14:00 IGT
-						</p>
-						<p class="flex items-center gap-2">
-							<CompassSolid class="h-4 w-4 text-primary-main" /> Destination: Colonia
-						</p>
-						<p class="flex items-center gap-2">
-							<RocketSolid class="h-4 w-4 text-primary-main" /> Distance: ~22,000 LY
-						</p>
-					</div>
-				</div>
-			</div>
-			<div use:inview={{ delay: 200 }} class="inview-hidden group">
-				<div
-					class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-				>
-					<div class="mb-3 flex items-center gap-2">
-						<SpaceShuttleSolid class="h-5 w-5 text-primary-main" />
-						<h3 class="font-bold text-white">Jump #2</h3>
-					</div>
-					<div class="space-y-2 text-sm text-gray-400">
-						<p class="flex items-center gap-2">
-							<CalendarAltSolid class="h-4 w-4 text-primary-main" /> April 5, 3311 — 10:00 IGT
-						</p>
-						<p class="flex items-center gap-2">
-							<CompassSolid class="h-4 w-4 text-primary-main" /> Destination: Sol (Return)
-						</p>
-						<p class="flex items-center gap-2">
-							<RocketSolid class="h-4 w-4 text-primary-main" /> Distance: Direct route
-						</p>
-					</div>
-				</div>
-			</div>
-			<div use:inview={{ delay: 300 }} class="inview-hidden group">
-				<div
-					class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-				>
-					<div class="mb-3 flex items-center gap-2">
-						<SpaceShuttleSolid class="h-5 w-5 text-primary-main" />
-						<h3 class="font-bold text-white">Jump #3</h3>
-					</div>
-					<div class="space-y-2 text-sm text-gray-400">
-						<p class="flex items-center gap-2">
-							<CalendarAltSolid class="h-4 w-4 text-primary-main" /> April 20, 3311 — 08:00 IGT
-						</p>
-						<p class="flex items-center gap-2">
-							<CompassSolid class="h-4 w-4 text-primary-main" /> Destination: HIP 12345
-						</p>
-						<p class="flex items-center gap-2">
-							<RocketSolid class="h-4 w-4 text-primary-main" /> Distance: ~150 LY
-						</p>
-					</div>
-				</div>
-			</div>
+					{tab.label}
+				</button>
+			{/each}
 		</div>
 	</div>
-</section>
 
-<!-- How to Participate -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-	<div use:inview class="inview-hidden">
-		<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-			How to <span class="text-primary-main">Participate</span>
-		</h2>
-	</div>
-	<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-		<div use:inview={{ delay: 100 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-main/20 text-xl font-bold text-primary-light"
-				>
-					1
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Check the Board</h3>
-				<p class="text-sm text-gray-400">
-					Browse active operations and find one that matches your playstyle and availability.
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 200 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-main/20 text-xl font-bold text-primary-light"
-				>
-					2
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Sign Up on Discord</h3>
-				<p class="text-sm text-gray-400">
-					Let the operation commander know you're interested in participating.
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 300 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-main/20 text-xl font-bold text-primary-light"
-				>
-					3
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Contribute & Earn</h3>
-				<p class="text-sm text-gray-400">
-					Complete objectives, earn squadron credits, and help IGFV grow stronger.
-				</p>
-			</div>
-		</div>
-	</div>
-</section>
+	<!-- Cards list -->
+	{#if filteredOps.length > 0}
+		<div class="grid gap-6 md:grid-cols-2">
+			{#each filteredOps as op, i}
+				<div use:inview={{ delay: i * 80 }} class="inview-hidden group">
+					<div class="bg-[#000d22]/95 h-full rounded-xl border border-white/10 p-6 shadow-glow transition-all duration-300 hover:border-primary-main/30 flex flex-col justify-between">
+						
+						<!-- Header -->
+						<div>
+							<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+								<div class="flex items-center gap-2">
+									<!-- Priority Badge -->
+									{#if op.priority === 'Urgent'}
+										<span class="inline-flex items-center gap-1 rounded-full bg-red-500/10 border border-red-500/20 px-2.5 py-0.5 text-[10px] font-bold text-red-400">
+											<ExclamationTriangleSolid class="size-2.5 animate-pulse" />
+											Urgent
+										</span>
+									{:else if op.priority === 'High'}
+										<span class="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-400">
+											High
+										</span>
+									{:else}
+										<span class="inline-flex items-center gap-1 rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-bold text-gray-400">
+											{op.priority}
+										</span>
+									{/if}
 
-<!-- Tip Banner -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-	<div use:inview class="inview-hidden">
-		<div class="rounded-lg border border-amber-500/30 bg-amber-500/5 p-6 backdrop-blur-sm">
-			<div class="flex items-start gap-3">
-				<StarSolid class="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-400" />
-				<div>
-					<h3 class="font-semibold text-white">Pro Tip</h3>
-					<p class="mt-1 text-sm text-gray-400">
-						New to operations? Start with a BGS campaign—they're beginner-friendly and a great way
-						to learn the ropes while contributing to the squadron. The <span
-							class="font-medium text-primary-light">#operations</span
-						> channel on Discord has all the details you need to get started.
-					</p>
+									<!-- Beginner Friendly indicator -->
+									{#if op.beginnerFriendly}
+										<span class="inline-flex items-center rounded bg-green-500/10 border border-green-500/20 px-2 py-0.5 text-[10px] font-bold text-green-400 uppercase tracking-wide">
+											New Pilots Welcome
+										</span>
+									{/if}
+								</div>
+
+								<span class="text-[10px] text-gray-500 font-mono">ID: {op.id}</span>
+							</div>
+
+							<h3 class="mb-2 text-xl font-bold text-white uppercase tracking-wide">{op.title}</h3>
+							<p class="text-xs text-gray-400 mb-4 leading-relaxed">{op.summary}</p>
+							
+							<!-- Progress bar for active -->
+							{#if op.status === 'active'}
+								<div class="mb-5">
+									<div class="flex items-center justify-between text-[11px] text-gray-500 mb-1">
+										<span>Campaign Progress</span>
+										<span>{op.progress}%</span>
+									</div>
+									<div class="h-1.5 w-full overflow-hidden rounded-full bg-white/5 border border-white/5">
+										<div class="h-full bg-primary-main rounded-full" style="width: {op.progress}%"></div>
+									</div>
+								</div>
+							{/if}
+
+							<!-- Detailed Specifications -->
+							<div class="space-y-3.5 border-t border-white/5 pt-4">
+								<div class="flex flex-col gap-1.5">
+									<span class="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Required Wing Roles</span>
+									<span class="text-xs font-semibold text-white">{op.roles}</span>
+								</div>
+								<div class="flex flex-col gap-1.5">
+									<span class="text-[10px] uppercase font-bold text-gray-500 tracking-wider">How to Contribute</span>
+									<span class="text-xs text-gray-300 leading-relaxed">{op.help}</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Footer info -->
+						<div class="mt-6 border-t border-white/5 pt-4 flex items-center justify-between text-xs text-gray-500">
+							<span class="flex items-center gap-1"><UserAstronautSolid class="size-3.5 text-primary-light" /> Operations Lead: {op.lead}</span>
+							<span class="font-mono">{op.eta}</span>
+						</div>
+
+					</div>
 				</div>
-			</div>
+			{/each}
 		</div>
-	</div>
+	{:else}
+		<div class="text-center rounded-xl border border-white/10 bg-[#000d22]/90 p-12">
+			<ExclamationTriangleSolid class="size-8 text-gray-500 mx-auto mb-3" />
+			<h3 class="text-lg font-bold text-white uppercase mb-1">No Missions Found</h3>
+			<p class="text-xs text-gray-400">All campaigns in this sector are currently resolved or idle.</p>
+		</div>
+	{/if}
+
 </section>

@@ -7,370 +7,202 @@
 		CheckSolid,
 		MapMarkerAltSolid,
 		StarSolid,
-		RocketSolid
+		RocketSolid,
+		BookOpenSolid,
+		ShieldAltSolid,
+		GlobeAmericasSolid
 	} from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
+	import { events } from '$lib/data/events';
+
+	// Grouping events
+	const weeklyEvents = events.filter(e => e.status === 'weekly');
+	const upcomingEvents = events.filter(e => e.status === 'upcoming');
+	const pastEvents = events.filter(e => e.status === 'past');
+
+	// Mapping how to prepare for weekly loops
+	const weeklyPreparation = {
+		'evt-001': {
+			purpose: 'Maxing pilot credits via cargo pooling runs.',
+			requirements: 'Cargo hauler (Type-9, Cutter, or Python). Clean ship.',
+			joinStep: 'Connect to "Trade Operations" voice channels in Discord.'
+		},
+		'evt-002': {
+			purpose: 'Classroom practice for cold orbiting and target coordination.',
+			requirements: 'Medium combat ship with AX weapons (Gauss/Enhanced Multicannons).',
+			joinStep: 'Meet in Combat Operations voice channels in Discord.'
+		}
+	} as Record<string, { purpose: string; requirements: string; joinStep: string }>;
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20">
-	<div
-		class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"
-	></div>
-	<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
+	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
-				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-sm text-primary-light"
+				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-xs text-primary-light font-semibold uppercase tracking-wider"
 			>
 				<CalendarAltSolid class="h-4 w-4" />
-				<span>Events & Calendar</span>
+				<span>Flight Deck Operations</span>
 			</div>
-			<h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+			<h1 class="text-4xl font-bold tracking-tight text-white uppercase sm:text-5xl lg:text-6xl">
 				Squadron <span class="text-primary-main">Events</span>
 			</h1>
-			<p class="mt-6 text-lg leading-relaxed text-gray-300">
-				Stay up-to-date with upcoming squadron activities, expeditions, and community gatherings.
-				All times are in-game time (IGT).
+			<p class="mt-6 text-sm sm:text-base leading-relaxed text-gray-300">
+				Coordinate flight loops with wing members. View weekly recurring schedules, upcoming expeditions, and past operational milestones.
 			</p>
 		</div>
 	</div>
 </section>
 
-<!-- Upcoming Events -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-	<div use:inview class="inview-hidden">
-		<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-			Upcoming <span class="text-primary-main">Events</span>
+<!-- WEEKLY RHYTHM SECTION -->
+<section class="mx-auto max-w-7xl px-4 py-12 sm:py-16">
+	<div use:inview class="inview-hidden mb-12 border-b border-white/5 pb-4">
+		<h2 class="text-2xl font-bold text-white uppercase tracking-wider">
+			Weekly <span class="text-primary-main">Rhythm</span>
 		</h2>
+		<p class="text-xs text-gray-400 mt-1">Our recurring gameplay loops. Predictable schedules designed for easy entry</p>
 	</div>
-	<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-		<div use:inview={{ delay: 100 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-start justify-between">
-					<div
-						class="inline-block rounded-full bg-green-500/10 px-3 py-0.5 text-xs font-medium text-green-400"
-					>
-						Expedition
-					</div>
-					<div class="flex items-center gap-1 text-xs text-gray-500">
-						<ClockSolid class="h-3 w-3" />
-						<span>In progress</span>
+
+	<div class="grid gap-6 md:grid-cols-2">
+		{#each weeklyEvents as event, i}
+			{@const prep = weeklyPreparation[event.id]}
+			<div use:inview={{ delay: i * 100 }} class="inview-hidden">
+				<div class="bg-[#000d22]/95 h-full rounded-xl border border-white/10 p-6 shadow-glow flex flex-col justify-between hover:border-primary-main/20 transition-colors">
+					<div>
+						<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+							<span class="inline-flex rounded-full bg-primary-main/20 px-2.5 py-0.5 text-[9px] font-bold text-primary-light uppercase tracking-widest border border-primary-main/30">
+								{event.eventType}
+							</span>
+							<span class="inline-flex items-center gap-1 rounded bg-green-500/10 px-2 py-0.5 text-[9px] font-bold text-green-400 border border-green-500/20 uppercase tracking-wide">
+								{event.difficulty}
+							</span>
+						</div>
+
+						<h3 class="text-lg font-bold text-white uppercase mb-2 tracking-wide">{event.title}</h3>
+						<span class="text-xs text-primary-light font-semibold block mb-4">{event.date}</span>
+						<p class="text-xs text-gray-400 leading-relaxed mb-6">{event.description}</p>
+						
+						{#if prep}
+							<div class="space-y-3.5 border-t border-white/5 pt-4 text-xs">
+								<div>
+									<span class="text-[9px] uppercase font-bold text-gray-500 tracking-wider block mb-0.5">Campaign Purpose:</span>
+									<p class="text-gray-300 leading-relaxed">{prep.purpose}</p>
+								</div>
+								<div>
+									<span class="text-[9px] uppercase font-bold text-gray-500 tracking-wider block mb-0.5">Preparation & Fitting:</span>
+									<p class="text-gray-300 leading-relaxed font-sans">{prep.requirements}</p>
+								</div>
+								<div>
+									<span class="text-[9px] uppercase font-bold text-gray-500 tracking-wider block mb-0.5">How to Join:</span>
+									<p class="text-xs text-gray-400 font-sans leading-relaxed">{prep.joinStep}</p>
+								</div>
+							</div>
+						{/if}
 					</div>
 				</div>
-				<h3 class="text-xl font-bold text-white">Deep Space Expedition: Colonia Run</h3>
-				<div class="mt-3 space-y-2 text-sm text-gray-400">
-					<div class="flex items-center gap-2">
-						<CalendarAltSolid class="h-4 w-4 text-primary-main" />
-						<span>Starts: March 15, 3311</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<ClockSolid class="h-4 w-4 text-primary-main" />
-						<span>Duration: 2 weeks</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<UsersSolid class="h-4 w-4 text-primary-main" />
-						<span>8 participants confirmed</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<MapMarkerAltSolid class="h-4 w-4 text-primary-main" />
-						<span>Departure: ISS Valhall (VXX-RHJ)</span>
-					</div>
-				</div>
-				<p class="mt-4 text-sm text-gray-400">
-					A squadron expedition to Colonia via fleet carrier, with stops at notable waypoints along
-					the way. Join us for exploration, sightseeing, and camaraderie.
-				</p>
 			</div>
-		</div>
-		<div use:inview={{ delay: 200 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-start justify-between">
-					<div
-						class="inline-block rounded-full bg-blue-500/10 px-3 py-0.5 text-xs font-medium text-blue-400"
-					>
-						Operation
-					</div>
-					<div class="flex items-center gap-1 text-xs text-gray-500">
-						<ClockSolid class="h-3 w-3" />
-						<span>Coming soon</span>
-					</div>
-				</div>
-				<h3 class="text-xl font-bold text-white">BGS Influence Campaign: HIP 12345</h3>
-				<div class="mt-3 space-y-2 text-sm text-gray-400">
-					<div class="flex items-center gap-2">
-						<CalendarAltSolid class="h-4 w-4 text-primary-main" />
-						<span>Starts: April 1, 3311</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<ClockSolid class="h-4 w-4 text-primary-main" />
-						<span>Duration: 1 week</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<UsersSolid class="h-4 w-4 text-primary-main" />
-						<span>5 participants confirmed</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<MapMarkerAltSolid class="h-4 w-4 text-primary-main" />
-						<span>HIP 12345 system</span>
-					</div>
-				</div>
-				<p class="mt-4 text-sm text-gray-400">
-					Week-long BGS campaign to increase our minor faction's influence in the HIP 12345 system.
-					Various activities including trade, missions, and exploration.
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 300 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-start justify-between">
-					<div
-						class="inline-block rounded-full bg-purple-500/10 px-3 py-0.5 text-xs font-medium text-purple-400"
-					>
-						Community
-					</div>
-					<div class="flex items-center gap-1 text-xs text-gray-500">
-						<ClockSolid class="h-3 w-3" />
-						<span>Coming soon</span>
-					</div>
-				</div>
-				<h3 class="text-xl font-bold text-white">Squadron Movie & Chill Night</h3>
-				<div class="mt-3 space-y-2 text-sm text-gray-400">
-					<div class="flex items-center gap-2">
-						<CalendarAltSolid class="h-4 w-4 text-primary-main" />
-						<span>April 15, 3311</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<ClockSolid class="h-4 w-4 text-primary-main" />
-						<span>20:00 IGT</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<UsersSolid class="h-4 w-4 text-primary-main" />
-						<span>Open to all members</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<MapMarkerAltSolid class="h-4 w-4 text-primary-main" />
-						<span>Discord Voice Chat</span>
-					</div>
-				</div>
-				<p class="mt-4 text-sm text-gray-400">
-					A relaxed community evening where we watch space-themed movies together on Discord. Grab
-					your popcorn and join the fun!
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 400 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div class="mb-4 flex items-start justify-between">
-					<div
-						class="inline-block rounded-full bg-amber-500/10 px-3 py-0.5 text-xs font-medium text-amber-400"
-					>
-						Training
-					</div>
-					<div class="flex items-center gap-1 text-xs text-gray-500">
-						<ClockSolid class="h-3 w-3" />
-						<span>Coming soon</span>
-					</div>
-				</div>
-				<h3 class="text-xl font-bold text-white">New Commander Orientation</h3>
-				<div class="mt-3 space-y-2 text-sm text-gray-400">
-					<div class="flex items-center gap-2">
-						<CalendarAltSolid class="h-4 w-4 text-primary-main" />
-						<span>May 1, 3311</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<ClockSolid class="h-4 w-4 text-primary-main" />
-						<span>18:00 IGT</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<UsersSolid class="h-4 w-4 text-primary-main" />
-						<span>New members welcome</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<MapMarkerAltSolid class="h-4 w-4 text-primary-main" />
-						<span>ISS Valhall</span>
-					</div>
-				</div>
-				<p class="mt-4 text-sm text-gray-400">
-					A beginner-friendly orientation session for new and aspiring commanders. Learn the basics,
-					ask questions, and meet your fellow squadron members.
-				</p>
-			</div>
-		</div>
+		{/each}
 	</div>
 </section>
 
-<!-- Event Guidelines -->
-<section
-	class="border-t border-primary-main/20 bg-gradient-to-b from-dark-bg via-primary-main/5 to-dark-bg"
->
-	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-		<div use:inview class="inview-hidden">
-			<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-				Event <span class="text-primary-main">Guidelines</span>
-			</h2>
-		</div>
-		<div class="mx-auto max-w-3xl space-y-4">
-			<div
-				use:inview={{ delay: 100 }}
-				class="inview-hidden bg-dark/50 flex items-start gap-3 rounded-lg border border-primary-main/20 p-4 backdrop-blur-sm"
-			>
-				<CheckSolid class="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
-				<div>
-					<h4 class="font-medium text-white">RSVP in Advance</h4>
-					<p class="text-sm text-gray-400">
-						Please confirm your participation in Discord so organizers can plan accordingly.
-					</p>
-				</div>
-			</div>
-			<div
-				use:inview={{ delay: 150 }}
-				class="inview-hidden bg-dark/50 flex items-start gap-3 rounded-lg border border-primary-main/20 p-4 backdrop-blur-sm"
-			>
-				<CheckSolid class="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
-				<div>
-					<h4 class="font-medium text-white">Be on Time</h4>
-					<p class="text-sm text-gray-400">
-						Arrive at the designated meeting point before the scheduled start time.
-					</p>
-				</div>
-			</div>
-			<div
-				use:inview={{ delay: 200 }}
-				class="inview-hidden bg-dark/50 flex items-start gap-3 rounded-lg border border-primary-main/20 p-4 backdrop-blur-sm"
-			>
-				<CheckSolid class="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
-				<div>
-					<h4 class="font-medium text-white">Follow the Leader</h4>
-					<p class="text-sm text-gray-400">
-						During organized events, follow the instructions of the event coordinator.
-					</p>
-				</div>
-			</div>
-			<div
-				use:inview={{ delay: 250 }}
-				class="inview-hidden bg-dark/50 flex items-start gap-3 rounded-lg border border-primary-main/20 p-4 backdrop-blur-sm"
-			>
-				<CheckSolid class="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
-				<div>
-					<h4 class="font-medium text-white">Use Discord Voice</h4>
-					<p class="text-sm text-gray-400">
-						Join the appropriate voice channel during events for better coordination.
-					</p>
-				</div>
-			</div>
-			<div
-				use:inview={{ delay: 300 }}
-				class="inview-hidden bg-dark/50 flex items-start gap-3 rounded-lg border border-primary-main/20 p-4 backdrop-blur-sm"
-			>
-				<CheckSolid class="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
-				<div>
-					<h4 class="font-medium text-white">Have Fun</h4>
-					<p class="text-sm text-gray-400">
-						Events are about enjoying the game together. Help others and make it a great experience
-						for everyone.
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- How to Join -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-	<div use:inview class="inview-hidden">
-		<h2 class="mb-12 text-center text-3xl font-bold text-white sm:text-4xl">
-			How to <span class="text-primary-main">Join</span>
+<!-- UPCOMING SPECIAL EVENTS (Solid panels list) -->
+<section class="border-t border-white/5 bg-[#000814]/90 py-12 sm:py-16 px-4">
+	<div class="mx-auto max-w-7xl">
+		<h2 use:inview class="inview-hidden text-2xl font-bold text-white uppercase tracking-wider mb-12 text-center">
+			Upcoming Campaigns <span class="text-primary-main">& Expeditions</span>
 		</h2>
-	</div>
-	<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-		<div use:inview={{ delay: 100 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-main/20 text-xl font-bold text-primary-light"
-				>
-					1
+
+		<div class="grid gap-6 md:grid-cols-2">
+			{#each upcomingEvents as event, i}
+				<div use:inview={{ delay: i * 100 }} class="inview-hidden">
+					<div class="rounded-xl border border-white/10 bg-[#000d22]/90 p-6 flex flex-col justify-between hover:border-primary-main/20 transition-colors">
+						<div>
+							<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+								<span class="inline-flex rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[9px] font-bold text-gray-400 uppercase tracking-wide">
+									{event.eventType}
+								</span>
+								<span class="inline-flex items-center gap-1 rounded bg-green-500/10 px-2 py-0.5 text-[9px] font-bold text-green-400 border border-green-500/20 uppercase tracking-wide">
+									{event.difficulty}
+								</span>
+							</div>
+
+							<h3 class="text-base font-bold text-white uppercase tracking-wide mb-1">{event.title}</h3>
+							<span class="text-xs text-primary-light font-mono block mb-4">{event.date}</span>
+							<p class="text-xs text-gray-400 leading-relaxed mb-6">{event.description}</p>
+
+							<div class="border-t border-white/5 pt-4 text-xs space-y-2.5 text-gray-400">
+								<div class="flex items-center justify-between">
+									<span class="text-gray-500">Scheduled Duration</span>
+									<span class="font-bold text-white">{event.duration}</span>
+								</div>
+								<div class="flex items-center justify-between">
+									<span class="text-gray-500">Landing Location</span>
+									<span class="font-medium text-white">{event.participationRoute.includes('carrier') ? 'ISS Valhall Hangar' : 'Sector Wing'}</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="mt-6 border-t border-white/5 pt-4 flex flex-col gap-2">
+							<span class="text-[9px] uppercase font-bold text-primary-light font-mono block">Action Checklist:</span>
+							<p class="text-xs text-gray-400 font-sans leading-relaxed">{event.participationRoute}</p>
+						</div>
+					</div>
 				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Check the Calendar</h3>
-				<p class="text-sm text-gray-400">
-					Browse our upcoming events and find one that interests you.
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 200 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-main/20 text-xl font-bold text-primary-light"
-				>
-					2
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">RSVP on Discord</h3>
-				<p class="text-sm text-gray-400">Let us know you're coming in the events channel.</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 300 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-main/20 text-xl font-bold text-primary-light"
-				>
-					3
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Prepare Your Ship</h3>
-				<p class="text-sm text-gray-400">
-					Make sure your ship is ready for the event's activities.
-				</p>
-			</div>
-		</div>
-		<div use:inview={{ delay: 400 }} class="inview-hidden group">
-			<div
-				class="bg-dark/50 h-full rounded-lg border border-primary-main/30 p-6 text-center shadow-glow backdrop-blur-sm transition-all duration-300 hover:border-primary-main/50 hover:shadow-glow-hover"
-			>
-				<div
-					class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-main/20 text-xl font-bold text-primary-light"
-				>
-					4
-				</div>
-				<h3 class="mb-2 text-lg font-bold text-white">Show Up & Have Fun</h3>
-				<p class="text-sm text-gray-400">Join the voice channel at event time and enjoy!</p>
-			</div>
+			{/each}
 		</div>
 	</div>
 </section>
 
-<!-- Info Banner -->
-<section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+<!-- PAST MILESTONES (Group list) -->
+<section class="border-t border-white/5 bg-[#000814]/50 py-12 sm:py-16 px-4">
+	<div class="mx-auto max-w-5xl">
+		<h2 use:inview class="inview-hidden text-2xl font-bold text-white uppercase tracking-wider mb-12 text-center">
+			Past <span class="text-primary-main">Milestones</span>
+		</h2>
+
+		<div class="space-y-4">
+			{#each pastEvents as event}
+				<div class="rounded-xl border border-white/5 bg-[#000814]/70 p-5 flex items-start gap-4">
+					<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-primary-main/10 text-primary-light">
+						<StarSolid class="size-5" />
+					</div>
+					<div class="flex-1 min-w-0">
+						<div class="flex items-center justify-between text-xs mb-1">
+							<span class="inline-flex rounded-full bg-white/5 border border-white/5 px-2 py-0.5 text-[9px] font-bold text-gray-400 uppercase tracking-wide">{event.eventType}</span>
+							<span class="text-[10px] text-gray-500 font-mono">{event.date.replace('Completed ', '')}</span>
+						</div>
+						<h4 class="text-xs font-bold text-white uppercase tracking-wide truncate">{event.title}</h4>
+						<p class="text-xs text-gray-400 mt-1 leading-relaxed">{event.description}</p>
+					</div>
+				</div>
+			{/each}
+		</div>
+	</div>
+</section>
+
+<!-- Guidelines Info Banner -->
+<section class="mx-auto max-w-4xl px-4 py-16 sm:py-24">
 	<div use:inview class="inview-hidden">
-		<div
-			class="rounded-lg border border-blue-500/30 bg-blue-500/5 p-6 text-center backdrop-blur-sm"
-		>
-			<StarSolid class="mx-auto mb-3 h-8 w-8 text-blue-400" />
-			<h3 class="text-xl font-bold text-white">Stay Updated on Discord</h3>
-			<p class="mt-2 text-sm text-gray-400">
-				All event announcements, changes, and reminders are posted in our Discord <span
-					class="font-medium text-blue-400">#events</span
-				> channel. Make sure to check it regularly!
+		<div class="rounded-xl border border-white/10 bg-[#000d22]/95 p-8 text-center shadow-glow">
+			<CalendarAltSolid class="mx-auto mb-4 h-8 w-8 text-primary-light" />
+			<h3 class="text-xl font-bold text-white uppercase tracking-wide">RSVP on Discord</h3>
+			<p class="mt-2 text-xs leading-relaxed text-gray-400 max-w-xl mx-auto">
+				Wing coordination, carrier refueling jumps, and expedition schedules are posted and updated in our Discord #events channels. Prepare your flight setup and meet the wings!
 			</p>
-			<a
-				href="https://discord.gg/igfv"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary-main px-6 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-primary-light hover:shadow-glow-hover"
-			>
-				<RocketSolid class="h-4 w-4" />
-				Join Our Discord
-			</a>
+			
+			<div class="mt-6 flex flex-wrap justify-center gap-4">
+				<a 
+					href="https://discord.gg/igfv"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-2 rounded bg-primary-main px-6 py-3 text-xs font-bold text-white uppercase tracking-wider hover:bg-primary-light"
+				>
+					<RocketSolid class="size-4" />
+					Join Comms Network
+				</a>
+			</div>
 		</div>
 	</div>
 </section>
