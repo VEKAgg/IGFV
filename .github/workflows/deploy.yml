@@ -115,7 +115,9 @@ jobs:
             --restart unless-stopped \
             --label "traefik.enable=true" \
             --label "traefik.http.routers.igfv.rule=Host(\`${{ env.DOMAIN }}\`)" \
-            --label "traefik.http.routers.igfv.entrypoints=tunnel" \
+            --label "traefik.http.routers.igfv.entrypoints=websecure" \
+            --label "traefik.http.routers.igfv.tls=true" \
+            --label "traefik.http.routers.igfv.tls.certresolver=letsencrypt" \
             --label "traefik.http.services.igfv.loadbalancer.server.port=${{ env.APP_PORT }}" \
             --label "traefik.http.routers.igfv.middlewares=secure-headers@file" \
             --label "com.igfv.version=$VERSION" \
@@ -195,7 +197,9 @@ jobs:
             --restart unless-stopped \
             --label "traefik.enable=true" \
             --label "traefik.http.routers.igfv.rule=Host(\`${{ env.DOMAIN }}\`)" \
-            --label "traefik.http.routers.igfv.entrypoints=tunnel" \
+            --label "traefik.http.routers.igfv.entrypoints=websecure" \
+            --label "traefik.http.routers.igfv.tls=true" \
+            --label "traefik.http.routers.igfv.tls.certresolver=letsencrypt" \
             --label "traefik.http.services.igfv.loadbalancer.server.port=${{ env.APP_PORT }}" \
             --label "traefik.http.routers.igfv.middlewares=secure-headers@file" \
             --label "com.igfv.version=$PREV_TAG" \
