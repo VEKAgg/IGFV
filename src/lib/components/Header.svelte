@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { BarsSolid, XmarkSolid } from 'svelte-awesome-icons';
 	import { resolve } from '$app/paths';
+	import DiscordLive from './DiscordLive.svelte';
 
 	let mobileOpen = $state(false);
 
@@ -44,14 +45,7 @@
 					{/if}
 				</a>
 			{/each}
-			<a
-				href="https://discord.gg/igfv"
-				target="_blank"
-				rel="noopener noreferrer external"
-				class="rounded-md bg-primary-main px-4 py-2 text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light hover:shadow-glow-hover"
-			>
-				Discord
-			</a>
+			<DiscordLive showLabel={false} />
 		</nav>
 
 		<!-- Mobile Hamburger -->
@@ -82,15 +76,7 @@
 						{link.label}
 					</a>
 				{/each}
-				<a
-					href="https://discord.gg/igfv"
-					target="_blank"
-					rel="noopener noreferrer external"
-					class="mt-2 rounded-md bg-primary-main px-4 py-2 text-center text-sm font-bold tracking-wider text-white uppercase transition-all hover:bg-primary-light"
-					onclick={closeMobile}
-				>
-					Discord
-				</a>
+				<DiscordLive />
 			</nav>
 		</div>
 	{/if}
