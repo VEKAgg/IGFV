@@ -1,11 +1,43 @@
 import type { GuideEntry } from '$lib/types';
 
-export const guides: GuideEntry[] = [
+export interface ExtendedGuideEntry extends GuideEntry {
+	difficulty: 'Beginner' | 'Intermediate' | 'Squadron-Specific';
+	isStartHere?: boolean;
+}
+
+export const guides: ExtendedGuideEntry[] = [
+	{
+		slug: 'road-to-riches-exploration',
+		title: 'Road to Riches: Fast-track Exploration Guide',
+		category: 'Exploration',
+		publishedAt: '3311-05-18',
+		difficulty: 'Beginner',
+		isStartHere: true,
+		excerpt: 'A step-by-step route mapping highly valuable Earth-like and Water worlds close to the Bubble for quick exploration credits.',
+		content: 'New pilots can quickly earn tens of millions of credits and unlock their first exploration ranks by scanning known high-value planets near the starting systems. This guide explains the "Road to Riches" technique.',
+		steps: [
+			{
+				title: 'Required Outfitting',
+				text: 'You need a ship with a decent jump range (25ly+ is fine; a Hauler or Diamondback Explorer are great cheap options), a Fuel Scoop, and a Detailed Surface Scanner.'
+			},
+			{
+				title: 'Plotting the Route',
+				text: 'Use the Spansh Road to Riches plotter. Input your current location, jump range, and target destination. It will generate a list of systems containing terraformable high-value worlds.'
+			},
+			{
+				title: 'Scanning Protocol',
+				text: 'Upon jumping into each system, fire your Discovery Scanner ("Honk"). Navigate to the specified planets and fire DSS probes until you achieve 100% surface mapping coverage.'
+			}
+		],
+		dataState: 'live'
+	},
 	{
 		slug: 'mining-for-beginners',
 		title: 'Subsurface and Core Mining Guide',
 		category: 'Mining',
 		publishedAt: '3311-04-12',
+		difficulty: 'Beginner',
+		isStartHere: false,
 		excerpt: 'Learn the difference between laser, subsurface, and core mining, and how to outfit your ship for maximum credit yields.',
 		content: 'Mining is one of the most lucrative careers in the galaxy. This guide will walk you through the essential equipment and techniques needed to find and extract high-value minerals like Void Opals, Low Temperature Diamonds, and Platinum.',
 		steps: [
@@ -29,6 +61,8 @@ export const guides: GuideEntry[] = [
 		title: 'Introduction to the Background Simulation (BGS)',
 		category: 'Background Simulation',
 		publishedAt: '3311-05-02',
+		difficulty: 'Intermediate',
+		isStartHere: false,
 		excerpt: 'Understand how player actions affect minor factions, system control, security status, and how to support IGFV political interests.',
 		content: 'The Background Simulation (BGS) is the living engine behind Elite Dangerous. Every mission completed, every tonne of cargo traded, and every bounty turned in influences the balance of power in the system.',
 		steps: [
@@ -48,29 +82,32 @@ export const guides: GuideEntry[] = [
 		dataState: 'live'
 	},
 	{
-		slug: 'road-to-riches-exploration',
-		title: 'Road to Riches: Fast-track Exploration Guide',
-		category: 'Exploration',
-		publishedAt: '3311-05-18',
-		excerpt: 'A step-by-step route mapping highly valuable Earth-like and Water worlds close to the Bubble for quick exploration credits.',
-		content: 'New pilots can quickly earn tens of millions of credits and unlock their first exploration ranks by scanning known high-value planets near the starting systems. This guide explains the "Road to Riches" technique.',
+		slug: 'squadron-workflow-carrier-guide',
+		title: 'ISS Valhall Operations & Carrier Logistics Guide',
+		category: 'Squadron Logistics',
+		publishedAt: '3311-06-01',
+		difficulty: 'Squadron-Specific',
+		isStartHere: false,
+		excerpt: 'A comprehensive onboarding guide explaining carrier parking rules, Tritium loading/unloading logistics, and Inara sync requirements.',
+		content: 'To keep our squadron operations running smoothly, we coordinate carrier jumps, trade loading loops, and expedition rosters. This guide explains how to properly park and support our operational base.',
 		steps: [
 			{
-				title: 'Required Outfitting',
-				text: 'You need a ship with a decent jump range (25ly+ is fine; a Hauler or Diamondback Explorer are great cheap options), a Fuel Scoop, and a Detailed Surface Scanner.'
+				title: 'Docking & Roster Registration',
+				text: 'Always make sure you have applied to join our squadron on Inara and synced your commander logs via EDMC. Dock your exploration and mining ships on ISS Valhall before scheduled trips.'
 			},
 			{
-				title: 'Plotting the Route',
-				text: 'Use the Spansh Road to Riches plotter. Input your current location, jump range, and target destination. It will generate a list of systems containing terraformable high-value worlds.'
+				title: 'Tritium Cargo Offloading',
+				text: 'When Tritium loading operations are active, buy Tritium from local stations and sell it directly to the carrier market, or donate it to the fuel depot in the Carrier Services menu.'
 			},
 			{
-				title: 'Scanning Protocol',
-				text: 'Upon jumping into each system, fire your Discovery Scanner ("Honk"). Navigate to the specified planets and fire DSS probes until you achieve 100% surface mapping coverage.'
+				title: 'Expedition Preparation',
+				text: 'During long voyages, docking access is set to Friends and Squadron members only. Set your ships in shipyard hangar bay at least 30 minutes before jump scheduled times.'
 			}
 		],
 		dataState: 'live'
 	}
 ];
+
 export const guidesWithDataState = guides.map(g => ({
 	...g,
 	dataState: g.dataState ?? 'live'

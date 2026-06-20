@@ -15,10 +15,46 @@
 		ShipSolid,
 		BoltSolid,
 		CrownSolid,
-		UserAstronautSolid
+		UserAstronautSolid,
+		ShieldAltSolid,
+		InfoCircleSolid
 	} from 'svelte-awesome-icons';
 	import ScrollDown from '$lib/components/ScrollDown.svelte';
+	import CurrentFocus from '$lib/components/UI/CurrentFocus.svelte';
+	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
+	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
 	import { resolve } from '$app/paths';
+	import { whyJoinReasons, squadronStatsWithIcons, onboardingSteps, testimonials } from '$lib/data/squadron';
+	import { newsPosts } from '$lib/data/news';
+
+	// ─── Latest Announcement ───
+	const latestNews = newsPosts[0];
+
+	// ─── Discord Widget Client Fetching ───
+	let discordData = $state<{
+		guildName: string;
+		inviteLink: string;
+		onlineCount: number;
+		onlineMembers: Array<{ name: string; status: string; avatarUrl?: string }>;
+	} | null>(null);
+	let loadingDiscord = $state(true);
+
+	async function loadDiscord() {
+		try {
+			const res = await fetch('/api/discord/widget');
+			if (res.ok) {
+				discordData = await res.json();
+			}
+		} catch (err) {
+			console.error('Failed to load Discord widget data', err);
+		} finally {
+			loadingDiscord = false;
+		}
+	}
+
+	$effect(() => {
+		loadDiscord();
+	});
 
 	// ─── Cursor tracking ───
 	let mouseX = $state(0);
@@ -70,7 +106,7 @@
 		{
 			question: 'What activities does the squadron participate in?',
 			answer:
-				'We engage in a wide variety of activities including exploration expeditions, trade routes and fleet carrier operations, bounty hunting and combat zones, mining operations, Thargoid combat, community goals, and organized PvP events. There is always something happening!'
+				'We engage in a wide variety of activities including exploration expeditions, trade routes and fleet carrier operations, bounty hunting and combat zones, mining operations, Thargoid combat, community goals, and organized BGS events. There is always something happening!'
 		},
 		{
 			question: 'What platforms are supported?',
@@ -81,78 +117,6 @@
 			question: 'Do you use third-party tools?',
 			answer:
 				'Yes, we make use of several third-party tools to enhance our gameplay experience including Discord for voice/text communication, Inara for squadron management and trade data, EDSM for exploration tracking, and various other tools for specific activities.'
-		}
-	];
-
-	// ─── Stats ───
-	const stats = [
-		{ value: '100+', label: 'Active Members', icon: UsersSolid },
-		{ value: '1,247', label: 'Systems Explored', icon: GlobeAmericasSolid },
-		{ value: '2.3B', label: 'Total Credits Earned', icon: StarSolid },
-		{ value: 'Growing', label: 'Faction Status', icon: CrownSolid }
-	];
-
-	// ─── Quick Navigation ───
-	const quickNavs = [
-		{
-			num: '01',
-			title: 'About',
-			subtitle: 'Learn our story and mission',
-			icon: UserAstronautSolid,
-			href: resolve('/about')
-		},
-		{
-			num: '02',
-			title: 'Fleet Carrier',
-			subtitle: 'Explore our fleet operations',
-			icon: ShipSolid,
-			href: resolve('/fleet-carrier')
-		},
-		{
-			num: '03',
-			title: 'Events',
-			subtitle: 'See upcoming activities',
-			icon: StarSolid,
-			href: resolve('/events')
-		},
-		{
-			num: '04',
-			title: 'Gallery',
-			subtitle: 'Browse screenshots & media',
-			icon: ExternalLinkAltSolid,
-			href: resolve('/gallery')
-		}
-	];
-
-	// ─── Journey Steps ───
-	const journeySteps = [
-		{
-			num: '01',
-			icon: DiscordBrands,
-			title: 'Join Discord',
-			description:
-				'Start your journey by joining our Discord server. Introduce yourself and connect with fellow commanders who share your passion for the stars.'
-		},
-		{
-			num: '02',
-			icon: HandsHelpingSolid,
-			title: 'Meet Your Mentor',
-			description:
-				'Every new member is paired with an experienced mentor who will guide you through squadron operations, wing mechanics, and help you find your footing in the galaxy.'
-		},
-		{
-			num: '03',
-			icon: CompassSolid,
-			title: 'Choose Your Path',
-			description:
-				'Whether you prefer exploration, trading, combat, or mining — discover your niche and specialize in the activities that excite you most.'
-		},
-		{
-			num: '04',
-			icon: RocketSolid,
-			title: 'Start Flying',
-			description:
-				'Jump into action with wing missions, squadron events, and community goals. The galaxy is vast — and with IGFV, you will never fly alone.'
 		}
 	];
 
@@ -175,7 +139,7 @@
 		};
 	}
 
-	// ─── Staggered inview action (sets --delay for children) ───
+	// ─── Staggered inview action ───
 	function staggerContainer(node: HTMLElement) {
 		const observer = new IntersectionObserver(
 			([entry]) => {
@@ -313,13 +277,33 @@
 	{/each}
 </div>
 
+<!-- ─── LATEST ANNOUNCEMENT STRIP ─── -->
+{#if latestNews}
+	<div class="relative z-20 border-b border-primary-main/20 bg-black/60 px-4 py-2.5 backdrop-blur-md">
+		<div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 sm:flex-row">
+			<div class="flex flex-col items-center gap-2 sm:flex-row">
+				<span class="inline-flex items-center rounded-full bg-primary-main/20 px-2.5 py-0.5 text-xs font-semibold text-primary-light border border-primary-main/30">
+					Latest Update
+				</span>
+				<span class="text-xs text-gray-300 font-medium text-center sm:text-left">{latestNews.title} ({latestNews.publishedAt})</span>
+			</div>
+			<a
+				href={resolve(`/news/${latestNews.slug}`)}
+				class="text-xs font-bold text-primary-light hover:text-white transition-colors uppercase tracking-wider flex items-center gap-1"
+			>
+				<span>Read Command Bulletin</span>
+				<ExternalLinkAltSolid class="size-3" />
+			</a>
+		</div>
+	</div>
+{/if}
+
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- HERO SECTION -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <section
-	class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4"
+	class="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden px-4"
 >
-	<!-- Hero content -->
 	<div class="fade-in-section z-10 mx-auto max-w-5xl text-center" style="--delay: 0s;">
 		<!-- Eyebrow -->
 		<div
@@ -356,25 +340,21 @@
 			style="--delay: 0.8s;"
 		>
 			<a
-				href="https://discord.gg/igfv"
-				target="_blank"
-				rel="noopener noreferrer"
+				href={resolve('/join')}
 				class="cta-primary group inline-flex items-center gap-3 rounded-lg bg-primary-main px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary-main/25 transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-primary-main/40"
 			>
-				<DiscordBrands class="size-5" />
-				Join Our Community
-				<ExternalLinkAltSolid
-					class="size-4 opacity-60 transition-opacity group-hover:opacity-100"
-				/>
+				<RocketSolid class="size-5" />
+				Join the Squadron
+				<BoltSolid class="size-4" />
 			</a>
 			<a
-				href="https://inara.cz/squadron/"
+				href="https://discord.gg/igfv"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="cta-secondary group inline-flex items-center gap-3 rounded-lg border border-white/20 bg-white/5 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-white/40 hover:bg-white/10"
 			>
-				<StarSolid class="size-5" />
-				Squadron Profile
+				<DiscordBrands class="size-5 text-[#5865F2]" />
+				Warp into Discord
 				<ExternalLinkAltSolid
 					class="size-4 opacity-60 transition-opacity group-hover:opacity-100"
 				/>
@@ -386,23 +366,190 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SQUADRON HUB STATUS (Current Focus & Discord widget) -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="relative px-4 py-16 sm:py-24 border-t border-white/5 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
+	<div class="mx-auto max-w-7xl">
+		<div class="mb-12 flex flex-col justify-between items-start gap-4 sm:flex-row sm:items-center">
+			<div>
+				<h2 use:inview class="fade-up-section text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl">
+					Squadron <span class="text-primary-main">Command Hub</span>
+				</h2>
+				<p use:inview class="fade-up-section mt-1.5 text-sm text-gray-400">Weekly targets and comms channels network status</p>
+			</div>
+			<div use:inview class="fade-up-section">
+				<DataStatusPanel state={discordData ? 'live' : 'placeholder'} source="Discord Comms API" />
+			</div>
+		</div>
+
+		<div class="grid gap-8 lg:grid-cols-3">
+			<!-- Current Focus Banner -->
+			<div use:inview class="fade-up-section lg:col-span-2">
+				<CurrentFocus />
+			</div>
+
+			<!-- Live Discord Panel -->
+			<div use:inview class="fade-up-section flex flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-glow">
+				<div>
+					<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+						<div class="flex items-center gap-2 text-white font-bold">
+							<DiscordBrands class="size-5 text-[#5865F2]" />
+							<span>Discord Comms</span>
+						</div>
+						{#if loadingDiscord}
+							<span class="text-xs text-gray-500 animate-pulse">Syncing...</span>
+						{:else if discordData}
+							<span class="inline-flex items-center gap-1 rounded bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-400 border border-green-500/20">
+								{discordData.onlineCount} Online
+							</span>
+						{:else}
+							<span class="text-xs text-amber-500">Offline Fallback</span>
+						{/if}
+					</div>
+
+					<p class="text-xs leading-relaxed text-gray-400 mb-4">
+						Active pilots coordinates in voice networks and sector briefings:
+					</p>
+
+					<!-- Online list or placeholders -->
+					<div class="space-y-2.5 max-h-40 overflow-y-auto pr-1">
+						{#if loadingDiscord}
+							{#each Array(3) as _}
+								<div class="flex items-center gap-3 animate-pulse">
+									<div class="size-6 rounded-full bg-white/5"></div>
+									<div class="h-3 w-24 rounded bg-white/5"></div>
+								</div>
+							{/each}
+						{:else if discordData && discordData.onlineMembers.length > 0}
+							{#each discordData.onlineMembers.slice(0, 5) as member}
+								<div class="flex items-center justify-between text-xs">
+									<div class="flex items-center gap-2.5">
+										{#if member.avatarUrl}
+											<img src={member.avatarUrl} alt="" class="size-6 rounded-full border border-white/10" />
+										{:else}
+											<div class="flex size-6 items-center justify-center rounded-full bg-white/10 text-gray-400">
+												<UserAstronautSolid class="size-3" />
+											</div>
+										{/if}
+										<span class="font-medium text-gray-200">{member.name}</span>
+									</div>
+									<span class="text-[10px] text-gray-500 capitalize">{member.status === 'online' ? 'active' : 'idle'}</span>
+								</div>
+							{/each}
+							{#if discordData.onlineMembers.length > 5}
+								<p class="text-[10px] text-center text-gray-500 mt-2">Plus {discordData.onlineMembers.length - 5} more commanders</p>
+							{/if}
+						{:else}
+							<!-- Fallback list -->
+							<div class="flex items-center justify-between text-xs">
+								<div class="flex items-center gap-2.5">
+									<div class="flex size-6 items-center justify-center rounded-full bg-[#002868]/30 text-primary-light border border-primary-light/20">
+										<UserAstronautSolid class="size-3" />
+									</div>
+									<span class="font-medium text-gray-300">CMDR Don Samen</span>
+								</div>
+								<span class="inline-flex size-2 rounded-full bg-green-500"></span>
+							</div>
+							<div class="flex items-center justify-between text-xs">
+								<div class="flex items-center gap-2.5">
+									<div class="flex size-6 items-center justify-center rounded-full bg-[#002868]/30 text-primary-light border border-primary-light/20">
+										<UserAstronautSolid class="size-3" />
+									</div>
+									<span class="font-medium text-gray-300">CMDR Twisted VorteK</span>
+								</div>
+								<span class="inline-flex size-2 rounded-full bg-green-500"></span>
+							</div>
+							<div class="flex items-center justify-between text-xs">
+								<div class="flex items-center gap-2.5">
+									<div class="flex size-6 items-center justify-center rounded-full bg-[#002868]/30 text-primary-light border border-primary-light/20">
+										<UserAstronautSolid class="size-3" />
+									</div>
+									<span class="font-medium text-gray-300">CMDR Sarah Thorne</span>
+								</div>
+								<span class="inline-flex size-2 rounded-full bg-green-500"></span>
+							</div>
+						{/if}
+					</div>
+				</div>
+
+				<a
+					href="https://discord.gg/igfv"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-[#5865F2] px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#4752C4]"
+				>
+					<DiscordBrands class="size-4" />
+					Join Voice Channel
+				</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- WHY IGFV (3 pillars) -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="relative px-4 py-20 sm:py-28 border-t border-white/5 bg-[#000814]/90">
+	<div class="mx-auto max-w-6xl">
+		<div class="mb-16 text-center">
+			<h2 use:inview class="fade-up-section text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl">
+				Why Join <span class="text-primary-main">IGFV?</span>
+			</h2>
+			<div class="mt-4 mb-2 mx-auto h-1 w-16 rounded-full bg-primary-main"></div>
+			<p use:inview class="fade-up-section text-sm text-gray-400 max-w-xl mx-auto">
+				Built around mutual support, zero demands, and shared galactic adventures
+			</p>
+		</div>
+
+		<div use:staggerContainer class="stagger-grid grid gap-8 md:grid-cols-3">
+			{#each whyJoinReasons as reason, i (reason.title)}
+				<div
+					class="stagger-item rounded-xl border border-white/10 bg-[#000d22]/90 p-8 shadow-glow transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/30"
+					style="--item-delay: {i * 0.15}s;"
+				>
+					<div class="mb-5 inline-flex rounded-lg bg-primary-main/10 p-3.5 text-primary-light">
+						<reason.icon class="size-8" />
+					</div>
+					<h3 class="mb-3 text-lg font-bold text-white uppercase tracking-wider">{reason.title}</h3>
+					<p class="text-sm leading-relaxed text-gray-400">{reason.description}</p>
+				</div>
+			{/each}
+		</div>
+	</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- NEW COMMANDERS START HERE PANEL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<section class="relative px-4 py-20 border-t border-white/5 bg-gradient-to-b from-[#000814]/90 to-[#000814]/50">
+	<div class="mx-auto max-w-6xl">
+		<NewCommandersStart />
+	</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- QUICK NAVIGATION -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-24 sm:py-32">
+<section class="relative px-4 py-20 border-t border-white/5 bg-[#000814]/50">
 	<div class="mx-auto max-w-6xl">
 		<h2
 			use:inview
-			class="fade-up-section mb-16 text-center text-4xl font-bold text-white sm:text-5xl"
+			class="fade-up-section mb-16 text-center text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl"
 		>
-			Quick <span class="text-primary-main">Navigation</span>
+			Tactical <span class="text-primary-main">Console</span>
 		</h2>
 
 		<div use:staggerContainer class="stagger-grid grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-			{#each quickNavs as nav, i (nav.title)}
+			{#each [
+				{ num: '01', title: 'Operations', subtitle: 'Check active wing missions', icon: RocketSolid, href: resolve('/operations') },
+				{ num: '02', title: 'Carrier', subtitle: 'Logistics and jump logs', icon: ShipSolid, href: resolve('/fleet-carrier') },
+				{ num: '03', title: 'Resources', subtitle: 'Curated third-party tools', icon: StarSolid, href: resolve('/resources') },
+				{ num: '04', title: 'About', subtitle: 'Ranks and code values', icon: UserAstronautSolid, href: resolve('/about') }
+			] as nav, i}
 				<a
 					href={nav.href}
-					class="stagger-item group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/40 hover:bg-white/10"
-					style="--item-delay: {i * 0.15}s;"
+					class="stagger-item group relative overflow-hidden rounded-xl border border-white/10 bg-[#000d22]/80 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/40 hover:bg-[#000d22]/95"
+					style="--item-delay: {i * 0.1}s;"
 				>
 					<div
 						class="absolute -top-8 -right-8 text-7xl font-bold text-white/5 transition-all duration-500 group-hover:text-primary-main/10"
@@ -411,16 +558,16 @@
 					</div>
 					<div class="relative z-10">
 						<div
-							class="mb-6 inline-flex rounded-lg bg-primary-main/10 p-3 text-primary-main transition-colors duration-300 group-hover:bg-primary-main/20"
+							class="mb-6 inline-flex rounded-lg bg-primary-main/10 p-3 text-primary-light transition-colors duration-300 group-hover:bg-primary-main/20"
 						>
-							<nav.icon class="size-7" />
+							<nav.icon class="size-6" />
 						</div>
 						<h3
-							class="mb-2 text-xl font-bold text-white transition-colors duration-300 group-hover:text-primary-main"
+							class="mb-2 text-lg font-bold text-white tracking-wider uppercase group-hover:text-primary-light"
 						>
 							{nav.title}
 						</h3>
-						<p class="text-sm leading-relaxed text-white/50">{nav.subtitle}</p>
+						<p class="text-xs leading-relaxed text-gray-400">{nav.subtitle}</p>
 					</div>
 				</a>
 			{/each}
@@ -429,82 +576,33 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- WHO WE ARE -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-24 sm:py-32">
-	<div class="mx-auto max-w-4xl">
-		<div
-			use:inview
-			class="fade-up-section relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-dark-navy via-dark-bg to-dark-slate1 p-8 shadow-xl sm:p-12 lg:p-16"
-		>
-			<!-- Decorative corner accent -->
-			<div
-				class="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-primary-main/5 blur-3xl"
-			></div>
-			<div
-				class="pointer-events-none absolute -bottom-20 -left-20 size-48 rounded-full bg-primary-main/3 blur-3xl"
-			></div>
-
-			<div class="relative z-10">
-				<h2 class="mb-4 inline-block text-4xl font-bold text-white sm:text-5xl">
-					Who We
-					<span class="text-primary-main">Are</span>
-				</h2>
-				<div class="mt-4 mb-2 h-1 w-16 rounded-full bg-primary-main"></div>
-
-				<div class="mt-8 space-y-6 text-base leading-relaxed text-white/70 sm:text-lg">
-					<p>
-						Interstellar Goodfellas (IGFV) is a player squadron in Elite: Dangerous built on the
-						foundations of camaraderie, exploration, and mutual respect. We are a diverse group of
-						commanders who share a common passion for the stars and a commitment to creating a
-						welcoming environment for pilots of all skill levels.
-					</p>
-					<p>
-						Whether you are a seasoned veteran with thousands of hours in the cockpit or a
-						fresh-faced cadet taking your first jump, you will find a place among the Goodfellas.
-						Our squadron emphasizes teamwork over competition, exploration over exploitation, and
-						friendship over factionalism.
-					</p>
-					<p>
-						From organized wing missions and community goals to deep-space exploration expeditions
-						and fleet carrier operations, there is always an opportunity to contribute, learn, and
-						explore the galaxy together. We believe that the best experiences in Elite are shared
-						ones — and with IGFV, the galaxy is yours to discover alongside friends.
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SQUADRON OVERVIEW (Stats) -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-24 sm:py-32">
+<section class="relative px-4 py-20 border-t border-white/5 bg-[#000814]/90">
 	<div class="mx-auto max-w-6xl">
 		<h2
 			use:inview
-			class="fade-up-section mb-4 text-center text-4xl font-bold text-white sm:text-5xl"
+			class="fade-up-section mb-4 text-center text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl"
 		>
-			Squadron <span class="text-primary-main">Overview</span>
+			Squadron <span class="text-primary-main">Logistics</span>
 		</h2>
-		<p use:inview class="fade-up-section mb-16 text-center text-white/50">
-			Our growing presence in the galaxy
+		<p use:inview class="fade-up-section mb-16 text-center text-gray-400 text-sm">
+			Our verified presence in the Milky Way galaxy
 		</p>
 
 		<div use:staggerContainer class="stagger-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-			{#each stats as stat, i (stat.label)}
+			{#each squadronStatsWithIcons as stat, i (stat.label)}
 				<div
-					class="stagger-item stat-card group rounded-xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/40 hover:bg-white/10"
-					style="--item-delay: {i * 0.15}s;"
+					class="stagger-item group rounded-xl border border-white/10 bg-[#000d22]/90 p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/40"
+					style="--item-delay: {i * 0.1}s;"
 				>
 					<div
-						class="mb-4 inline-flex rounded-lg bg-primary-main/10 p-3 text-primary-main transition-colors duration-300 group-hover:bg-primary-main/20"
+						class="mb-4 inline-flex rounded-lg bg-primary-main/10 p-3 text-primary-light transition-colors duration-300 group-hover:bg-primary-main/20"
 					>
-						<stat.icon class="size-8" />
+						<stat.icon class="size-7" />
 					</div>
-					<div class="mb-1 text-4xl font-bold text-white">{stat.value}</div>
-					<div class="text-sm text-white/50">{stat.label}</div>
+					<div class="mb-1 text-3xl font-bold text-white">{stat.value}</div>
+					<div class="text-xs text-gray-500 uppercase tracking-wider">{stat.label}</div>
 				</div>
 			{/each}
 		</div>
@@ -512,36 +610,35 @@
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- FAQ SECTION -->
+<!-- FAQ SECTION (Solid contrast panels) -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-24 sm:py-32">
+<section class="relative px-4 py-20 border-t border-white/5 bg-[#000814]/50">
 	<div class="mx-auto max-w-3xl">
 		<h2
 			use:inview
-			class="fade-up-section mb-4 text-center text-4xl font-bold text-white sm:text-5xl"
+			class="fade-up-section mb-4 text-center text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl"
 		>
-			Frequently Asked
-			<span class="text-primary-main">Questions</span>
+			Frequently Asked <span class="text-primary-main">Questions</span>
 		</h2>
-		<p use:inview class="fade-up-section mb-16 text-center text-white/50">
-			Everything you need to know about the squadron
+		<p use:inview class="fade-up-section mb-16 text-center text-gray-400 text-sm">
+			Answers from the squadron flight operations desk
 		</p>
 
 		<div class="space-y-4">
 			{#each faqs as faq, i (faq.question)}
 				<div
 					use:inview
-					class="fade-up-section rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300"
-					style="--delay: {i * 0.1}s;"
+					class="fade-up-section rounded-xl border border-white/10 bg-[#000d22]/90 transition-all duration-300"
+					style="--delay: {i * 0.08}s;"
 				>
 					<button
 						onclick={() => toggleFaq(i)}
-						class="faq-trigger flex w-full cursor-pointer items-center justify-between px-6 py-5 text-left text-base font-semibold text-white transition-colors duration-200 hover:text-primary-main sm:text-lg"
+						class="flex w-full cursor-pointer items-center justify-between px-6 py-5 text-left text-base font-semibold text-white transition-colors duration-200 hover:text-primary-light"
 						aria-expanded={openFaq === i}
 					>
-						<span class="pr-4">{faq.question}</span>
+						<span class="pr-4 tracking-wide text-sm uppercase">{faq.question}</span>
 						<svg
-							class="size-5 shrink-0 text-white/40 transition-transform duration-300 {openFaq === i
+							class="size-5 shrink-0 text-gray-500 transition-transform duration-300 {openFaq === i
 								? 'rotate-180'
 								: ''}"
 							xmlns="http://www.w3.org/2000/svg"
@@ -558,59 +655,11 @@
 						</svg>
 					</button>
 					<div
-						class="faq-answer overflow-hidden transition-all duration-300 ease-in-out"
+						class="overflow-hidden transition-all duration-300 ease-in-out"
 						style="max-height: {openFaq === i ? '300px' : '0'};"
 					>
-						<div class="border-t border-white/5 px-6 py-5 text-base leading-relaxed text-white/60">
+						<div class="border-t border-white/5 px-6 py-5 text-sm leading-relaxed text-gray-300 bg-[#000814]/80 rounded-b-xl">
 							{faq.answer}
-						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-	</div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- YOUR JOURNEY WITH US -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-24 sm:py-32">
-	<div class="mx-auto max-w-6xl">
-		<h2
-			use:inview
-			class="fade-up-section mb-4 text-center text-4xl font-bold text-white sm:text-5xl"
-		>
-			Your Journey
-			<span class="text-primary-main">With Us</span>
-		</h2>
-		<p use:inview class="fade-up-section mb-16 text-center text-white/50">
-			Four simple steps to becoming a Goodfella
-		</p>
-
-		<div use:staggerContainer class="stagger-grid grid gap-8 md:grid-cols-2">
-			{#each journeySteps as step, i (step.title)}
-				<div
-					class="stagger-item journey-card group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/40 hover:bg-white/10"
-					style="--item-delay: {i * 0.15}s;"
-				>
-					<div
-						class="absolute -top-6 -right-6 text-6xl font-bold text-white/5 transition-all duration-500 group-hover:text-primary-main/10"
-					>
-						{step.num}
-					</div>
-					<div class="relative z-10 flex items-start gap-6">
-						<div
-							class="shrink-0 rounded-lg bg-primary-main/10 p-4 text-primary-main transition-colors duration-300 group-hover:bg-primary-main/20"
-						>
-							<step.icon class="size-7" />
-						</div>
-						<div>
-							<h3
-								class="mb-2 text-xl font-bold text-white transition-colors duration-300 group-hover:text-primary-main"
-							>
-								{step.title}
-							</h3>
-							<p class="text-sm leading-relaxed text-white/50">{step.description}</p>
 						</div>
 					</div>
 				</div>
@@ -622,42 +671,40 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- JOIN US TODAY CTA -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-24 sm:py-32">
+<section class="relative px-4 py-24 border-t border-white/5 bg-[#000814]/90">
 	<div use:inview class="fade-up-section mx-auto max-w-4xl">
 		<div
-			class="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary-main/10 via-dark-navy to-primary-darkest/20 p-12 text-center shadow-2xl sm:p-16"
+			class="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary-main/10 via-[#000d22]/90 to-[#000814]/95 p-12 text-center shadow-2xl sm:p-16"
 		>
-			<!-- Decorative elements -->
 			<div
-				class="pointer-events-none absolute -top-20 -left-20 size-64 rounded-full bg-primary-main/10 blur-3xl"
+				class="pointer-events-none absolute -top-20 -left-20 size-64 rounded-full bg-primary-main/5 blur-3xl"
 			></div>
 			<div
 				class="pointer-events-none absolute -right-20 -bottom-20 size-48 rounded-full bg-primary-main/5 blur-3xl"
 			></div>
 
 			<div class="relative z-10">
-				<div class="mb-6 inline-flex rounded-full bg-primary-main/15 p-4 text-primary-main">
-					<DiscordBrands class="size-10" />
+				<div class="mb-6 inline-flex rounded-full bg-primary-main/15 p-4 text-primary-light">
+					<DiscordBrands class="size-10 text-[#5865F2]" />
 				</div>
 
-				<h2 class="mb-4 text-4xl font-bold text-white sm:text-5xl">
+				<h2 class="mb-4 text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl">
 					Join Us <span class="text-primary-main">Today</span>
 				</h2>
 
-				<p class="mx-auto mb-10 max-w-xl text-lg text-white/60">
-					Ready to explore the galaxy with the finest commanders this side of the bubble? Grab your
-					joystick, and let us make history together.
+				<p class="mx-auto mb-10 max-w-xl text-sm leading-relaxed text-gray-300">
+					Ready to explore the galaxy with the finest commanders this side of the bubble? Apply now, meet your mentor, and let's fly together.
 				</p>
 
 				<a
 					href="https://discord.gg/igfv"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="cta-primary group inline-flex items-center gap-3 rounded-lg bg-primary-main px-10 py-4 text-lg font-bold text-white shadow-lg shadow-primary-main/30 transition-all duration-300 hover:scale-105 hover:bg-primary-dark hover:shadow-primary-main/50"
+					class="cta-primary group inline-flex items-center gap-3 rounded-lg bg-primary-main px-10 py-4 text-sm font-bold text-white shadow-lg shadow-primary-main/30 transition-all duration-300 hover:scale-105 hover:bg-primary-light hover:shadow-primary-main/50 uppercase tracking-wider"
 				>
-					<DiscordBrands class="size-6" />
-					Join Our Discord
-					<BoltSolid class="size-5 opacity-60 transition-opacity group-hover:opacity-100" />
+					<DiscordBrands class="size-5" />
+					Join Our Discord Comms
+					<BoltSolid class="size-4 opacity-70 transition-opacity group-hover:opacity-100" />
 				</a>
 			</div>
 		</div>
@@ -746,12 +793,6 @@
 		}
 	}
 
-	/* ───── FAQ accordion ───── */
-
-	.faq-answer {
-		transition: max-height 0.3s ease-in-out;
-	}
-
 	/* ───── CTA buttons ───── */
 
 	.cta-primary,
@@ -762,12 +803,6 @@
 			background-color 0.3s,
 			border-color 0.3s,
 			box-shadow 0.3s;
-	}
-
-	/* ───── Hover ───── */
-
-	.stat-card:hover .text-4xl {
-		color: rgb(var(--color-primary-main) / 1);
 	}
 
 	/* ───── Space element parallax ───── */

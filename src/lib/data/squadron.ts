@@ -1,5 +1,5 @@
-import type { SquadronStats, TestimonialItem } from '$lib/types';
-import { UsersSolid, GlobeAmericasSolid, StarSolid, CrownSolid } from 'svelte-awesome-icons';
+import type { SquadronStats, TestimonialItem, FAQItem } from '$lib/types';
+import { UsersSolid, GlobeAmericasSolid, StarSolid, CrownSolid, ShieldAltSolid, HandsHelpingSolid, CompassSolid } from 'svelte-awesome-icons';
 
 export const squadronStats: SquadronStats = {
 	membersCount: '124',
@@ -47,11 +47,61 @@ export const testimonials: TestimonialItem[] = [
 	{
 		commanderName: 'CMDR Marcus Vance',
 		role: 'Combat Specialist',
-		quote: 'The team coordination in our operations is top-notch. No pressure, no obligations, just solid wing combat and friendly banter.'
+		quote: 'The team coordination in our operations is top-notch. No pressure, no obligations, just solid wing combat and friendly work toward shared goals.'
 	},
 	{
 		commanderName: 'CMDR Jin-Woo',
 		role: 'Trade & Logistics',
 		quote: 'Fleet carrier logistics can be overwhelming, but with IGFV, loading/unloading operations are incredibly organized and highly profitable for everyone involved.'
+	}
+];
+
+export const whyJoinReasons = [
+	{
+		title: 'Camaraderie First',
+		description: 'We prioritize friendship and mutual support. Whether winging up for combat or exploring deep space, you fly with trusted allies.',
+		icon: HandsHelpingSolid
+	},
+	{
+		title: 'Zero Obligations',
+		description: 'Real life always comes first. There are no mandatory login times, activity quotas, or contribution demands. Fly when you want, how you want.',
+		icon: CompassSolid
+	},
+	{
+		title: 'Elite Guidance',
+		description: 'Our Mentor program pairs newer commanders with experienced veterans, accelerating ship engineering, credit loops, and AX training.',
+		icon: ShieldAltSolid
+	}
+];
+
+export const currentFocus = {
+	title: 'Valhall Tritium Loading',
+	description: 'Procuring and loading Tritium fuel onto the ISS Valhall in LHS 3447 in preparation for the Colonia Summer Expedition.',
+	priority: 'High',
+	progress: 60,
+	target: '5,000 tonnes',
+	current: '3,000 tonnes',
+	link: '/fleet-carrier',
+	linkLabel: 'View Carrier Status'
+};
+
+export const codeOfConductSummary = 'We believe a great community is built on simple, clear expectations of mutual respect. We do not tolerate griefing, harassment, or toxic behavior. Our goal is a relaxed, supportive environment for all pilots.';
+
+export const detailedRules = [
+	{
+		title: 'Respect Fellow Commanders',
+		description: 'Treat all players—both inside and outside the squadron—with respect. Harassment, discrimination, hate speech, and toxic behavior are strictly prohibited.'
+	},
+	{
+		title: 'No Griefing or Unprovoked PvP',
+		description: 'We are a peaceful PvE-focused squadron. Unprovoked attacks on clean players (griefing) are not permitted. Consent-based PvP (like training or duels) is allowed.'
+	},
+	{
+		title: 'Represent IGFV Honorably',
+		description: 'When flying under the IGFV tag or communicating in public channels (Inara, Forums, Discord), remember that your actions reflect on the community as a whole.'
+	},
+	{
+		title: 'Real Life Comes First',
+		description: 'Real-life duties, family, and health always take precedence. There is no penalty for inactivity. Just let us know if you will be gone long-term.'
 	}
 ];

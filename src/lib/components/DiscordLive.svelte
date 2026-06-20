@@ -28,8 +28,8 @@
 				onlineCount = null;
 				return;
 			}
-			memberCount = data.members?.length ?? null;
-			onlineCount = data.presence_count ?? null;
+			memberCount = data.onlineMembers?.length ?? null;
+			onlineCount = data.onlineCount ?? null;
 			error = null;
 		} catch {
 			error = 'Failed to connect';

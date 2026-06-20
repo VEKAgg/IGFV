@@ -8,9 +8,14 @@
 
 	const navLinks = [
 		{ href: resolve('/about'), label: 'About' },
+		{ href: resolve('/operations'), label: 'Operations' },
+		{ href: resolve('/fleet-carrier'), label: 'Carrier' },
+		{ href: resolve('/news'), label: 'News' },
+		{ href: resolve('/resources'), label: 'Resources' },
 		{ href: resolve('/guides'), label: 'Guides' },
 		{ href: resolve('/gallery'), label: 'Gallery' },
-		{ href: resolve('/partners'), label: 'Partners' }
+		{ href: resolve('/rules'), label: 'Rules' },
+		{ href: resolve('/join'), label: 'Join' }
 	];
 
 	function toggleMobile() {
@@ -32,11 +37,11 @@
 		</a>
 
 		<!-- Desktop Nav -->
-		<nav class="hidden items-center gap-8 md:flex">
+		<nav class="hidden items-center gap-4 lg:gap-6 md:flex">
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
-					class="relative text-sm font-medium tracking-wider text-gray-300 uppercase transition-colors hover:text-white"
+					class="relative text-xs lg:text-sm font-medium tracking-wider text-gray-300 uppercase transition-colors hover:text-white"
 					class:active-link={$page.url.pathname === link.href}
 				>
 					{link.label}
