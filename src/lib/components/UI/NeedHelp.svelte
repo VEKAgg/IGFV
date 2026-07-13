@@ -3,7 +3,7 @@
 	import { DiscordBrands, BookOpenSolid, InfoCircleSolid } from 'svelte-awesome-icons';
 </script>
 
-<div class="rounded-xl border border-white/10 bg-[#000814]/90 p-6 shadow-md">
+<div class="rounded-xl border border-white/10 bg-dark-bg/90 p-6 shadow-md">
 	<div class="flex items-start gap-4">
 		<div class="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary-main/10 text-primary-light">
 			<InfoCircleSolid class="size-5" />

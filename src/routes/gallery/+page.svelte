@@ -31,8 +31,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -94,7 +94,7 @@
 </section>
 
 <!-- CURATED GALLERY MEDIA GRID -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-12 sm:py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-12 sm:py-16 px-4">
 	<div class="mx-auto max-w-7xl">
 		
 		<!-- Category tabs -->
@@ -155,7 +155,7 @@
 </section>
 
 <!-- Submit screen section -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div use:inview class="inview-hidden mx-auto max-w-3xl">
 		<div class="rounded-xl border border-white/10 bg-[#000d22]/95 p-8 text-center shadow-glow">
 			<ImagesSolid class="mx-auto mb-4 h-8 w-8 text-primary-light" />

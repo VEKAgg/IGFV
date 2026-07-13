@@ -45,8 +45,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -68,7 +68,7 @@
 <!-- START HERE GUIDE PATH (Highlighted at the top!) -->
 {#if startHereGuide}
 	<section class="mx-auto max-w-7xl px-4 py-12 sm:py-16">
-		<div class="relative overflow-hidden rounded-xl border-2 border-primary-main/30 bg-gradient-to-r from-primary-main/10 via-[#000d22]/95 to-primary-main/5 p-6 sm:p-8 shadow-glow">
+		<div class="relative overflow-hidden rounded-xl border-2 border-primary-main/30 bg-linear-to-r from-primary-main/10 via-[#000d22]/95 to-primary-main/5 p-6 sm:p-8 shadow-glow">
 			<div class="absolute -top-12 -left-12 size-36 rounded-full bg-primary-main/5 blur-2xl"></div>
 			
 			<div class="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -96,7 +96,7 @@
 {/if}
 
 <!-- CURATED SECTIONS (Solid high-contrast containers) -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-12 sm:py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-12 sm:py-16 px-4">
 	<div class="mx-auto max-w-7xl">
 		
 		<div class="space-y-16">
@@ -135,7 +135,7 @@
 														<span class="text-[10px] uppercase font-bold text-primary-light font-mono block">Step-by-Step Training:</span>
 														{#each guide.steps as step, idx}
 															<div class="flex gap-4 border-l border-white/10 pl-4 relative">
-																<div class="absolute -left-[5px] top-1.5 size-2 rounded-full bg-primary-main"></div>
+																<div class="absolute left-[-5px] top-1.5 size-2 rounded-full bg-primary-main"></div>
 																<div>
 																	<h5 class="text-xs font-bold text-white uppercase">{step.title}</h5>
 																	<p class="text-xs text-gray-400 mt-1 leading-relaxed">{step.text}</p>
@@ -169,7 +169,7 @@
 </section>
 
 <!-- Onboarding Panel at the bottom -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<NewCommandersStart />
 	</div>

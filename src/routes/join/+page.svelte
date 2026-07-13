@@ -15,8 +15,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -108,7 +108,7 @@
 </section>
 
 <!-- ONBOARDING TIMELINE: WHAT HAPPENS AFTER YOU JOIN DISCORD -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-4xl">
 		<div class="mb-16 text-center">
 			<h2 use:inview class="inview-hidden text-3xl font-bold text-white uppercase tracking-wider">
@@ -128,12 +128,12 @@
 				{ step: '04', title: 'Launch with the Wing', desc: 'Jump into our weekly Thursday wing trade loops, mining runs, or AX practice. Welcome to the crew!' }
 			] as timeline}
 				<div class="mb-10 ml-8 relative">
-					<span class="absolute -left-12 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#000814] border border-primary-main">
+					<span class="absolute -left-12 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-dark-bg border border-primary-main">
 						<span class="size-2 rounded-full bg-primary-light"></span>
 					</span>
 					<span class="hidden md:block absolute -left-28 top-1 text-sm font-bold text-primary-light uppercase tracking-wider font-mono">Step {timeline.step}</span>
 					
-					<div class="rounded-lg border border-white/5 bg-[#000814]/60 p-6">
+					<div class="rounded-lg border border-white/5 bg-dark-bg/60 p-6">
 						<span class="md:hidden block text-xs font-bold text-primary-light mb-1 uppercase tracking-wider font-mono">Step {timeline.step}</span>
 						<h3 class="text-base font-bold text-white uppercase">{timeline.title}</h3>
 						<p class="text-xs text-gray-400 mt-2 leading-relaxed">{timeline.desc}</p>
@@ -145,7 +145,7 @@
 </section>
 
 <!-- TESTIMONIALS (Solid cards layout) -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<h2 use:inview class="inview-hidden mb-16 text-center text-3xl font-bold text-white uppercase tracking-wider">
 			Commander <span class="text-primary-main">Logs</span>
@@ -166,9 +166,9 @@
 </section>
 
 <!-- Call to Action (Pre-onboarding bridge) -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div use:inview class="inview-hidden mx-auto max-w-4xl">
-		<div class="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary-main/10 via-[#000d22]/95 to-[#000814]/95 p-12 text-center shadow-2xl">
+		<div class="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-primary-main/10 via-[#000d22]/95 to-dark-bg/95 p-12 text-center shadow-2xl">
 			
 			<div class="mb-6 inline-flex rounded-full bg-primary-main/15 p-4 text-primary-light">
 				<DiscordBrands class="size-10 text-[#5865F2]" />

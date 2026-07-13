@@ -36,8 +36,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -68,7 +68,7 @@
 	<div class="grid gap-6 md:grid-cols-3">
 		{#each newCommanderToolkit as tool, i}
 			<div use:inview={{ delay: i * 100 }} class="inview-hidden">
-				<div class="bg-gradient-to-br from-primary-main/5 via-[#000d22]/95 to-primary-main/10 h-full rounded-xl border-2 border-primary-main/20 p-6 flex flex-col justify-between shadow-glow">
+				<div class="bg-linear-to-br from-primary-main/5 via-[#000d22]/95 to-primary-main/10 h-full rounded-xl border-2 border-primary-main/20 p-6 flex flex-col justify-between shadow-glow">
 					<div>
 						<div class="mb-4 flex items-center justify-between">
 							<span class="inline-flex rounded bg-primary-main/20 px-2.5 py-0.5 text-[10px] font-bold text-primary-light uppercase tracking-wider border border-primary-main/30">
@@ -101,7 +101,7 @@
 </section>
 
 <!-- CATEGORIZED TOOLS (Solid panel listings) -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-12 sm:py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-12 sm:py-16 px-4">
 	<div class="mx-auto max-w-7xl">
 		<h2 use:inview class="inview-hidden text-2xl font-bold text-white uppercase tracking-wider mb-12 text-center">
 			Galactic Database <span class="text-primary-main">& Utilities</span>
@@ -148,7 +148,7 @@
 </section>
 
 <!-- Onboarding Panel at the bottom -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<NewCommandersStart />
 	</div>

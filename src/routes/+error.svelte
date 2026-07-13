@@ -7,7 +7,7 @@
 
 <section class="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden">
 	<div
-		class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"
+		class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"
 	></div>
 
 	<div class="relative z-10 mx-auto max-w-2xl px-4 text-center">

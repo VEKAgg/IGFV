@@ -9,7 +9,7 @@
 	}>();
 </script>
 
-<div class="inline-flex items-center gap-3 rounded-lg border border-white/5 bg-[#000814]/80 px-3.5 py-1.5 text-xs text-gray-400 shadow-sm backdrop-blur-sm">
+<div class="inline-flex items-center gap-3 rounded-lg border border-white/5 bg-dark-bg/80 px-3.5 py-1.5 text-xs text-gray-400 shadow-sm backdrop-blur-sm">
 	<div class="flex items-center gap-1.5">
 		{#if state === 'live'}
 			<!-- Glowing green indicator -->

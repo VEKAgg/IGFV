@@ -6,7 +6,7 @@
 	let { focus = currentFocus } = $props();
 </script>
 
-<div class="relative overflow-hidden rounded-xl border border-primary-main/20 bg-gradient-to-r from-primary-main/10 via-[#000d22]/90 to-primary-main/5 p-6 shadow-glow">
+<div class="relative overflow-hidden rounded-xl border border-primary-main/20 bg-linear-to-r from-primary-main/10 via-[#000d22]/90 to-primary-main/5 p-6 shadow-glow">
 	<!-- Decorative glow -->
 	<div class="pointer-events-none absolute -top-12 -left-12 size-36 rounded-full bg-primary-main/5 blur-2xl"></div>
 
@@ -31,7 +31,7 @@
 				</div>
 				<div class="h-2 w-full overflow-hidden rounded-full bg-white/5 border border-white/10">
 					<div 
-						class="h-full rounded-full bg-gradient-to-r from-primary-dark to-primary-main shadow-[0_0_8px_rgba(169,11,43,0.5)] transition-all duration-500" 
+						class="h-full rounded-full bg-linear-to-r from-primary-dark to-primary-main shadow-[0_0_8px_rgba(169,11,43,0.5)] transition-all duration-500" 
 						style="width: {focus.progress}%"
 					></div>
 				</div>

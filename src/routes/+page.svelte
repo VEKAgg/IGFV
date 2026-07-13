@@ -368,7 +368,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SQUADRON HUB STATUS (Current Focus & Discord widget) -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-16 sm:py-24 border-t border-white/5 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
+<section class="relative px-4 py-16 sm:py-24 border-t border-white/5 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
 	<div class="mx-auto max-w-7xl">
 		<div class="mb-12 flex flex-col justify-between items-start gap-4 sm:flex-row sm:items-center">
 			<div>
@@ -443,7 +443,7 @@
 							<!-- Fallback list -->
 							<div class="flex items-center justify-between text-xs">
 								<div class="flex items-center gap-2.5">
-									<div class="flex size-6 items-center justify-center rounded-full bg-[#002868]/30 text-primary-light border border-primary-light/20">
+									<div class="flex size-6 items-center justify-center rounded-full bg-norway-blue/30 text-primary-light border border-primary-light/20">
 										<UserAstronautSolid class="size-3" />
 									</div>
 									<span class="font-medium text-gray-300">CMDR Don Samen</span>
@@ -452,7 +452,7 @@
 							</div>
 							<div class="flex items-center justify-between text-xs">
 								<div class="flex items-center gap-2.5">
-									<div class="flex size-6 items-center justify-center rounded-full bg-[#002868]/30 text-primary-light border border-primary-light/20">
+									<div class="flex size-6 items-center justify-center rounded-full bg-norway-blue/30 text-primary-light border border-primary-light/20">
 										<UserAstronautSolid class="size-3" />
 									</div>
 									<span class="font-medium text-gray-300">CMDR Twisted VorteK</span>
@@ -461,7 +461,7 @@
 							</div>
 							<div class="flex items-center justify-between text-xs">
 								<div class="flex items-center gap-2.5">
-									<div class="flex size-6 items-center justify-center rounded-full bg-[#002868]/30 text-primary-light border border-primary-light/20">
+									<div class="flex size-6 items-center justify-center rounded-full bg-norway-blue/30 text-primary-light border border-primary-light/20">
 										<UserAstronautSolid class="size-3" />
 									</div>
 									<span class="font-medium text-gray-300">CMDR Sarah Thorne</span>
@@ -489,7 +489,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- WHY IGFV (3 pillars) -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-20 sm:py-28 border-t border-white/5 bg-[#000814]/90">
+<section class="relative px-4 py-20 sm:py-28 border-t border-white/5 bg-dark-bg/90">
 	<div class="mx-auto max-w-6xl">
 		<div class="mb-16 text-center">
 			<h2 use:inview class="fade-up-section text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl">
@@ -521,7 +521,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- NEW COMMANDERS START HERE PANEL -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-gradient-to-b from-[#000814]/90 to-[#000814]/50">
+<section class="relative px-4 py-20 border-t border-white/5 bg-linear-to-b from-dark-bg/90 to-dark-bg/50">
 	<div class="mx-auto max-w-6xl">
 		<NewCommandersStart />
 	</div>
@@ -530,7 +530,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- QUICK NAVIGATION -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-[#000814]/50">
+<section class="relative px-4 py-20 border-t border-white/5 bg-dark-bg/50">
 	<div class="mx-auto max-w-6xl">
 		<h2
 			use:inview
@@ -578,7 +578,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SQUADRON OVERVIEW (Stats) -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-[#000814]/90">
+<section class="relative px-4 py-20 border-t border-white/5 bg-dark-bg/90">
 	<div class="mx-auto max-w-6xl">
 		<h2
 			use:inview
@@ -612,7 +612,7 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- FAQ SECTION (Solid contrast panels) -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-[#000814]/50">
+<section class="relative px-4 py-20 border-t border-white/5 bg-dark-bg/50">
 	<div class="mx-auto max-w-3xl">
 		<h2
 			use:inview
@@ -658,7 +658,7 @@
 						class="overflow-hidden transition-all duration-300 ease-in-out"
 						style="max-height: {openFaq === i ? '300px' : '0'};"
 					>
-						<div class="border-t border-white/5 px-6 py-5 text-sm leading-relaxed text-gray-300 bg-[#000814]/80 rounded-b-xl">
+						<div class="border-t border-white/5 px-6 py-5 text-sm leading-relaxed text-gray-300 bg-dark-bg/80 rounded-b-xl">
 							{faq.answer}
 						</div>
 					</div>
@@ -671,10 +671,10 @@
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- JOIN US TODAY CTA -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<section class="relative px-4 py-24 border-t border-white/5 bg-[#000814]/90">
+<section class="relative px-4 py-24 border-t border-white/5 bg-dark-bg/90">
 	<div use:inview class="fade-up-section mx-auto max-w-4xl">
 		<div
-			class="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary-main/10 via-[#000d22]/90 to-[#000814]/95 p-12 text-center shadow-2xl sm:p-16"
+			class="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-primary-main/10 via-[#000d22]/90 to-dark-bg/95 p-12 text-center shadow-2xl sm:p-16"
 		>
 			<div
 				class="pointer-events-none absolute -top-20 -left-20 size-64 rounded-full bg-primary-main/5 blur-3xl"

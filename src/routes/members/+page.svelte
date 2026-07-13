@@ -127,8 +127,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -170,7 +170,7 @@
 		</div>
 
 		<!-- Right: Status sync note -->
-		<div use:inview={{ delay: 150 }} class="inview-hidden flex flex-col justify-between rounded-xl border border-primary-main/20 bg-gradient-to-br from-primary-main/5 to-primary-main/15 p-6 shadow-glow">
+		<div use:inview={{ delay: 150 }} class="inview-hidden flex flex-col justify-between rounded-xl border border-primary-main/20 bg-linear-to-br from-primary-main/5 to-primary-main/15 p-6 shadow-glow">
 			<div>
 				<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
 					<span class="text-xs font-bold text-white uppercase">Sync Status</span>
@@ -196,7 +196,7 @@
 </section>
 
 <!-- ROSTER GRID (Role filtering) -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-12 sm:py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-12 sm:py-16 px-4">
 	<div class="mx-auto max-w-7xl">
 		
 		<!-- Role Filters -->

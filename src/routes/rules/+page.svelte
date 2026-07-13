@@ -13,8 +13,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -35,7 +35,7 @@
 
 <!-- PLAIN LANGUAGE SUMMARY (At the top!) -->
 <section class="mx-auto max-w-4xl px-4 py-12 sm:py-16">
-	<div use:inview class="inview-hidden rounded-xl border-2 border-primary-main/20 bg-gradient-to-br from-primary-main/5 via-[#000d22]/95 to-primary-main/10 p-6 sm:p-8 shadow-glow flex gap-5 items-start">
+	<div use:inview class="inview-hidden rounded-xl border-2 border-primary-main/20 bg-linear-to-br from-primary-main/5 via-[#000d22]/95 to-primary-main/10 p-6 sm:p-8 shadow-glow flex gap-5 items-start">
 		<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-main/20 text-primary-light">
 			<InfoCircleSolid class="size-5" />
 		</div>
@@ -47,7 +47,7 @@
 </section>
 
 <!-- WHY THESE RULES EXIST (Values-driven section) -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 px-4">
 	<div class="mx-auto max-w-6xl">
 		<div class="grid gap-12 lg:grid-cols-2 lg:items-center">
 			<div>
@@ -106,7 +106,7 @@
 </section>
 
 <!-- Reporting Violations -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 px-4">
 	<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 		<ExclamationTriangleSolid class="size-7 text-primary-light mx-auto mb-4" />
 		<h2 class="text-xl font-bold text-white uppercase tracking-wider mb-2">Reporting Violations</h2>

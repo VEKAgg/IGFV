@@ -49,8 +49,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -70,7 +70,7 @@
 </section>
 
 <!-- ─── WHO FITS HERE section ─── -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<div class="grid gap-12 lg:grid-cols-2 lg:items-center">
 			<div>
@@ -129,7 +129,7 @@
 </section>
 
 <!-- ─── HOW WE OPERATE section ─── -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<div class="mb-16 text-center">
 			<h2 use:inview class="inview-hidden text-3xl font-bold text-white uppercase tracking-wider">
@@ -174,7 +174,7 @@
 </section>
 
 <!-- Timeline History -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-5xl">
 		<h2 use:inview class="inview-hidden mb-16 text-center text-3xl font-bold text-white uppercase tracking-wider">
 			Squadron <span class="text-primary-main">Timeline</span>
@@ -188,12 +188,12 @@
 			] as item}
 				<div class="mb-10 ml-8 relative">
 					<!-- Blinking dot on current timeline step -->
-					<span class="absolute -left-12 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#000814] border border-primary-main">
+					<span class="absolute -left-12 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-dark-bg border border-primary-main">
 						<span class="size-2 rounded-full bg-primary-light"></span>
 					</span>
 					<span class="hidden md:block absolute -left-44 top-1 text-sm font-bold text-primary-light">{item.year}</span>
 					
-					<div class="rounded-lg border border-white/5 bg-[#000814]/60 p-6">
+					<div class="rounded-lg border border-white/5 bg-dark-bg/60 p-6">
 						<span class="md:hidden block text-xs font-bold text-primary-light mb-1">{item.year}</span>
 						<h3 class="text-base font-bold text-white uppercase">{item.title}</h3>
 						<p class="text-xs text-gray-400 mt-2 leading-relaxed">{item.text}</p>
@@ -205,7 +205,7 @@
 </section>
 
 <!-- ─── WHY COMMANDERS STAY section (Solid panels) ─── -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<h2 use:inview class="inview-hidden mb-16 text-center text-3xl font-bold text-white uppercase tracking-wider">
 			Why Commanders <span class="text-primary-main">Stay</span>
@@ -230,7 +230,7 @@
 </section>
 
 <!-- Leadership Team -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-5xl">
 		<h2 use:inview class="inview-hidden mb-16 text-center text-3xl font-bold text-white uppercase tracking-wider">
 			Squadron <span class="text-primary-main">Command Staff</span>
@@ -260,7 +260,7 @@
 </section>
 
 <!-- FAQ Section (Solid panels) -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-3xl">
 		<div class="mb-12 text-center">
 			<h2 use:inview class="inview-hidden text-3xl font-bold text-white uppercase tracking-wider">
@@ -287,7 +287,7 @@
 						</svg>
 					</button>
 					{#if openFaq === i}
-						<div class="border-t border-white/5 px-6 py-5 text-xs leading-relaxed text-gray-300 bg-[#000814]/50 rounded-b-xl">
+						<div class="border-t border-white/5 px-6 py-5 text-xs leading-relaxed text-gray-300 bg-dark-bg/50 rounded-b-xl">
 							{faq.answer}
 						</div>
 					{/if}
@@ -298,7 +298,7 @@
 </section>
 
 <!-- Onboarding Panel at the bottom -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<NewCommandersStart />
 	</div>

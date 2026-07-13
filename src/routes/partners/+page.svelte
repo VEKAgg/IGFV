@@ -13,7 +13,7 @@
 <!-- Hero Section -->
 <section class="relative overflow-hidden border-b border-primary-main/20">
 	<div
-		class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"
+		class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"
 	></div>
 	<div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
@@ -190,7 +190,7 @@
 
 <!-- Supporting Partners -->
 <section
-	class="border-t border-primary-main/20 bg-gradient-to-b from-dark-bg via-primary-main/5 to-dark-bg"
+	class="border-t border-primary-main/20 bg-linear-to-b from-dark-bg via-primary-main/5 to-dark-bg"
 >
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
 		<div use:inview class="inview-hidden">
@@ -255,7 +255,7 @@
 <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
 	<div use:inview class="inview-hidden">
 		<div
-			class="to-dark/50 rounded-lg border border-primary-main/30 bg-gradient-to-br from-primary-main/10 p-8 text-center shadow-glow backdrop-blur-sm sm:p-12"
+			class="to-dark/50 rounded-lg border border-primary-main/30 bg-linear-to-br from-primary-main/10 p-8 text-center shadow-glow backdrop-blur-sm sm:p-12"
 		>
 			<h2 class="text-3xl font-bold text-white sm:text-4xl">
 				Become a <span class="text-primary-main">Partner</span>

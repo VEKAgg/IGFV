@@ -19,7 +19,7 @@
 
 <div class="relative flex min-h-[calc(100vh-4rem)] items-center justify-center bg-dark-bg px-4 overflow-hidden">
 	<!-- Gradient glow background -->
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 
 	<div class="relative z-10 flex max-w-xl flex-col items-center gap-8 text-center rounded-xl border border-white/10 bg-[#000d22]/90 p-8 shadow-glow sm:p-12">
 		<!-- Operational Drydock Graphic -->

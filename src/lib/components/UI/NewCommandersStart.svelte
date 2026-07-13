@@ -26,7 +26,7 @@
 		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 			{#each onboardingSteps as step, i}
 				{@const IconComponent = icons[i]}
-				<div class="relative flex flex-col justify-between rounded-lg border border-white/5 bg-[#000814]/75 p-5 transition-all duration-300 hover:border-primary-main/20 hover:bg-[#000814]/95">
+				<div class="relative flex flex-col justify-between rounded-lg border border-white/5 bg-dark-bg/75 p-5 transition-all duration-300 hover:border-primary-main/20 hover:bg-dark-bg/95">
 					<div class="absolute -top-3 -right-3 flex size-8 items-center justify-center rounded-full border border-white/5 bg-[#000d22] text-xs font-bold text-gray-500">
 						{step.num}
 					</div>

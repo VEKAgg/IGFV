@@ -36,8 +36,8 @@
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-gradient-to-b from-[#000814]/0 to-[#000814]/80">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
@@ -108,7 +108,7 @@
 </section>
 
 <!-- UPCOMING SPECIAL EVENTS (Solid panels list) -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-12 sm:py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-12 sm:py-16 px-4">
 	<div class="mx-auto max-w-7xl">
 		<h2 use:inview class="inview-hidden text-2xl font-bold text-white uppercase tracking-wider mb-12 text-center">
 			Upcoming Campaigns <span class="text-primary-main">& Expeditions</span>
@@ -156,7 +156,7 @@
 </section>
 
 <!-- PAST MILESTONES (Group list) -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-12 sm:py-16 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-12 sm:py-16 px-4">
 	<div class="mx-auto max-w-5xl">
 		<h2 use:inview class="inview-hidden text-2xl font-bold text-white uppercase tracking-wider mb-12 text-center">
 			Past <span class="text-primary-main">Milestones</span>
@@ -164,7 +164,7 @@
 
 		<div class="space-y-4">
 			{#each pastEvents as event}
-				<div class="rounded-xl border border-white/5 bg-[#000814]/70 p-5 flex items-start gap-4">
+				<div class="rounded-xl border border-white/5 bg-dark-bg/70 p-5 flex items-start gap-4">
 					<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-primary-main/10 text-primary-light">
 						<StarSolid class="size-5" />
 					</div>

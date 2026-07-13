@@ -20,8 +20,8 @@
 </script>
 
 <!-- Live Operational Dashboard (Status at the top!) -->
-<section class="relative border-b border-primary-main/20 bg-[#000814]/90 px-4 py-16 sm:py-24">
-	<div class="absolute inset-0 bg-gradient-to-b from-primary-main/5 via-transparent to-transparent"></div>
+<section class="relative border-b border-primary-main/20 bg-dark-bg/90 px-4 py-16 sm:py-24">
+	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
 	<div class="mx-auto max-w-7xl relative z-10">
 		
 		<!-- Header with Live Status Note -->
@@ -105,7 +105,7 @@
 			</div>
 
 			<!-- Right: CURRENT OPERATIONS ORDER -->
-			<div use:inview={{ delay: 200 }} class="inview-hidden rounded-xl border border-primary-main/20 bg-gradient-to-br from-primary-main/5 via-[#000d22]/95 to-primary-main/10 p-6 shadow-glow">
+			<div use:inview={{ delay: 200 }} class="inview-hidden rounded-xl border border-primary-main/20 bg-linear-to-br from-primary-main/5 via-[#000d22]/95 to-primary-main/10 p-6 shadow-glow">
 				<div class="mb-4 flex items-center gap-3 border-b border-white/5 pb-3">
 					<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-main/15 text-primary-light">
 						<ShieldAltSolid class="h-5 w-5 animate-pulse" />
@@ -129,7 +129,7 @@
 </section>
 
 <!-- ─── WHY VALHALL MATTERS section ─── -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<div class="grid gap-12 lg:grid-cols-2 lg:items-center">
 			<div>
@@ -184,7 +184,7 @@
 </section>
 
 <!-- Available Services Detail (Solid panels) -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<div class="mb-16 text-center">
 			<h2 use:inview class="inview-hidden text-3xl font-bold text-white uppercase tracking-wider">
@@ -213,7 +213,7 @@
 </section>
 
 <!-- Jump Schedule & History -->
-<section class="border-t border-white/5 bg-[#000814]/90 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/90 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-6xl">
 		<div class="grid gap-12 lg:grid-cols-2">
 			
@@ -247,7 +247,7 @@
 				
 				<div class="space-y-4">
 					{#each carrierJumpHistory as log}
-						<div class="rounded-xl border border-white/5 bg-[#000814]/60 p-5 flex items-start gap-4">
+						<div class="rounded-xl border border-white/5 bg-dark-bg/60 p-5 flex items-start gap-4">
 							<div class="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-primary-main/10 text-primary-light">
 								<HistorySolid class="size-4" />
 							</div>
@@ -271,7 +271,7 @@
 </section>
 
 <!-- Carrier Etiquette FAQ section (Solid panels) -->
-<section class="border-t border-white/5 bg-[#000814]/50 py-16 sm:py-24 px-4">
+<section class="border-t border-white/5 bg-dark-bg/50 py-16 sm:py-24 px-4">
 	<div class="mx-auto max-w-3xl">
 		<div class="mb-12 text-center">
 			<h2 use:inview class="inview-hidden text-3xl font-bold text-white uppercase tracking-wider">
