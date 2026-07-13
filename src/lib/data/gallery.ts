@@ -4,7 +4,8 @@ export const galleryItems: GalleryItem[] = [
 	{
 		id: 'gal-001',
 		title: 'ISS Valhall in Orbit',
-		caption: 'The majestic flagship ISS Valhall parked in orbit around a ringed gas giant in LHS 3447.',
+		caption:
+			'The majestic flagship ISS Valhall parked in orbit around a ringed gas giant in LHS 3447.',
 		category: 'carrier',
 		imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800',
 		credit: 'CMDR Don Samen'
@@ -12,7 +13,8 @@ export const galleryItems: GalleryItem[] = [
 	{
 		id: 'gal-002',
 		title: 'Sagittarius A* Arrival',
-		caption: 'A fleet of IGFV exploration ships posing in front of the supermassive black hole at the center of the Milky Way.',
+		caption:
+			'A fleet of IGFV exploration ships posing in front of the supermassive black hole at the center of the Milky Way.',
 		category: 'exploration',
 		imageUrl: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=800',
 		credit: 'CMDR Sarah Thorne'

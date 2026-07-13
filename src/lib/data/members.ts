@@ -57,11 +57,37 @@ export const members: MemberProfile[] = [
 		isFeatured: false
 	}
 ];
-export const leadership = members.filter(m => m.role === 'Leader' || m.role === 'Manager' || m.role === 'Officer');
-export const featuredMembers = members.filter(m => m.isFeatured);
+export const leadership = members.filter(
+	(m) => m.role === 'Leader' || m.role === 'Manager' || m.role === 'Officer'
+);
+export const featuredMembers = members.filter((m) => m.isFeatured);
 export const standardMembersPlaceholder = [
-	{ name: 'CMDR Aethelgard', role: 'Commander', rank: 'Dangerous', platform: 'PC', timezone: 'UTC+1' },
-	{ name: 'CMDR Nova_Storm', role: 'Commander', rank: 'Ranger', platform: 'Xbox', timezone: 'UTC-6' },
-	{ name: 'CMDR Polaris_Cap', role: 'Commander', rank: 'Broker', platform: 'PlayStation', timezone: 'UTC' },
-	{ name: 'CMDR VoidWalker', role: 'Commander', rank: 'Elite Explorer', platform: 'PC', timezone: 'UTC+3' }
+	{
+		name: 'CMDR Aethelgard',
+		role: 'Commander',
+		rank: 'Dangerous',
+		platform: 'PC',
+		timezone: 'UTC+1'
+	},
+	{
+		name: 'CMDR Nova_Storm',
+		role: 'Commander',
+		rank: 'Ranger',
+		platform: 'Xbox',
+		timezone: 'UTC-6'
+	},
+	{
+		name: 'CMDR Polaris_Cap',
+		role: 'Commander',
+		rank: 'Broker',
+		platform: 'PlayStation',
+		timezone: 'UTC'
+	},
+	{
+		name: 'CMDR VoidWalker',
+		role: 'Commander',
+		rank: 'Elite Explorer',
+		platform: 'PC',
+		timezone: 'UTC+3'
+	}
 ];

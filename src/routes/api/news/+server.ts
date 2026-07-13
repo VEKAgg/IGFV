@@ -1,12 +1,12 @@
 import { json } from '@sveltejs/kit';
-import { fetchDiscordWidget } from '$lib/server/discord';
+import { fetchNews } from '$lib/server/news';
 
 export async function GET() {
 	try {
-		const data = await fetchDiscordWidget();
+		const data = await fetchNews();
 		return json(data, {
 			headers: {
-				'cache-control': 'public, max-age=30'
+				'cache-control': 'public, max-age=60'
 			}
 		});
 	} catch (err: any) {

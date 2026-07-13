@@ -19,7 +19,7 @@
 	// Filter tabs
 	let activeTab = $state<'active' | 'upcoming' | 'completed'>('active');
 
-	const enrichedOps = operations.map(op => {
+	const enrichedOps = operations.map((op) => {
 		let roles = 'All pilots';
 		let help = 'Join Discord and report to wing commander.';
 		let beginnerFriendly = true;
@@ -32,7 +32,8 @@
 			tags = ['expedition', 'logistics', 'open-to-new-pilots'];
 		} else if (op.id === 'op-002') {
 			roles = 'Combat Pilots, Escorts';
-			help = 'Meet in LHS 3447 resource extraction sites and wing up to suppress pirate incursions.';
+			help =
+				'Meet in LHS 3447 resource extraction sites and wing up to suppress pirate incursions.';
 			beginnerFriendly = true;
 			tags = ['combat', 'security', 'open-to-new-pilots'];
 		} else if (op.id === 'op-003') {
@@ -42,7 +43,8 @@
 			tags = ['logistics', 'trade', 'open-to-new-pilots'];
 		} else if (op.id === 'op-004') {
 			roles = 'Long-Range Explorers';
-			help = 'Help establish safe path points and scan market rates along the transit connection stations.';
+			help =
+				'Help establish safe path points and scan market rates along the transit connection stations.';
 			beginnerFriendly = false;
 			tags = ['expedition', 'navigation'];
 		} else if (op.id === 'op-005') {
@@ -66,16 +68,20 @@
 		};
 	});
 
-	let filteredOps = $derived(enrichedOps.filter(op => op.status === activeTab));
+	let filteredOps = $derived(enrichedOps.filter((op) => op.status === activeTab));
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
-	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
-	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
+<section
+	class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80"
+>
+	<div
+		class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"
+	></div>
+	<div class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
-				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-xs text-primary-light font-semibold uppercase tracking-wider"
+				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-primary-light uppercase"
 			>
 				<RocketSolid class="h-4 w-4" />
 				<span>Mission Control Center</span>
@@ -83,8 +89,9 @@
 			<h1 class="text-4xl font-bold tracking-tight text-white uppercase sm:text-5xl lg:text-6xl">
 				Tactical <span class="text-primary-main">Mission</span> Board
 			</h1>
-			<p class="mt-6 text-sm sm:text-base leading-relaxed text-gray-300">
-				Monitor ongoing squadron operations, check logistics goals, and find active wing missions to contribute to the Goodfellas presence in the galaxy.
+			<p class="mt-6 text-sm leading-relaxed text-gray-300 sm:text-base">
+				Monitor ongoing squadron operations, check logistics goals, and find active wing missions to
+				contribute to the Goodfellas presence in the galaxy.
 			</p>
 		</div>
 	</div>
@@ -92,8 +99,8 @@
 
 <!-- Current Focus & Live status indicator -->
 <section class="mx-auto max-w-7xl px-4 py-8">
-	<div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between mb-8">
-		<h2 class="text-xl font-bold text-white uppercase tracking-wider">Tactical Focus</h2>
+	<div class="mb-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+		<h2 class="text-xl font-bold tracking-wider text-white uppercase">Tactical Focus</h2>
 		<DataStatusPanel state="live" source="Squadron Registry API" />
 	</div>
 	<CurrentFocus />
@@ -101,19 +108,15 @@
 
 <!-- Mission board board view -->
 <section class="mx-auto max-w-7xl px-4 py-12 sm:py-16">
-	
 	<!-- Filter Tabs -->
 	<div class="mb-12 flex justify-center">
 		<div class="inline-flex rounded-lg border border-white/10 bg-[#000d22]/90 p-1">
-			{#each [
-				{ id: 'active', label: 'Active Missions' },
-				{ id: 'upcoming', label: 'Upcoming Plans' },
-				{ id: 'completed', label: 'Archived / Complete' }
-			] as tab}
+			{#each [{ id: 'active', label: 'Active Missions' }, { id: 'upcoming', label: 'Upcoming Plans' }, { id: 'completed', label: 'Archived / Complete' }] as tab}
 				<button
-					onclick={() => activeTab = tab.id as any}
-					class="rounded-md px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all {activeTab === tab.id 
-						? 'bg-primary-main text-white shadow-md' 
+					onclick={() => (activeTab = tab.id as any)}
+					class="rounded-md px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all {activeTab ===
+					tab.id
+						? 'bg-primary-main text-white shadow-md'
 						: 'text-gray-400 hover:text-white'}"
 				>
 					{tab.label}
@@ -127,51 +130,65 @@
 		<div class="grid gap-6 md:grid-cols-2">
 			{#each filteredOps as op, i}
 				<div use:inview={{ delay: i * 80 }} class="inview-hidden group">
-					<div class="bg-[#000d22]/95 h-full rounded-xl border border-white/10 p-6 shadow-glow transition-all duration-300 hover:border-primary-main/30 flex flex-col justify-between">
-						
+					<div
+						class="flex h-full flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/95 p-6 shadow-glow transition-all duration-300 hover:border-primary-main/30"
+					>
 						<!-- Header -->
 						<div>
-							<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+							<div class="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
 								<div class="flex items-center gap-2">
 									<!-- Priority Badge -->
 									{#if op.priority === 'Urgent'}
-										<span class="inline-flex items-center gap-1 rounded-full bg-red-500/10 border border-red-500/20 px-2.5 py-0.5 text-[10px] font-bold text-red-400">
+										<span
+											class="inline-flex items-center gap-1 rounded-full border border-red-500/20 bg-red-500/10 px-2.5 py-0.5 text-[10px] font-bold text-red-400"
+										>
 											<ExclamationTriangleSolid class="size-2.5 animate-pulse" />
 											Urgent
 										</span>
 									{:else if op.priority === 'High'}
-										<span class="inline-flex items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-400">
+										<span
+											class="inline-flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold text-amber-400"
+										>
 											High
 										</span>
 									{:else}
-										<span class="inline-flex items-center gap-1 rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-bold text-gray-400">
+										<span
+											class="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold text-gray-400"
+										>
 											{op.priority}
 										</span>
 									{/if}
 
 									<!-- Beginner Friendly indicator -->
 									{#if op.beginnerFriendly}
-										<span class="inline-flex items-center rounded bg-green-500/10 border border-green-500/20 px-2 py-0.5 text-[10px] font-bold text-green-400 uppercase tracking-wide">
+										<span
+											class="inline-flex items-center rounded border border-green-500/20 bg-green-500/10 px-2 py-0.5 text-[10px] font-bold tracking-wide text-green-400 uppercase"
+										>
 											New Pilots Welcome
 										</span>
 									{/if}
 								</div>
 
-								<span class="text-[10px] text-gray-500 font-mono">ID: {op.id}</span>
+								<span class="font-mono text-[10px] text-gray-500">ID: {op.id}</span>
 							</div>
 
-							<h3 class="mb-2 text-xl font-bold text-white uppercase tracking-wide">{op.title}</h3>
-							<p class="text-xs text-gray-400 mb-4 leading-relaxed">{op.summary}</p>
-							
+							<h3 class="mb-2 text-xl font-bold tracking-wide text-white uppercase">{op.title}</h3>
+							<p class="mb-4 text-xs leading-relaxed text-gray-400">{op.summary}</p>
+
 							<!-- Progress bar for active -->
 							{#if op.status === 'active'}
 								<div class="mb-5">
-									<div class="flex items-center justify-between text-[11px] text-gray-500 mb-1">
+									<div class="mb-1 flex items-center justify-between text-[11px] text-gray-500">
 										<span>Campaign Progress</span>
 										<span>{op.progress}%</span>
 									</div>
-									<div class="h-1.5 w-full overflow-hidden rounded-full bg-white/5 border border-white/5">
-										<div class="h-full bg-primary-main rounded-full" style="width: {op.progress}%"></div>
+									<div
+										class="h-1.5 w-full overflow-hidden rounded-full border border-white/5 bg-white/5"
+									>
+										<div
+											class="h-full rounded-full bg-primary-main"
+											style="width: {op.progress}%"
+										></div>
 									</div>
 								</div>
 							{/if}
@@ -179,32 +196,40 @@
 							<!-- Detailed Specifications -->
 							<div class="space-y-3.5 border-t border-white/5 pt-4">
 								<div class="flex flex-col gap-1.5">
-									<span class="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Required Wing Roles</span>
+									<span class="text-[10px] font-bold tracking-wider text-gray-500 uppercase"
+										>Required Wing Roles</span
+									>
 									<span class="text-xs font-semibold text-white">{op.roles}</span>
 								</div>
 								<div class="flex flex-col gap-1.5">
-									<span class="text-[10px] uppercase font-bold text-gray-500 tracking-wider">How to Contribute</span>
-									<span class="text-xs text-gray-300 leading-relaxed">{op.help}</span>
+									<span class="text-[10px] font-bold tracking-wider text-gray-500 uppercase"
+										>How to Contribute</span
+									>
+									<span class="text-xs leading-relaxed text-gray-300">{op.help}</span>
 								</div>
 							</div>
 						</div>
 
 						<!-- Footer info -->
-						<div class="mt-6 border-t border-white/5 pt-4 flex items-center justify-between text-xs text-gray-500">
-							<span class="flex items-center gap-1"><UserAstronautSolid class="size-3.5 text-primary-light" /> Operations Lead: {op.lead}</span>
+						<div
+							class="mt-6 flex items-center justify-between border-t border-white/5 pt-4 text-xs text-gray-500"
+						>
+							<span class="flex items-center gap-1"
+								><UserAstronautSolid class="size-3.5 text-primary-light" /> Operations Lead: {op.lead}</span
+							>
 							<span class="font-mono">{op.eta}</span>
 						</div>
-
 					</div>
 				</div>
 			{/each}
 		</div>
 	{:else}
-		<div class="text-center rounded-xl border border-white/10 bg-[#000d22]/90 p-12">
-			<ExclamationTriangleSolid class="size-8 text-gray-500 mx-auto mb-3" />
-			<h3 class="text-lg font-bold text-white uppercase mb-1">No Missions Found</h3>
-			<p class="text-xs text-gray-400">All campaigns in this sector are currently resolved or idle.</p>
+		<div class="rounded-xl border border-white/10 bg-[#000d22]/90 p-12 text-center">
+			<ExclamationTriangleSolid class="mx-auto mb-3 size-8 text-gray-500" />
+			<h3 class="mb-1 text-lg font-bold text-white uppercase">No Missions Found</h3>
+			<p class="text-xs text-gray-400">
+				All campaigns in this sector are currently resolved or idle.
+			</p>
 		</div>
 	{/if}
-
 </section>

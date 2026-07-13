@@ -4,9 +4,11 @@ export const newsPosts: NewsPost[] = [
 	{
 		slug: 'squadron-anniversary-3311',
 		title: 'Celebrating 6 Years of Interstellar Goodfellas',
-		excerpt: 'Founding member CMDR Don Samen looks back at our humble beginnings in 2019 and outlines our vision for the future of our peaceful squadron.',
-		category: 'Announcements',
+		excerpt:
+			'Founding member CMDR Don Samen looks back at our humble beginnings in 2019 and outlines our vision for the future of our peaceful squadron.',
+		category: 'Milestone',
 		publishedAt: '3311-06-15',
+		author: 'CMDR Don Samen',
 		content: `Commanders,
 
 Today marks exactly six years since the Imperial Guard Fleet Vanguard (IGFV) - known to many as the Interstellar Goodfellas - was registered with the Pilot's Federation. What began in 3305 as a small team of three pilots sharing trade trade data has blossomed into a multi-platform community of over 100 active pilots.
@@ -19,14 +21,17 @@ Thank you to all commanders who have flown with us, donated Tritium, shared mini
 
 Fly safe,
 *IGFV Command Staff*`,
+		isFeatured: true,
 		dataState: 'live'
 	},
 	{
 		slug: 'valhall-expedition-preparations',
 		title: 'ISS Valhall Colonia Expedition Details Released',
-		excerpt: 'The logistics staff have finalized the route for the upcoming summer expedition to Colonia. Tritium load operations begin this week.',
-		category: 'Expeditions',
+		excerpt:
+			'The logistics staff have finalized the route for the upcoming summer expedition to Colonia. Tritium load operations begin this week.',
+		category: 'Fleet Carrier',
 		publishedAt: '3311-06-08',
+		author: 'CMDR Don Samen',
 		content: `Logistics operations are now underway for the ISS Valhall's upcoming voyage to the Colonia Nebula. 
 
 The carrier is currently taking on fuel at LHS 3447. We require approximately 5,000 tonnes of Tritium to complete the round trip, accounting for safety margins. A buying order has been placed on the commodities market at a premium price, allowing squadron haulers to make a substantial profit loading the depot.
@@ -39,14 +44,17 @@ The carrier is currently taking on fuel at LHS 3447. We require approximately 5,
 - **July 18**: Return trip begins.
 
 If you plan to join the expedition, please ensure your explorer and miner ships are docked in the shipyard by July 1, 19:30 UTC. Ship transfers to the carrier will not be available once we leave the Bubble, so double check your inventory!`,
+		isFeatured: false,
 		dataState: 'live'
 	},
 	{
 		slug: 'ax-combat-training-seminar',
 		title: 'Anti-Xeno Combat Training Weekend',
-		excerpt: 'New to AX combat? Join our veterans next weekend for a step-by-step introduction to Guardian technology and Interceptor cold orbiting.',
-		category: 'Training',
+		excerpt:
+			'New to AX combat? Join our veterans next weekend for a step-by-step introduction to Guardian technology and Interceptor cold orbiting.',
+		category: 'Operations',
 		publishedAt: '3311-05-24',
+		author: 'CMDR Twisted VorteK',
 		content: `With Thargoid activity remains a persistent threat in surrounding sectors, the IGFV security department is hosting an AX Combat Training Seminar.
 
 Our experienced combat pilots will lead classroom discussions in Discord and hands-on exercises in low-intensity threat zones.
@@ -61,10 +69,11 @@ Our experienced combat pilots will lead classroom discussions in Discord and han
 - A medium-sized combat ship (Krait MkII, Alliance Chieftain, or Federal Assault Ship are recommended).
 - Basic engineering completed (FSD and Thrusters).
 - A positive attitude and willingness to rebuy your ship! (Don't worry, we'll keep you alive as much as possible).`,
+		isFeatured: false,
 		dataState: 'live'
 	}
 ];
-export const newsPostsWithDataState = newsPosts.map(p => ({
+export const newsPostsWithDataState = newsPosts.map((p) => ({
 	...p,
 	dataState: p.dataState ?? 'live'
 }));

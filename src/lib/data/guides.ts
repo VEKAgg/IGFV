@@ -13,8 +13,10 @@ export const guides: ExtendedGuideEntry[] = [
 		publishedAt: '3311-05-18',
 		difficulty: 'Beginner',
 		isStartHere: true,
-		excerpt: 'A step-by-step route mapping highly valuable Earth-like and Water worlds close to the Bubble for quick exploration credits.',
-		content: 'New pilots can quickly earn tens of millions of credits and unlock their first exploration ranks by scanning known high-value planets near the starting systems. This guide explains the "Road to Riches" technique.',
+		excerpt:
+			'A step-by-step route mapping highly valuable Earth-like and Water worlds close to the Bubble for quick exploration credits.',
+		content:
+			'New pilots can quickly earn tens of millions of credits and unlock their first exploration ranks by scanning known high-value planets near the starting systems. This guide explains the "Road to Riches" technique.',
 		steps: [
 			{
 				title: 'Required Outfitting',
@@ -38,8 +40,10 @@ export const guides: ExtendedGuideEntry[] = [
 		publishedAt: '3311-04-12',
 		difficulty: 'Beginner',
 		isStartHere: false,
-		excerpt: 'Learn the difference between laser, subsurface, and core mining, and how to outfit your ship for maximum credit yields.',
-		content: 'Mining is one of the most lucrative careers in the galaxy. This guide will walk you through the essential equipment and techniques needed to find and extract high-value minerals like Void Opals, Low Temperature Diamonds, and Platinum.',
+		excerpt:
+			'Learn the difference between laser, subsurface, and core mining, and how to outfit your ship for maximum credit yields.',
+		content:
+			'Mining is one of the most lucrative careers in the galaxy. This guide will walk you through the essential equipment and techniques needed to find and extract high-value minerals like Void Opals, Low Temperature Diamonds, and Platinum.',
 		steps: [
 			{
 				title: 'Step 1: Outfitting',
@@ -63,8 +67,10 @@ export const guides: ExtendedGuideEntry[] = [
 		publishedAt: '3311-05-02',
 		difficulty: 'Intermediate',
 		isStartHere: false,
-		excerpt: 'Understand how player actions affect minor factions, system control, security status, and how to support IGFV political interests.',
-		content: 'The Background Simulation (BGS) is the living engine behind Elite Dangerous. Every mission completed, every tonne of cargo traded, and every bounty turned in influences the balance of power in the system.',
+		excerpt:
+			'Understand how player actions affect minor factions, system control, security status, and how to support IGFV political interests.',
+		content:
+			'The Background Simulation (BGS) is the living engine behind Elite Dangerous. Every mission completed, every tonne of cargo traded, and every bounty turned in influences the balance of power in the system.',
 		steps: [
 			{
 				title: 'Influence & Control',
@@ -88,8 +94,10 @@ export const guides: ExtendedGuideEntry[] = [
 		publishedAt: '3311-06-01',
 		difficulty: 'Squadron-Specific',
 		isStartHere: false,
-		excerpt: 'A comprehensive onboarding guide explaining carrier parking rules, Tritium loading/unloading logistics, and Inara sync requirements.',
-		content: 'To keep our squadron operations running smoothly, we coordinate carrier jumps, trade loading loops, and expedition rosters. This guide explains how to properly park and support our operational base.',
+		excerpt:
+			'A comprehensive onboarding guide explaining carrier parking rules, Tritium loading/unloading logistics, and Inara sync requirements.',
+		content:
+			'To keep our squadron operations running smoothly, we coordinate carrier jumps, trade loading loops, and expedition rosters. This guide explains how to properly park and support our operational base.',
 		steps: [
 			{
 				title: 'Docking & Roster Registration',
@@ -108,7 +116,7 @@ export const guides: ExtendedGuideEntry[] = [
 	}
 ];
 
-export const guidesWithDataState = guides.map(g => ({
+export const guidesWithDataState = guides.map((g) => ({
 	...g,
 	dataState: g.dataState ?? 'live'
 }));
