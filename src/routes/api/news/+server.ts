@@ -9,7 +9,7 @@ export async function GET() {
 				'cache-control': 'public, max-age=60'
 			}
 		});
-	} catch (err: any) {
-		return json({ error: err?.message || 'failed' }, { status: 500 });
+	} catch (err: unknown) {
+		return json({ error: err instanceof Error ? err.message : 'failed' }, { status: 500 });
 	}
 }
