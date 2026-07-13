@@ -11,10 +11,12 @@
 This guide documents the performance optimizations and dynamic Directus blog integration. Because of negative constraints prohibiting direct workspace modifications, complete replacement file contents are provided below, along with a self-contained patch script `apply-updates.js` which can be executed to modify the files safely.
 
 ### 1. Performance Optimizations (Homepage)
+
 High-frequency layout calculations for the cursor glow and parallax background elements in `src/routes/+page.svelte` originally triggered continuous Svelte state updates via `$state(mouseX/Y/scrollY)` and `$effect()`, resulting in lag and high CPU usage.
 **Solution**: Replaced state variables with raw event listeners that update CSS Custom Properties (`--mouse-x`, `--mouse-y`, `--scroll-y`) directly on `document.documentElement`. The layout elements resolve these via `calc()` inside their CSS bindings, keeping the Svelte render thread idle.
 
 ### 2. Directus CMS Blog Integration (News Page)
+
 Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.svelte` and the latest bulletin strip on `src/routes/+page.svelte` with a dynamic client-side fetch from the parent website's Directus instance (`https://ms.veka.gg`).
 **Solution**: Added a normalized mapping layout that retrieves posts from the `posts` collection, maps the categories dynamically to matching IGFV tags, adjusts standard Gregorian dates to in-game Elite: Dangerous calendar years (Gregorian + 1286 years), and handles image rendering safely. A fallback layer is included so that if the API is offline or slow, the page instantly displays static news.
 
@@ -23,6 +25,7 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 ## 💾 Code Replacement Specs
 
 ### File 1: `src/routes/+page.svelte` (Optimized & CMS Announcement Strip)
+
 ```svelte
 <script lang="ts">
 	import {
@@ -50,7 +53,12 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
 	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
 	import { resolve } from '$app/paths';
-	import { whyJoinReasons, squadronStatsWithIcons, onboardingSteps, testimonials } from '$lib/data/squadron';
+	import {
+		whyJoinReasons,
+		squadronStatsWithIcons,
+		onboardingSteps,
+		testimonials
+	} from '$lib/data/squadron';
 	import { newsPosts } from '$lib/data/news';
 
 	// ─── Latest Announcement ───
@@ -59,7 +67,9 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 	async function loadLatestNews() {
 		try {
 			const directusUrl = import.meta.env.VITE_PUBLIC_DIRECTUS_URL || 'https://ms.veka.gg';
-			const res = await fetch(`${directusUrl}/items/posts?filter[status][_eq]=published&sort=-published_at&limit=1`);
+			const res = await fetch(
+				`${directusUrl}/items/posts?filter[status][_eq]=published&sort=-published_at&limit=1`
+			);
 			if (res.ok) {
 				const json = await res.json();
 				if (json.data && json.data.length > 0) {
@@ -331,17 +341,23 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 
 <!-- ─── LATEST ANNOUNCEMENT STRIP ─── -->
 {#if latestNews}
-	<div class="relative z-20 border-b border-primary-main/20 bg-black/60 px-4 py-2.5 backdrop-blur-md">
+	<div
+		class="relative z-20 border-b border-primary-main/20 bg-black/60 px-4 py-2.5 backdrop-blur-md"
+	>
 		<div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 sm:flex-row">
 			<div class="flex flex-col items-center gap-2 sm:flex-row">
-				<span class="inline-flex items-center rounded-full bg-primary-main/20 px-2.5 py-0.5 text-xs font-semibold text-primary-light border border-primary-main/30">
+				<span
+					class="inline-flex items-center rounded-full border border-primary-main/30 bg-primary-main/20 px-2.5 py-0.5 text-xs font-semibold text-primary-light"
+				>
 					Latest Update
 				</span>
-				<span class="text-xs text-gray-300 font-medium text-center sm:text-left">{latestNews.title} ({latestNews.publishedAt})</span>
+				<span class="text-center text-xs font-medium text-gray-300 sm:text-left"
+					>{latestNews.title} ({latestNews.publishedAt})</span
+				>
 			</div>
 			<a
 				href={resolve(`/news/${latestNews.slug}` as any)}
-				class="text-xs font-bold text-primary-light hover:text-white transition-colors uppercase tracking-wider flex items-center gap-1"
+				class="flex items-center gap-1 text-xs font-bold tracking-wider text-primary-light uppercase transition-colors hover:text-white"
 			>
 				<span>Read Command Bulletin</span>
 				<ExternalLinkAltSolid class="size-3" />
@@ -418,14 +434,21 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 </section>
 
 <!-- ─── SQUADRON HUB STATUS (Current Focus & Discord widget) ─── -->
-<section class="relative px-4 py-16 sm:py-24 border-t border-white/5 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
+<section
+	class="relative border-t border-white/5 bg-linear-to-b from-dark-bg/0 to-dark-bg/80 px-4 py-16 sm:py-24"
+>
 	<div class="mx-auto max-w-7xl">
-		<div class="mb-12 flex flex-col justify-between items-start gap-4 sm:flex-row sm:items-center">
+		<div class="mb-12 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
 			<div>
-				<h2 use:inview class="fade-up-section text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl">
+				<h2
+					use:inview
+					class="fade-up-section text-3xl font-bold tracking-wide text-white uppercase sm:text-4xl"
+				>
 					Squadron <span class="text-primary-main">Command Hub</span>
 				</h2>
-				<p use:inview class="fade-up-section mt-1.5 text-sm text-gray-400">Weekly targets and comms channels network status</p>
+				<p use:inview class="fade-up-section mt-1.5 text-sm text-gray-400">
+					Weekly targets and comms channels network status
+				</p>
 			</div>
 			<div use:inview class="fade-up-section">
 				<DataStatusPanel state={discordData ? 'live' : 'placeholder'} source="Discord Comms API" />
@@ -439,17 +462,22 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 			</div>
 
 			<!-- Live Discord Panel -->
-			<div use:inview class="fade-up-section flex flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-glow">
+			<div
+				use:inview
+				class="fade-up-section flex flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-glow"
+			>
 				<div>
-					<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
-						<div class="flex items-center gap-2 text-white font-bold">
+					<div class="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
+						<div class="flex items-center gap-2 font-bold text-white">
 							<DiscordBrands class="size-5 text-[#5865F2]" />
 							<span>Discord Comms</span>
 						</div>
 						{#if loadingDiscord}
-							<span class="text-xs text-gray-500 animate-pulse">Syncing...</span>
+							<span class="animate-pulse text-xs text-gray-500">Syncing...</span>
 						{:else if discordData}
-							<span class="inline-flex items-center gap-1 rounded bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-400 border border-green-500/20">
+							<span
+								class="inline-flex items-center gap-1 rounded border border-green-500/20 bg-green-500/10 px-2 py-0.5 text-[10px] font-bold text-green-400"
+							>
 								{discordData.onlineCount} Online
 							</span>
 						{:else}
@@ -457,15 +485,15 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 						{/if}
 					</div>
 
-					<p class="text-xs leading-relaxed text-gray-400 mb-4">
+					<p class="mb-4 text-xs leading-relaxed text-gray-400">
 						Active pilots coordinates in voice networks and sector briefings:
 					</p>
 
 					<!-- Online list or placeholders -->
-					<div class="space-y-2.5 max-h-40 overflow-y-auto pr-1">
+					<div class="max-h-40 space-y-2.5 overflow-y-auto pr-1">
 						{#if loadingDiscord}
 							{#each Array(3) as _}
-								<div class="flex items-center gap-3 animate-pulse">
+								<div class="flex animate-pulse items-center gap-3">
 									<div class="size-6 rounded-full bg-white/5"></div>
 									<div class="h-3 w-24 rounded bg-white/5"></div>
 								</div>
@@ -475,25 +503,37 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 								<div class="flex items-center justify-between text-xs">
 									<div class="flex items-center gap-2.5">
 										{#if member.avatarUrl}
-											<img src={member.avatarUrl} alt="" class="size-6 rounded-full border border-white/10" />
+											<img
+												src={member.avatarUrl}
+												alt=""
+												class="size-6 rounded-full border border-white/10"
+											/>
 										{:else}
-											<div class="flex size-6 items-center justify-center rounded-full bg-white/10 text-gray-400">
+											<div
+												class="flex size-6 items-center justify-center rounded-full bg-white/10 text-gray-400"
+											>
 												<UserAstronautSolid class="size-3" />
 											</div>
 										{/if}
 										<span class="font-medium text-gray-200">{member.name}</span>
 									</div>
-									<span class="text-[10px] text-gray-500 capitalize">{member.status === 'online' ? 'active' : 'idle'}</span>
+									<span class="text-[10px] text-gray-500 capitalize"
+										>{member.status === 'online' ? 'active' : 'idle'}</span
+									>
 								</div>
 							{/each}
 							{#if discordData.onlineMembers.length > 5}
-								<p class="text-[10px] text-center text-gray-500 mt-2">Plus {discordData.onlineMembers.length - 5} more commanders</p>
+								<p class="mt-2 text-center text-[10px] text-gray-500">
+									Plus {discordData.onlineMembers.length - 5} more commanders
+								</p>
 							{/if}
 						{:else}
 							<!-- Fallback list -->
 							<div class="flex items-center justify-between text-xs">
 								<div class="flex items-center gap-2.5">
-									<div class="flex size-6 items-center justify-center rounded-full bg-norway-blue/30 text-primary-light border border-primary-light/20">
+									<div
+										class="flex size-6 items-center justify-center rounded-full border border-primary-light/20 bg-norway-blue/30 text-primary-light"
+									>
 										<UserAstronautSolid class="size-3" />
 									</div>
 									<span class="font-medium text-gray-300">CMDR Don Samen</span>
@@ -502,7 +542,9 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 							</div>
 							<div class="flex items-center justify-between text-xs">
 								<div class="flex items-center gap-2.5">
-									<div class="flex size-6 items-center justify-center rounded-full bg-norway-blue/30 text-primary-light border border-primary-light/20">
+									<div
+										class="flex size-6 items-center justify-center rounded-full border border-primary-light/20 bg-norway-blue/30 text-primary-light"
+									>
 										<UserAstronautSolid class="size-3" />
 									</div>
 									<span class="font-medium text-gray-300">CMDR Twisted VorteK</span>
@@ -511,7 +553,9 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 							</div>
 							<div class="flex items-center justify-between text-xs">
 								<div class="flex items-center gap-2.5">
-									<div class="flex size-6 items-center justify-center rounded-full bg-norway-blue/30 text-primary-light border border-primary-light/20">
+									<div
+										class="flex size-6 items-center justify-center rounded-full border border-primary-light/20 bg-norway-blue/30 text-primary-light"
+									>
 										<UserAstronautSolid class="size-3" />
 									</div>
 									<span class="font-medium text-gray-300">CMDR Sarah Thorne</span>
@@ -537,14 +581,17 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 </section>
 
 <!-- ─── WHY JOIN IGFV (3 pillars) ─── -->
-<section class="relative px-4 py-20 sm:py-28 border-t border-white/5 bg-dark-bg/90">
+<section class="relative border-t border-white/5 bg-dark-bg/90 px-4 py-20 sm:py-28">
 	<div class="mx-auto max-w-6xl">
 		<div class="mb-16 text-center">
-			<h2 use:inview class="fade-up-section text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl">
+			<h2
+				use:inview
+				class="fade-up-section text-3xl font-bold tracking-wide text-white uppercase sm:text-4xl"
+			>
 				Why Join <span class="text-primary-main">IGFV?</span>
 			</h2>
-			<div class="mt-4 mb-2 mx-auto h-1 w-16 rounded-full bg-primary-main"></div>
-			<p use:inview class="fade-up-section text-sm text-gray-400 max-w-xl mx-auto">
+			<div class="mx-auto mt-4 mb-2 h-1 w-16 rounded-full bg-primary-main"></div>
+			<p use:inview class="fade-up-section mx-auto max-w-xl text-sm text-gray-400">
 				Built around mutual support, zero demands, and shared galactic adventures
 			</p>
 		</div>
@@ -558,7 +605,7 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 					<div class="mb-5 inline-flex rounded-lg bg-primary-main/10 p-3.5 text-primary-light">
 						<reason.icon class="size-8" />
 					</div>
-					<h3 class="mb-3 text-lg font-bold text-white uppercase tracking-wider">{reason.title}</h3>
+					<h3 class="mb-3 text-lg font-bold tracking-wider text-white uppercase">{reason.title}</h3>
 					<p class="text-sm leading-relaxed text-gray-400">{reason.description}</p>
 				</div>
 			{/each}
@@ -567,29 +614,26 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 </section>
 
 <!-- ─── NEW COMMANDERS START HERE PANEL ─── -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-linear-to-b from-dark-bg/90 to-dark-bg/50">
+<section
+	class="relative border-t border-white/5 bg-linear-to-b from-dark-bg/90 to-dark-bg/50 px-4 py-20"
+>
 	<div class="mx-auto max-w-6xl">
 		<NewCommandersStart />
 	</div>
 </section>
 
 <!-- ─── QUICK NAVIGATION ─── -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-dark-bg/50">
+<section class="relative border-t border-white/5 bg-dark-bg/50 px-4 py-20">
 	<div class="mx-auto max-w-6xl">
 		<h2
 			use:inview
-			class="fade-up-section mb-16 text-center text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl"
+			class="fade-up-section mb-16 text-center text-3xl font-bold tracking-wide text-white uppercase sm:text-4xl"
 		>
 			Tactical <span class="text-primary-main">Console</span>
 		</h2>
 
 		<div use:staggerContainer class="stagger-grid grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-			{#each [
-				{ num: '01', title: 'Operations', subtitle: 'Check active wing missions', icon: RocketSolid, href: resolve('/operations') },
-				{ num: '02', title: 'Carrier', subtitle: 'Logistics and jump logs', icon: ShipSolid, href: resolve('/fleet-carrier') },
-				{ num: '03', title: 'Resources', subtitle: 'Curated third-party tools', icon: StarSolid, href: resolve('/resources') },
-				{ num: '04', title: 'About', subtitle: 'Ranks and code values', icon: UserAstronautSolid, href: resolve('/about') }
-			] as nav, i}
+			{#each [{ num: '01', title: 'Operations', subtitle: 'Check active wing missions', icon: RocketSolid, href: resolve('/operations') }, { num: '02', title: 'Carrier', subtitle: 'Logistics and jump logs', icon: ShipSolid, href: resolve('/fleet-carrier') }, { num: '03', title: 'Resources', subtitle: 'Curated third-party tools', icon: StarSolid, href: resolve('/resources') }, { num: '04', title: 'About', subtitle: 'Ranks and code values', icon: UserAstronautSolid, href: resolve('/about') }] as nav, i}
 				<a
 					href={nav.href}
 					class="stagger-item group relative overflow-hidden rounded-xl border border-white/10 bg-[#000d22]/80 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary-main/40 hover:bg-[#000d22]/95"
@@ -607,7 +651,7 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 							<nav.icon class="size-6" />
 						</div>
 						<h3
-							class="mb-2 text-lg font-bold text-white tracking-wider uppercase group-hover:text-primary-light"
+							class="mb-2 text-lg font-bold tracking-wider text-white uppercase group-hover:text-primary-light"
 						>
 							{nav.title}
 						</h3>
@@ -620,15 +664,15 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 </section>
 
 <!-- ─── SQUADRON OVERVIEW (Stats) ─── -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-dark-bg/90">
+<section class="relative border-t border-white/5 bg-dark-bg/90 px-4 py-20">
 	<div class="mx-auto max-w-6xl">
 		<h2
 			use:inview
-			class="fade-up-section mb-4 text-center text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl"
+			class="fade-up-section mb-4 text-center text-3xl font-bold tracking-wide text-white uppercase sm:text-4xl"
 		>
 			Squadron <span class="text-primary-main">Logistics</span>
 		</h2>
-		<p use:inview class="fade-up-section mb-16 text-center text-gray-400 text-sm">
+		<p use:inview class="fade-up-section mb-16 text-center text-sm text-gray-400">
 			Our verified presence in the Milky Way galaxy
 		</p>
 
@@ -644,7 +688,7 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 						<stat.icon class="size-7" />
 					</div>
 					<div class="mb-1 text-3xl font-bold text-white">{stat.value}</div>
-					<div class="text-xs text-gray-500 uppercase tracking-wider">{stat.label}</div>
+					<div class="text-xs tracking-wider text-gray-500 uppercase">{stat.label}</div>
 				</div>
 			{/each}
 		</div>
@@ -652,15 +696,15 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 </section>
 
 <!-- ─── FAQ SECTION ─── -->
-<section class="relative px-4 py-20 border-t border-white/5 bg-dark-bg/50">
+<section class="relative border-t border-white/5 bg-dark-bg/50 px-4 py-20">
 	<div class="mx-auto max-w-3xl">
 		<h2
 			use:inview
-			class="fade-up-section mb-4 text-center text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl"
+			class="fade-up-section mb-4 text-center text-3xl font-bold tracking-wide text-white uppercase sm:text-4xl"
 		>
 			Frequently Asked <span class="text-primary-main">Questions</span>
 		</h2>
-		<p use:inview class="fade-up-section mb-16 text-center text-gray-400 text-sm">
+		<p use:inview class="fade-up-section mb-16 text-center text-sm text-gray-400">
 			Answers from the squadron flight operations desk
 		</p>
 
@@ -676,7 +720,7 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 						class="flex w-full cursor-pointer items-center justify-between px-6 py-5 text-left text-base font-semibold text-white transition-colors duration-200 hover:text-primary-light"
 						aria-expanded={openFaq === i}
 					>
-						<span class="pr-4 tracking-wide text-sm uppercase">{faq.question}</span>
+						<span class="pr-4 text-sm tracking-wide uppercase">{faq.question}</span>
 						<svg
 							class="size-5 shrink-0 text-gray-500 transition-transform duration-300 {openFaq === i
 								? 'rotate-180'
@@ -698,7 +742,9 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 						class="overflow-hidden transition-all duration-300 ease-in-out"
 						style="max-height: {openFaq === i ? '300px' : '0'};"
 					>
-						<div class="border-t border-white/5 px-6 py-5 text-sm leading-relaxed text-gray-300 bg-dark-bg/80 rounded-b-xl">
+						<div
+							class="rounded-b-xl border-t border-white/5 bg-dark-bg/80 px-6 py-5 text-sm leading-relaxed text-gray-300"
+						>
 							{faq.answer}
 						</div>
 					</div>
@@ -709,7 +755,7 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 </section>
 
 <!-- ─── JOIN US TODAY CTA ─── -->
-<section class="relative px-4 py-24 border-t border-white/5 bg-dark-bg/90">
+<section class="relative border-t border-white/5 bg-dark-bg/90 px-4 py-24">
 	<div use:inview class="fade-up-section mx-auto max-w-4xl">
 		<div
 			class="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-primary-main/10 via-[#000d22]/90 to-dark-bg/95 p-12 text-center shadow-2xl sm:p-16"
@@ -726,19 +772,20 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 					<DiscordBrands class="size-10 text-[#5865F2]" />
 				</div>
 
-				<h2 class="mb-4 text-3xl font-bold text-white tracking-wide uppercase sm:text-4xl">
+				<h2 class="mb-4 text-3xl font-bold tracking-wide text-white uppercase sm:text-4xl">
 					Join Us <span class="text-primary-main">Today</span>
 				</h2>
 
 				<p class="mx-auto mb-10 max-w-xl text-sm leading-relaxed text-gray-300">
-					Ready to explore the galaxy with the finest commanders this side of the bubble? Apply now, meet your mentor, and let's fly together.
+					Ready to explore the galaxy with the finest commanders this side of the bubble? Apply now,
+					meet your mentor, and let's fly together.
 				</p>
 
 				<a
 					href="https://discord.gg/igfv"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="cta-primary group inline-flex items-center gap-3 rounded-lg bg-primary-main px-10 py-4 text-sm font-bold text-white shadow-lg shadow-primary-main/30 transition-all duration-300 hover:scale-105 hover:bg-primary-light hover:shadow-primary-main/50 uppercase tracking-wider"
+					class="cta-primary group inline-flex items-center gap-3 rounded-lg bg-primary-main px-10 py-4 text-sm font-bold tracking-wider text-white uppercase shadow-lg shadow-primary-main/30 transition-all duration-300 hover:scale-105 hover:bg-primary-light hover:shadow-primary-main/50"
 				>
 					<DiscordBrands class="size-5" />
 					Join Our Discord Comms
@@ -852,6 +899,7 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 ```
 
 ### File 2: `src/routes/news/+page.svelte` (Dynamic Directus CMS Loading & Fallback)
+
 ```svelte
 <script lang="ts">
 	import { inview } from '$lib/actions/inview';
@@ -877,15 +925,21 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 	let activePost = $state<any | null>(null);
 
 	// Computed lists
-	const categories = ['All', 'Milestone', 'Logistics', 'Community', 'Fleet Carrier', 'Operations', 'Recruitment'];
-	
-	let featuredPost = $derived(
-		newsPosts.find(p => p.isFeatured) || newsPosts[0]
-	);
+	const categories = [
+		'All',
+		'Milestone',
+		'Logistics',
+		'Community',
+		'Fleet Carrier',
+		'Operations',
+		'Recruitment'
+	];
+
+	let featuredPost = $derived(newsPosts.find((p) => p.isFeatured) || newsPosts[0]);
 
 	// Filtered posts excluding the active featured post (unless Tab is set to a specific category)
 	let filteredNews = $derived(
-		newsPosts.filter(p => {
+		newsPosts.filter((p) => {
 			const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
 			return matchesCategory;
 		})
@@ -893,12 +947,15 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 
 	// Grouping historical news posts by Year/Month
 	let archivedGroups = $derived(
-		newsPosts.reduce((acc, p) => {
-			const yearMonth = p.publishedAt ? p.publishedAt.slice(0, 7) : '3311-01'; // e.g. 3311-06
-			if (!acc[yearMonth]) acc[yearMonth] = [];
-			acc[yearMonth].push(p);
-			return acc;
-		}, {} as Record<string, any[]>)
+		newsPosts.reduce(
+			(acc, p) => {
+				const yearMonth = p.publishedAt ? p.publishedAt.slice(0, 7) : '3311-01'; // e.g. 3311-06
+				if (!acc[yearMonth]) acc[yearMonth] = [];
+				acc[yearMonth].push(p);
+				return acc;
+			},
+			{} as Record<string, any[]>
+		)
 	);
 
 	function showPostDetails(post: any) {
@@ -913,10 +970,20 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 
 	function normalizePost(post: any) {
 		const cats = post.categories?.map((c: any) => c.categories_id?.name).filter(Boolean) || [];
-		const validCategories = ['Milestone', 'Logistics', 'Community', 'Fleet Carrier', 'Operations', 'Recruitment'];
-		const matchedCategory = validCategories.find(vc => cats.some((c: string) => c.toLowerCase() === vc.toLowerCase())) 
-			|| cats[0] 
-			|| 'Milestone';
+		const validCategories = [
+			'Milestone',
+			'Logistics',
+			'Community',
+			'Fleet Carrier',
+			'Operations',
+			'Recruitment'
+		];
+		const matchedCategory =
+			validCategories.find((vc) =>
+				cats.some((c: string) => c.toLowerCase() === vc.toLowerCase())
+			) ||
+			cats[0] ||
+			'Milestone';
 
 		// Elite Dangerous calendar year is standard Gregorian + 1286 years (e.g. 2025 -> 3311)
 		let publishedAt = '3311-01-01';
@@ -930,8 +997,8 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 			publishedAt = `${eliteYear}-${month}-${day}`;
 		}
 
-		const authorName = post.author 
-			? [post.author.first_name, post.author.last_name].filter(Boolean).join(' ') 
+		const authorName = post.author
+			? [post.author.first_name, post.author.last_name].filter(Boolean).join(' ')
 			: 'CMDR Don Samen';
 
 		return {
@@ -952,8 +1019,10 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 		try {
 			// Read Directus URL from environment if configured, otherwise fallback to VEKA prod URL
 			const directusUrl = import.meta.env.VITE_PUBLIC_DIRECTUS_URL || 'https://ms.veka.gg';
-			const res = await fetch(`${directusUrl}/items/posts?filter[status][_eq]=published&sort=-published_at&fields=*,author.first_name,author.last_name,author.avatar,image.id,image.filename_disk,categories.categories_id.name,categories.categories_id.slug`);
-			
+			const res = await fetch(
+				`${directusUrl}/items/posts?filter[status][_eq]=published&sort=-published_at&fields=*,author.first_name,author.last_name,author.avatar,image.id,image.filename_disk,categories.categories_id.name,categories.categories_id.slug`
+			);
+
 			if (res.ok) {
 				const json = await res.json();
 				if (json.data && json.data.length > 0) {
@@ -965,12 +1034,19 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 		} catch (err) {
 			console.error('Failed to fetch from Directus, using fallback data', err);
 		}
-		
+
 		// Fallback to structured static local data mapped to match output format
-		newsPosts = fallbackPosts.map(p => ({
+		newsPosts = fallbackPosts.map((p) => ({
 			id: p.slug,
 			slug: p.slug,
-			category: p.category === 'Announcements' ? 'Milestone' : p.category === 'Expeditions' ? 'Fleet Carrier' : p.category === 'Training' ? 'Operations' : p.category,
+			category:
+				p.category === 'Announcements'
+					? 'Milestone'
+					: p.category === 'Expeditions'
+						? 'Fleet Carrier'
+						: p.category === 'Training'
+							? 'Operations'
+							: p.category,
 			title: p.title,
 			publishedAt: p.publishedAt,
 			author: 'CMDR Don Samen',
@@ -988,12 +1064,16 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 </script>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80">
-	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
-	<div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24 relative z-10">
+<section
+	class="relative overflow-hidden border-b border-primary-main/20 bg-linear-to-b from-dark-bg/0 to-dark-bg/80"
+>
+	<div
+		class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"
+	></div>
+	<div class="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
 		<div use:inview class="inview-hidden mx-auto max-w-3xl text-center">
 			<div
-				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-xs text-primary-light font-semibold uppercase tracking-wider"
+				class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-main/30 bg-primary-main/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-primary-light uppercase"
 			>
 				<NewspaperSolid class="h-4 w-4" />
 				<span>Command Announcements</span>
@@ -1001,46 +1081,59 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 			<h1 class="text-4xl font-bold tracking-tight text-white uppercase sm:text-5xl lg:text-6xl">
 				Squadron <span class="text-primary-main">Bulletins</span>
 			</h1>
-			<p class="mt-6 text-sm sm:text-base leading-relaxed text-gray-300">
-				Official operational updates, logistical logs, and milestone announcements straight from the command staff of Interstellar Goodfellas.
+			<p class="mt-6 text-sm leading-relaxed text-gray-300 sm:text-base">
+				Official operational updates, logistical logs, and milestone announcements straight from the
+				command staff of Interstellar Goodfellas.
 			</p>
 		</div>
 	</div>
 </section>
 
 <div class="mx-auto max-w-7xl px-4 py-12 sm:py-16">
-	
 	<!-- Active details overlay panel (Full Bulletin view) -->
 	{#if activePost}
-		<div id="bulletin-details" class="mb-12 rounded-xl border-2 border-primary-main/40 bg-[#000d22] p-6 sm:p-8 shadow-xl">
-			<div class="flex items-center justify-between border-b border-white/5 pb-4 mb-6">
+		<div
+			id="bulletin-details"
+			class="mb-12 rounded-xl border-2 border-primary-main/40 bg-[#000d22] p-6 shadow-xl sm:p-8"
+		>
+			<div class="mb-6 flex items-center justify-between border-b border-white/5 pb-4">
 				<div class="flex items-center gap-3">
-					<span class="inline-flex rounded-full bg-primary-main/20 px-3 py-1 text-xs font-semibold text-primary-light border border-primary-main/30">
+					<span
+						class="inline-flex rounded-full border border-primary-main/30 bg-primary-main/20 px-3 py-1 text-xs font-semibold text-primary-light"
+					>
 						{activePost.category}
 					</span>
-					<span class="text-xs text-gray-400 font-mono">{activePost.publishedAt}</span>
+					<span class="font-mono text-xs text-gray-400">{activePost.publishedAt}</span>
 				</div>
-				<button 
+				<button
 					onclick={closePostDetails}
-					class="text-xs font-bold text-gray-400 hover:text-white uppercase transition-colors"
+					class="text-xs font-bold text-gray-400 uppercase transition-colors hover:text-white"
 				>
 					&larr; Back to Board
 				</button>
 			</div>
 
-			<h2 class="text-2xl font-bold text-white uppercase tracking-wide mb-4 sm:text-3xl">{activePost.title}</h2>
-			<div class="flex items-center gap-2 text-xs text-primary-light mb-8">
+			<h2 class="mb-4 text-2xl font-bold tracking-wide text-white uppercase sm:text-3xl">
+				{activePost.title}
+			</h2>
+			<div class="mb-8 flex items-center gap-2 text-xs text-primary-light">
 				<UserSolid class="size-3.5" />
 				<span>Logged by {activePost.author}</span>
 			</div>
 
 			{#if activePost.coverImage}
-				<div class="mb-8 overflow-hidden rounded-xl bg-black/40 border border-white/10 max-h-96">
-					<img src={activePost.coverImage} alt={activePost.title} class="w-full object-cover max-h-96" />
+				<div class="mb-8 max-h-96 overflow-hidden rounded-xl border border-white/10 bg-black/40">
+					<img
+						src={activePost.coverImage}
+						alt={activePost.title}
+						class="max-h-96 w-full object-cover"
+					/>
 				</div>
 			{/if}
 
-			<div class="text-xs sm:text-sm leading-relaxed text-gray-300 space-y-6 max-w-none font-sans border-t border-white/5 pt-6">
+			<div
+				class="max-w-none space-y-6 border-t border-white/5 pt-6 font-sans text-xs leading-relaxed text-gray-300 sm:text-sm"
+			>
 				{#if activePost.content.includes('<')}
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 					{@html activePost.content}
@@ -1049,10 +1142,10 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 				{/if}
 			</div>
 
-			<div class="mt-8 pt-6 border-t border-white/5">
-				<button 
+			<div class="mt-8 border-t border-white/5 pt-6">
+				<button
 					onclick={closePostDetails}
-					class="inline-flex items-center justify-center rounded-lg bg-primary-main px-6 py-3 text-xs font-bold text-white uppercase tracking-wider hover:bg-primary-light"
+					class="inline-flex items-center justify-center rounded-lg bg-primary-main px-6 py-3 text-xs font-bold tracking-wider text-white uppercase hover:bg-primary-light"
 				>
 					Return to news board
 				</button>
@@ -1062,22 +1155,26 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 
 	<!-- Layout Grid -->
 	<div class="grid gap-12 lg:grid-cols-4">
-		
 		<!-- Left: Filters & Archive (Logistics sidebar) -->
-		<div class="lg:col-span-1 space-y-8">
-			
+		<div class="space-y-8 lg:col-span-1">
 			<!-- Category Filter Block -->
 			<div class="rounded-xl border border-white/10 bg-[#000d22]/95 p-5 shadow-sm">
-				<h3 class="text-xs font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+				<h3
+					class="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest text-white uppercase"
+				>
 					<FilterSolid class="size-3.5 text-primary-light" />
 					<span>Category Filter</span>
 				</h3>
 				<div class="flex flex-col gap-1.5">
 					{#each categories as cat}
 						<button
-							onclick={() => { selectedCategory = cat; closePostDetails(); }}
-							class="text-left rounded px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all {selectedCategory === cat 
-								? 'bg-primary-main text-white' 
+							onclick={() => {
+								selectedCategory = cat;
+								closePostDetails();
+							}}
+							class="rounded px-3 py-2 text-left text-xs font-bold tracking-wider uppercase transition-all {selectedCategory ===
+							cat
+								? 'bg-primary-main text-white'
 								: 'text-gray-400 hover:bg-white/5 hover:text-white'}"
 						>
 							{cat}
@@ -1088,19 +1185,25 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 
 			<!-- Archive Groups Block -->
 			<div class="rounded-xl border border-white/10 bg-[#000d22]/95 p-5 shadow-sm">
-				<h3 class="text-xs font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+				<h3
+					class="mb-4 flex items-center gap-2 text-xs font-bold tracking-widest text-white uppercase"
+				>
 					<CalendarAltSolid class="size-3.5 text-primary-light" />
 					<span>Archive Logs</span>
 				</h3>
 				<div class="space-y-4">
 					{#each Object.entries(archivedGroups) as [month, posts]}
 						<div>
-							<h4 class="text-[10px] font-bold text-gray-500 uppercase font-mono tracking-wider mb-2">{month}</h4>
+							<h4
+								class="mb-2 font-mono text-[10px] font-bold tracking-wider text-gray-500 uppercase"
+							>
+								{month}
+							</h4>
 							<div class="space-y-1.5">
 								{#each posts as post}
-									<button 
+									<button
 										onclick={() => showPostDetails(post)}
-										class="w-full text-left text-xs text-gray-400 hover:text-primary-light truncate block"
+										class="block w-full truncate text-left text-xs text-gray-400 hover:text-primary-light"
 									>
 										&bull; {post.title}
 									</button>
@@ -1113,22 +1216,28 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 		</div>
 
 		<!-- Right: Featured and News List -->
-		<div class="lg:col-span-3 space-y-12">
-			
+		<div class="space-y-12 lg:col-span-3">
 			<!-- Featured Bulletin (Render only if no category filter active) -->
 			{#if selectedCategory === 'All' && !activePost && featuredPost}
-				<div use:inview class="inview-hidden rounded-xl border border-primary-main/20 bg-linear-to-r from-primary-main/10 via-[#000d22]/95 to-dark-bg/95 p-8 shadow-glow">
-					<div class="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-light/30 bg-primary-main/15 px-3 py-1 text-[10px] font-bold text-primary-light uppercase tracking-widest">
+				<div
+					use:inview
+					class="inview-hidden rounded-xl border border-primary-main/20 bg-linear-to-r from-primary-main/10 via-[#000d22]/95 to-dark-bg/95 p-8 shadow-glow"
+				>
+					<div
+						class="mb-4 inline-flex items-center gap-2 rounded-full border border-primary-light/30 bg-primary-main/15 px-3 py-1 text-[10px] font-bold tracking-widest text-primary-light uppercase"
+					>
 						Featured Bulletin
 					</div>
-					<h2 class="text-2xl font-bold text-white uppercase tracking-wide sm:text-3xl mb-3">{featuredPost.title}</h2>
-					<p class="text-xs text-gray-400 leading-relaxed mb-6 font-sans">{featuredPost.excerpt}</p>
-					
+					<h2 class="mb-3 text-2xl font-bold tracking-wide text-white uppercase sm:text-3xl">
+						{featuredPost.title}
+					</h2>
+					<p class="mb-6 font-sans text-xs leading-relaxed text-gray-400">{featuredPost.excerpt}</p>
+
 					<div class="flex items-center justify-between border-t border-white/5 pt-4 text-xs">
-						<span class="text-gray-500 font-mono">Logged: {featuredPost.publishedAt}</span>
-						<button 
+						<span class="font-mono text-gray-500">Logged: {featuredPost.publishedAt}</span>
+						<button
 							onclick={() => showPostDetails(featuredPost)}
-							class="text-xs font-bold text-primary-light hover:text-white uppercase transition-colors flex items-center gap-1"
+							class="flex items-center gap-1 text-xs font-bold text-primary-light uppercase transition-colors hover:text-white"
 						>
 							<span>Access Full File</span>
 							<ChevronRightSolid class="size-3" />
@@ -1139,31 +1248,41 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 
 			<!-- Bulletins list -->
 			<div>
-				<h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 font-mono">Board Entries</h3>
-				
+				<h3 class="mb-6 font-mono text-xs font-bold tracking-widest text-gray-500 uppercase">
+					Board Entries
+				</h3>
+
 				{#if filteredNews.length > 0}
 					<div class="space-y-6">
 						{#each filteredNews as post}
-							<div class="rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-sm flex flex-col justify-between hover:border-primary-main/20 transition-colors">
+							<div
+								class="flex flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-sm transition-colors hover:border-primary-main/20"
+							>
 								<div>
-									<div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
-										<span class="inline-flex rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-bold text-gray-400 uppercase tracking-wide">
+									<div class="mb-4 flex items-center justify-between border-b border-white/5 pb-3">
+										<span
+											class="inline-flex rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold tracking-wide text-gray-400 uppercase"
+										>
 											{post.category}
 										</span>
-										<span class="text-xs text-gray-500 font-mono">{post.publishedAt}</span>
+										<span class="font-mono text-xs text-gray-500">{post.publishedAt}</span>
 									</div>
-									<h4 class="text-lg font-bold text-white uppercase tracking-wide mb-2">{post.title}</h4>
-									<p class="text-xs text-gray-400 leading-relaxed font-sans">{post.excerpt}</p>
+									<h4 class="mb-2 text-lg font-bold tracking-wide text-white uppercase">
+										{post.title}
+									</h4>
+									<p class="font-sans text-xs leading-relaxed text-gray-400">{post.excerpt}</p>
 								</div>
 
-								<div class="mt-5 border-t border-white/5 pt-4 flex items-center justify-between text-xs">
-									<span class="text-gray-500 font-medium flex items-center gap-1">
+								<div
+									class="mt-5 flex items-center justify-between border-t border-white/5 pt-4 text-xs"
+								>
+									<span class="flex items-center gap-1 font-medium text-gray-500">
 										<UserSolid class="size-3 text-primary-light" />
 										CMDR {post.author.replace('CMDR ', '')}
 									</span>
-									<button 
+									<button
 										onclick={() => showPostDetails(post)}
-										class="text-xs font-bold text-primary-light hover:text-white uppercase transition-colors flex items-center gap-1"
+										class="flex items-center gap-1 text-xs font-bold text-primary-light uppercase transition-colors hover:text-white"
 									>
 										<span>View Details</span>
 										<ChevronRightSolid class="size-3" />
@@ -1173,22 +1292,22 @@ Replaced the static hardcoded list of news bulletins in `src/routes/news/+page.s
 						{/each}
 					</div>
 				{:else if loading}
-					<div class="text-center rounded-xl border border-white/10 bg-[#000d22]/90 p-12">
-						<div class="inline-block size-6 animate-spin rounded-full border-2 border-primary-main border-t-transparent mb-3"></div>
+					<div class="rounded-xl border border-white/10 bg-[#000d22]/90 p-12 text-center">
+						<div
+							class="mb-3 inline-block size-6 animate-spin rounded-full border-2 border-primary-main border-t-transparent"
+						></div>
 						<p class="text-xs text-gray-400">Loading bulletins from sector network...</p>
 					</div>
 				{:else}
-					<div class="text-center rounded-xl border border-white/10 bg-[#000d22]/90 p-12">
-						<ExclamationTriangleSolid class="size-8 text-gray-500 mx-auto mb-3" />
-						<h3 class="text-lg font-bold text-white uppercase mb-1">No Bulletins Found</h3>
+					<div class="rounded-xl border border-white/10 bg-[#000d22]/90 p-12 text-center">
+						<ExclamationTriangleSolid class="mx-auto mb-3 size-8 text-gray-500" />
+						<h3 class="mb-1 text-lg font-bold text-white uppercase">No Bulletins Found</h3>
 						<p class="text-xs text-gray-400">Try adjusting your category filtering options.</p>
 					</div>
 				{/if}
 			</div>
-
 		</div>
 	</div>
-
 </div>
 ```
 
@@ -1214,7 +1333,7 @@ node -e "const fs = require('fs'); const path = require('path'); const apply = (
   // Extract from CLAUDE.md the spec blocks
   const claudePath = path.join(process.cwd(), 'CLAUDE.md');
   const claudeContent = fs.readFileSync(claudePath, 'utf8');
-  
+
   const extractSpec = (tag) => {
     const regex = new RegExp('\`\`\`svelte\\\\s*\\\\n([\\\\s\\\\S]*?)\`\`\`', 'g');
     let match;

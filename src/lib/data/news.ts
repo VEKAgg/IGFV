@@ -4,7 +4,8 @@ export const newsPosts: NewsPost[] = [
 	{
 		slug: 'squadron-anniversary-3311',
 		title: 'Celebrating 6 Years of Interstellar Goodfellas',
-		excerpt: 'Founding member CMDR Don Samen looks back at our humble beginnings in 2019 and outlines our vision for the future of our peaceful squadron.',
+		excerpt:
+			'Founding member CMDR Don Samen looks back at our humble beginnings in 2019 and outlines our vision for the future of our peaceful squadron.',
 		category: 'Announcements',
 		publishedAt: '3311-06-15',
 		content: `Commanders,
@@ -24,7 +25,8 @@ Fly safe,
 	{
 		slug: 'valhall-expedition-preparations',
 		title: 'ISS Valhall Colonia Expedition Details Released',
-		excerpt: 'The logistics staff have finalized the route for the upcoming summer expedition to Colonia. Tritium load operations begin this week.',
+		excerpt:
+			'The logistics staff have finalized the route for the upcoming summer expedition to Colonia. Tritium load operations begin this week.',
 		category: 'Expeditions',
 		publishedAt: '3311-06-08',
 		content: `Logistics operations are now underway for the ISS Valhall's upcoming voyage to the Colonia Nebula. 
@@ -44,7 +46,8 @@ If you plan to join the expedition, please ensure your explorer and miner ships 
 	{
 		slug: 'ax-combat-training-seminar',
 		title: 'Anti-Xeno Combat Training Weekend',
-		excerpt: 'New to AX combat? Join our veterans next weekend for a step-by-step introduction to Guardian technology and Interceptor cold orbiting.',
+		excerpt:
+			'New to AX combat? Join our veterans next weekend for a step-by-step introduction to Guardian technology and Interceptor cold orbiting.',
 		category: 'Training',
 		publishedAt: '3311-05-24',
 		content: `With Thargoid activity remains a persistent threat in surrounding sectors, the IGFV security department is hosting an AX Combat Training Seminar.
@@ -64,7 +67,7 @@ Our experienced combat pilots will lead classroom discussions in Discord and han
 		dataState: 'live'
 	}
 ];
-export const newsPostsWithDataState = newsPosts.map(p => ({
+export const newsPostsWithDataState = newsPosts.map((p) => ({
 	...p,
 	dataState: p.dataState ?? 'live'
 }));

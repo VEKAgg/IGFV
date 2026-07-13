@@ -14,14 +14,14 @@ Professional squadron website built with **SvelteKit** for the Interstellar Good
 
 ## 🛠️ Tech Stack
 
-| Component   | Technology                   |
-| ----------- | ---------------------------- |
-| Framework   | SvelteKit (Svelte 5)         |
-| Language    | TypeScript                   |
-| Styling     | Tailwind CSS v4              |
-| Animations  | Svelte Transitions           |
-| Icons       | svelte-awesome-icons         |
-| Deployment  | Node Adapter                 |
+| Component  | Technology           |
+| ---------- | -------------------- |
+| Framework  | SvelteKit (Svelte 5) |
+| Language   | TypeScript           |
+| Styling    | Tailwind CSS v4      |
+| Animations | Svelte Transitions   |
+| Icons      | svelte-awesome-icons |
+| Deployment | Node Adapter         |
 
 ## 🚀 Quick Start
 
@@ -89,10 +89,10 @@ IGFV/
 │   │   ├── components/   # Svelte components (Header, Footer, etc.)
 │   │   └── server/       # Server-only libraries (e.g., db.ts)
 │   ├── routes/           # SvelteKit file-based router
-│   │   ├── about/        
-│   │   ├── gallery/      
+│   │   ├── about/
+│   │   ├── gallery/
 │   │   ├── fleet-carrier/
-│   │   ├── operations/   
+│   │   ├── operations/
 │   │   ├── api/          # API routes
 │   │   └── +page.svelte  # Homepage
 ├── static/               # Static assets
@@ -106,11 +106,13 @@ IGFV/
 This project has been updated with high-performance CSS-driven animations and client-side integration with the parent VEKA website's Directus CMS instance.
 
 ### Key Changes
+
 1. **Zero-Render-Cycle Animations**: Removed Svelte `$state` and `$effect` triggers from window-scroll and window-mousemove event handlers on the homepage. Positions are bound to CSS custom properties on `document.documentElement` (`--scroll-y`, `--mouse-x`, `--mouse-y`) and mapped via `calc()` inside styles.
 2. **Directus CMS News Feed**: Implemented a dynamic fetch on both the homepage (announcement bar) and the bulletins board page (`src/routes/news/+page.svelte`) pointing to the parent CMS (`https://ms.veka.gg`).
 3. **Resilient Offline Fallbacks**: The pages automatically fall back to local structured mock data if the CMS API is rate-limited, offline, or experiencing timeout errors.
 
 ### Applying Code Changes
+
 Run the following Node command in the project root directory to automatically write the optimized and integrated Svelte components into the codebase:
 
 ```bash
@@ -143,6 +145,7 @@ node -e "const fs = require('fs'); const path = require('path'); const apply = (
 ## 🎨 Color Scheme & Theme
 
 The project uses a custom dark theme tailored for a premium space-operations aesthetic:
+
 - **Primary**: Deep space blacks and slate grays
 - **Accents**: Neon blues/reds tailored in Tailwind configuration
 

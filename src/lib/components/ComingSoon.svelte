@@ -17,11 +17,17 @@
 	}>();
 </script>
 
-<div class="relative flex min-h-[calc(100vh-4rem)] items-center justify-center bg-dark-bg px-4 overflow-hidden">
+<div
+	class="relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-dark-bg px-4"
+>
 	<!-- Gradient glow background -->
-	<div class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"></div>
+	<div
+		class="absolute inset-0 bg-linear-to-b from-primary-main/5 via-transparent to-transparent"
+	></div>
 
-	<div class="relative z-10 flex max-w-xl flex-col items-center gap-8 text-center rounded-xl border border-white/10 bg-[#000d22]/90 p-8 shadow-glow sm:p-12">
+	<div
+		class="relative z-10 flex max-w-xl flex-col items-center gap-8 rounded-xl border border-white/10 bg-[#000d22]/90 p-8 text-center shadow-glow sm:p-12"
+	>
 		<!-- Operational Drydock Graphic -->
 		<div class="flex items-center gap-6">
 			<div class="animate-bob text-primary-light">
@@ -35,7 +41,9 @@
 
 		<!-- Status Label -->
 		<div>
-			<div class="mb-3 inline-flex items-center gap-1.5 rounded bg-primary-main/15 px-2.5 py-0.5 text-[10px] font-bold text-primary-light uppercase tracking-widest border border-primary-main/20">
+			<div
+				class="mb-3 inline-flex items-center gap-1.5 rounded border border-primary-main/20 bg-primary-main/15 px-2.5 py-0.5 text-[10px] font-bold tracking-widest text-primary-light uppercase"
+			>
 				System Status: Drydock Maintenance
 			</div>
 			<h1 class="text-3xl font-extrabold tracking-wider text-white uppercase sm:text-4xl">
@@ -44,33 +52,39 @@
 		</div>
 
 		<!-- Explanations -->
-		<div class="space-y-4 text-xs sm:text-sm leading-relaxed text-gray-400 font-sans border-t border-b border-white/5 py-6">
+		<div
+			class="space-y-4 border-t border-b border-white/5 py-6 font-sans text-xs leading-relaxed text-gray-400 sm:text-sm"
+		>
 			<div>
-				<span class="text-[9px] uppercase font-bold text-primary-light font-mono block mb-1">Target Capability:</span>
+				<span class="mb-1 block font-mono text-[9px] font-bold text-primary-light uppercase"
+					>Target Capability:</span
+				>
 				<p class="text-gray-300">{whyItMatters}</p>
 			</div>
 			<div>
-				<span class="text-[9px] uppercase font-bold text-gray-500 font-mono block mb-1">Target Rollout Timeline:</span>
-				<p class="text-gray-300 font-mono">{completionEst}</p>
+				<span class="mb-1 block font-mono text-[9px] font-bold text-gray-500 uppercase"
+					>Target Rollout Timeline:</span
+				>
+				<p class="font-mono text-gray-300">{completionEst}</p>
 			</div>
 		</div>
 
 		<!-- Recovery instructions -->
 		<div>
-			<p class="text-xs text-gray-500 mb-6 font-sans">
+			<p class="mb-6 font-sans text-xs text-gray-500">
 				In the meantime, head back to active flight coordinates or read our logistics dashboards.
 			</p>
 
-			<div class="flex flex-col gap-3 sm:flex-row justify-center">
+			<div class="flex flex-col justify-center gap-3 sm:flex-row">
 				<a
 					href={resolve('/')}
-					class="inline-flex items-center justify-center gap-2 rounded bg-primary-main px-6 py-3 text-xs font-bold text-white uppercase tracking-wider hover:bg-primary-light"
+					class="inline-flex items-center justify-center gap-2 rounded bg-primary-main px-6 py-3 text-xs font-bold tracking-wider text-white uppercase hover:bg-primary-light"
 				>
 					Return to Base
 				</a>
 				<a
 					href={resolve(alternativeRoute)}
-					class="inline-flex items-center justify-center gap-2 rounded border border-white/10 bg-white/5 px-6 py-3 text-xs font-bold text-white uppercase tracking-wider hover:bg-white/10"
+					class="inline-flex items-center justify-center gap-2 rounded border border-white/10 bg-white/5 px-6 py-3 text-xs font-bold tracking-wider text-white uppercase hover:bg-white/10"
 				>
 					{alternativeLabel}
 				</a>

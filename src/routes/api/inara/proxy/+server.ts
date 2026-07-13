@@ -1,7 +1,11 @@
 import { json } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 import { getSquadronStats, getFleetCarrierDetails, getCommanderDetails } from '$lib/server/inara';
-import { getFallbackSquadronStats, getFallbackFleetCarrier, getFallbackCommanderProfile } from '$lib/server/fallbacks';
+import {
+	getFallbackSquadronStats,
+	getFallbackFleetCarrier,
+	getFallbackCommanderProfile
+} from '$lib/server/fallbacks';
 
 export async function POST(event: RequestEvent) {
 	try {
@@ -9,7 +13,10 @@ export async function POST(event: RequestEvent) {
 		const { action, id, name } = body;
 
 		if (!action) {
-			return json({ ok: false, errorCode: 'MISSING_ACTION', error: 'Action parameter is required' }, { status: 400 });
+			return json(
+				{ ok: false, errorCode: 'MISSING_ACTION', error: 'Action parameter is required' },
+				{ status: 400 }
+			);
 		}
 
 		if (action === 'getSquadron') {
@@ -75,14 +82,20 @@ export async function POST(event: RequestEvent) {
 			});
 		}
 
-		return json({ ok: false, errorCode: 'UNKNOWN_ACTION', error: `Action ${action} is not supported` }, { status: 400 });
+		return json(
+			{ ok: false, errorCode: 'UNKNOWN_ACTION', error: `Action ${action} is not supported` },
+			{ status: 400 }
+		);
 	} catch (err: any) {
 		console.error('Error in Inara proxy route:', err);
-		return json({
-			ok: false,
-			errorCode: 'INTERNAL_ERROR',
-			error: err?.message || 'Internal proxy error',
-			fallbackUsed: true
-		}, { status: 500 });
+		return json(
+			{
+				ok: false,
+				errorCode: 'INTERNAL_ERROR',
+				error: err?.message || 'Internal proxy error',
+				fallbackUsed: true
+			},
+			{ status: 500 }
+		);
 	}
 }
