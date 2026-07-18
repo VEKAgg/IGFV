@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { currentFocus } from '$lib/data/squadron';
+	import { base } from '$app/paths';
 	import { ShieldAltSolid, ArrowRightSolid } from 'svelte-awesome-icons';
 
 	let { focus = currentFocus } = $props();
@@ -48,7 +49,7 @@
 
 			<!-- Direct CTA Link -->
 			<a
-				href={focus.link}
+				href={base + focus.link}
 				class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary-main px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary-main/20 transition-all duration-300 hover:scale-[1.02] hover:bg-primary-light hover:shadow-primary-main/40"
 			>
 				<span>{focus.linkLabel}</span>
