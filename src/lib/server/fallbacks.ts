@@ -1,4 +1,9 @@
-import type { DataStateContainer, SquadronStats, FleetCarrierData, MemberProfile } from '$lib/types';
+import type {
+	DataStateContainer,
+	SquadronStats,
+	FleetCarrierData,
+	MemberProfile
+} from '$lib/types';
 import { squadronStats } from '$lib/data/squadron';
 import { fleetCarrierPlaceholder } from '$lib/data/fleet-carrier';
 
@@ -20,7 +25,10 @@ export function getFallbackFleetCarrier(error?: string): DataStateContainer<Flee
 	};
 }
 
-export function getFallbackCommanderProfile(commanderName: string, error?: string): DataStateContainer<MemberProfile> {
+export function getFallbackCommanderProfile(
+	commanderName: string,
+	error?: string
+): DataStateContainer<MemberProfile> {
 	return {
 		data: {
 			name: commanderName,

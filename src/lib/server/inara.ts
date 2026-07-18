@@ -1,11 +1,22 @@
 import { env } from '$env/dynamic/private';
-import type { DataStateContainer, SquadronStats, FleetCarrierData, MemberProfile } from '$lib/types';
-import { getFallbackSquadronStats, getFallbackFleetCarrier, getFallbackCommanderProfile } from './fallbacks';
+import type {
+	DataStateContainer,
+	SquadronStats,
+	FleetCarrierData,
+	MemberProfile
+} from '$lib/types';
+import {
+	getFallbackSquadronStats,
+	getFallbackFleetCarrier,
+	getFallbackCommanderProfile
+} from './fallbacks';
 
 const INARA_URL = 'https://inara.cz/inapi/v1/';
 
 function getApiKey(): string | undefined {
-	return env.INARA_API_KEY || (typeof process !== 'undefined' ? process.env.INARA_API_KEY : undefined);
+	return (
+		env.INARA_API_KEY || (typeof process !== 'undefined' ? process.env.INARA_API_KEY : undefined)
+	);
 }
 
 interface InaraHeader {
@@ -68,7 +79,9 @@ async function queryInara(eventName: string, eventData: Record<string, unknown>)
 	return eventResult.eventData || null;
 }
 
-export async function getSquadronStats(squadronId: number): Promise<DataStateContainer<SquadronStats>> {
+export async function getSquadronStats(
+	squadronId: number
+): Promise<DataStateContainer<SquadronStats>> {
 	try {
 		const data = await queryInara('getSquadron', { squadronID: squadronId });
 		if (!data) throw new Error('Empty squadron data from Inara');
@@ -89,7 +102,9 @@ export async function getSquadronStats(squadronId: number): Promise<DataStateCon
 	}
 }
 
-export async function getFleetCarrierDetails(carrierId: number): Promise<DataStateContainer<FleetCarrierData>> {
+export async function getFleetCarrierDetails(
+	carrierId: number
+): Promise<DataStateContainer<FleetCarrierData>> {
 	try {
 		const data = await queryInara('getFleetCarrier', { carrierID: carrierId });
 		if (!data) throw new Error('Empty fleet carrier data from Inara');
@@ -115,7 +130,11 @@ export async function getFleetCarrierDetails(carrierId: number): Promise<DataSta
 				activeServices: services.length ? services : ['Refuel', 'Repair', 'Rearm'],
 				jumpSchedule: 'Weekly Thursday maintenance jumps. Departs at 20:00 UTC.',
 				logisticsRole: 'Deep Space Operations Base & Commodity Trading Hub.',
-				operationalNotes: String(data.dockingAccess ? `Docking access: ${data.dockingAccess}` : 'Stationed near primary star. Open to clean ships.'),
+				operationalNotes: String(
+					data.dockingAccess
+						? `Docking access: ${data.dockingAccess}`
+						: 'Stationed near primary star. Open to clean ships.'
+				),
 				updatedAt: new Date().toISOString()
 			}
 		};
@@ -125,7 +144,9 @@ export async function getFleetCarrierDetails(carrierId: number): Promise<DataSta
 	}
 }
 
-export async function getCommanderDetails(commanderName: string): Promise<DataStateContainer<MemberProfile>> {
+export async function getCommanderDetails(
+	commanderName: string
+): Promise<DataStateContainer<MemberProfile>> {
 	try {
 		const data = await queryInara('getCommanderProfile', { commanderName });
 		if (!data) throw new Error('Empty commander data from Inara');
@@ -152,7 +173,9 @@ export async function getCommanderDetails(commanderName: string): Promise<DataSt
 				platform: 'PC', // Default or parse from ranks/details if available
 				timezone: 'UTC',
 				joinDate: new Date().toISOString().split('T')[0],
-				bio: String(data.commanderLore || `Commander ${commanderName} is a member of the IGFV crew.`)
+				bio: String(
+					data.commanderLore || `Commander ${commanderName} is a member of the IGFV crew.`
+				)
 			}
 		};
 	} catch (err: any) {

@@ -48,4 +48,3 @@ export function inview(node: HTMLElement, options: InviewOptions = {}) {
 		}
 	};
 }
-

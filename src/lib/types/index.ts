@@ -46,6 +46,8 @@ export interface NewsPost {
 	publishedAt: string;
 	coverImage?: string;
 	content: string;
+	author?: string;
+	isFeatured?: boolean;
 	dataState?: DataState;
 }
 

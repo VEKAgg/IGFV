@@ -13,7 +13,7 @@
 
 <div
 	use:inview={{ delay }}
-	class="inview-hidden panel-interactive group flex flex-col items-center justify-center text-center"
+	class="inview-hidden group flex panel-interactive flex-col items-center justify-center text-center"
 >
 	{#if IconComponent}
 		<div

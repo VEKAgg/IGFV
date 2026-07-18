@@ -37,11 +37,11 @@
 		</a>
 
 		<!-- Desktop Nav -->
-		<nav class="hidden items-center gap-4 lg:gap-6 md:flex">
+		<nav class="hidden items-center gap-4 md:flex lg:gap-6">
 			{#each navLinks as link (link.href)}
 				<a
 					href={link.href}
-					class="relative text-xs lg:text-sm font-medium tracking-wider text-gray-300 uppercase transition-colors hover:text-white"
+					class="relative text-xs font-medium tracking-wider text-gray-300 uppercase transition-colors hover:text-white lg:text-sm"
 					class:active-link={$page.url.pathname === link.href}
 				>
 					{link.label}

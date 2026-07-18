@@ -13,4 +13,3 @@ export async function GET() {
 		return json({ error: err?.message || 'failed' }, { status: 500 });
 	}
 }
-
