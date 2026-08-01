@@ -1,4 +1,5 @@
 import type { Operation } from '$lib/types';
+import { tritiumDepot } from '$lib/data/fleet-carrier';
 
 export const operations: Operation[] = [
 	{
@@ -33,13 +34,12 @@ export const operations: Operation[] = [
 		title: 'Valhall Tritium Re-stock',
 		category: 'Trade & Logistics',
 		priority: 'High',
-		summary:
-			'Procuring and loading 5,000 tonnes of Tritium fuel onto the ISS Valhall in preparation for the upcoming expedition.',
+		summary: `Procuring and loading ${tritiumDepot.formattedTarget} of Tritium fuel onto the ISS Valhall in preparation for the upcoming expedition.`,
 		lead: 'CMDR Don Samen',
 		eta: '3311-06-28',
 		participation:
 			'Open to all cargo haulers. High payout trade loop active from surrounding stations.',
-		progress: 60,
+		progress: tritiumDepot.progress,
 		status: 'active'
 	},
 	{

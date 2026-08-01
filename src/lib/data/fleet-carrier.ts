@@ -1,5 +1,22 @@
 import type { FleetCarrierData } from '$lib/types';
 
+export const tritiumDepot = {
+	current: 3000,
+	target: 5000,
+	get progress() {
+		return Math.round((this.current / this.target) * 100);
+	},
+	get formattedCurrent() {
+		return `${this.current.toLocaleString()} tonnes`;
+	},
+	get formattedTarget() {
+		return `${this.target.toLocaleString()} tonnes`;
+	},
+	get displayString() {
+		return `${this.current.toLocaleString()} / ${this.target.toLocaleString()} T (${this.progress}%)`;
+	}
+};
+
 export const fleetCarrierPlaceholder: FleetCarrierData = {
 	name: 'ISS Valhall',
 	id: 'VXX-RHJ',

@@ -1,4 +1,5 @@
 import type { SquadronStats, TestimonialItem, FAQItem } from '$lib/types';
+import { tritiumDepot } from '$lib/data/fleet-carrier';
 import {
 	UsersSolid,
 	GlobeAmericasSolid,
@@ -97,9 +98,9 @@ export const currentFocus = {
 	description:
 		'Procuring and loading Tritium fuel onto the ISS Valhall in LHS 3447 in preparation for the Colonia Summer Expedition.',
 	priority: 'High',
-	progress: 60,
-	target: '5,000 tonnes',
-	current: '3,000 tonnes',
+	progress: tritiumDepot.progress,
+	target: tritiumDepot.formattedTarget,
+	current: tritiumDepot.formattedCurrent,
 	link: '/fleet-carrier',
 	linkLabel: 'View Carrier Status'
 };
