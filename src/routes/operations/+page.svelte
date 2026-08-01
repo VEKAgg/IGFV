@@ -10,8 +10,10 @@
 		SpaceShuttleSolid,
 		ShieldAltSolid,
 		ExclamationTriangleSolid,
-		UserAstronautSolid
+		UserAstronautSolid,
+		ArrowRightSolid
 	} from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
 	import { operations } from '$lib/data/operations';
 	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
 	import CurrentFocus from '$lib/components/UI/CurrentFocus.svelte';
@@ -219,6 +221,15 @@
 							>
 							<span class="font-mono">{op.eta}</span>
 						</div>
+						{#if op.relatedLink}
+							<a
+								href={op.relatedLink}
+								class="mt-3 inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-primary-light uppercase transition-colors hover:text-white"
+							>
+								{op.relatedLinkLabel ?? 'View Details'}
+								<ArrowRightSolid class="size-3" />
+							</a>
+						{/if}
 					</div>
 				</div>
 			{/each}

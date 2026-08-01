@@ -12,8 +12,10 @@
 		FireSolid,
 		HammerSolid,
 		DiscordBrands,
-		ExternalLinkAltSolid
+		ExternalLinkAltSolid,
+		ArrowRightSolid
 	} from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
 	import { galleryItems, galleryCategories } from '$lib/data/gallery';
 
 	// Category filter state
@@ -154,16 +156,27 @@
 									<p class="mb-4 font-sans text-xs leading-relaxed text-gray-400">{item.caption}</p>
 								</div>
 
-								<div
-									class="mt-4 flex items-center justify-between border-t border-white/5 pt-3 text-[11px] text-gray-500"
-								>
-									<span class="font-mono text-[9px] tracking-wider text-gray-500 uppercase"
-										>{item.category}</span
+								<div>
+									{#if item.relatedEventId}
+										<a
+											href={resolve('/events')}
+											class="mb-3 inline-flex items-center gap-1 text-[10px] font-bold tracking-wider text-primary-light uppercase transition-colors hover:text-white"
+										>
+											View Event Archive
+											<ArrowRightSolid class="size-2.5" />
+										</a>
+									{/if}
+									<div
+										class="flex items-center justify-between border-t border-white/5 pt-3 text-[11px] text-gray-500"
 									>
-									<span class="flex items-center gap-1 font-bold text-white">
-										<UserSolid class="size-2.5 text-primary-light" />
-										{item.credit}
-									</span>
+										<span class="font-mono text-[9px] tracking-wider text-gray-500 uppercase"
+											>{item.category}</span
+										>
+										<span class="flex items-center gap-1 font-bold text-white">
+											<UserSolid class="size-2.5 text-primary-light" />
+											{item.credit}
+										</span>
+									</div>
 								</div>
 							</div>
 						</div>

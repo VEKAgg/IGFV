@@ -36,6 +36,8 @@ export interface Operation {
 	participation: string;
 	progress: number; // 0 to 100
 	status: 'active' | 'upcoming' | 'completed';
+	relatedLink?: string;
+	relatedLinkLabel?: string;
 }
 
 export interface NewsPost {
@@ -72,6 +74,8 @@ export interface MemberProfile {
 	joinDate: string;
 	bio: string;
 	isFeatured?: boolean;
+	categories?: string[];
+	inaraUrl?: string;
 }
 
 export interface EventItem {
@@ -93,6 +97,7 @@ export interface GalleryItem {
 	category: 'operations' | 'exploration' | 'carrier' | 'milestones' | 'community';
 	imageUrl: string;
 	credit: string;
+	relatedEventId?: string;
 }
 
 export interface FAQItem {

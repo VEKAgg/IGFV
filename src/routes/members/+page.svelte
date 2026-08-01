@@ -14,102 +14,32 @@
 		ExclamationTriangleSolid,
 		InfoCircleSolid
 	} from 'svelte-awesome-icons';
-	import { resolve } from '$app/paths';
-	import { members, leadership, standardMembersPlaceholder } from '$lib/data/members';
+	import { members, standardMembersPlaceholder } from '$lib/data/members';
 	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
+
+	// Combine real members with placeholder roster
+	const allMembers = [...members, ...standardMembersPlaceholder];
+
+	// Compute role distribution for community summary
+	const roleGroups = $derived(
+		allMembers.reduce(
+			(acc, m) => {
+				const cats = m.categories ?? [];
+				for (const cat of cats) {
+					acc[cat] = (acc[cat] ?? 0) + 1;
+				}
+				return acc;
+			},
+			{} as Record<string, number>
+		)
+	);
 
 	// Filters
 	let selectedRole = $state<string>('All');
 
-	// Enriched roster mapping category tags
-	const fullRoster = [
-		{
-			name: 'Don Samen',
-			role: 'Leader',
-			rank: 'Elite Explorer',
-			platform: 'PC',
-			timezone: 'UTC+1',
-			bio: 'Founder and overall commander of IGFV. Coordinates carrier loops and ensures a relaxed, low-stress community.',
-			categories: ['Leadership', 'Logistics', 'Mentors']
-		},
-		{
-			name: 'Twisted VorteK',
-			role: 'Manager',
-			rank: 'Elite Combat V',
-			platform: 'PC',
-			timezone: 'UTC-5',
-			bio: 'Active wing manager. Specializes in bounty hunting loops, engineering blueprints, and combat tactics training.',
-			categories: ['Leadership', 'Combat Pilots', 'Mentors', 'Specialists']
-		},
-		{
-			name: 'Sarah Thorne',
-			role: 'Officer / Lead Explorer',
-			rank: 'Elite Explorer III',
-			platform: 'PC',
-			timezone: 'UTC',
-			bio: 'Lead organizer of squadron expeditions. Helps pilots route through distant nebulas and map cartography.',
-			categories: ['Leadership', 'Explorers', 'Mentors']
-		},
-		{
-			name: 'Marcus Vance',
-			role: 'Recruiter',
-			rank: 'Elite Trader',
-			platform: 'Cross-platform',
-			timezone: 'UTC+2',
-			bio: 'Welcomes new pilots on Discord and assists them with their initial applications.',
-			categories: ['Recruiters', 'Traders']
-		},
-		{
-			name: 'Jin-Woo',
-			role: 'Logistics Lead',
-			rank: 'Elite Trader III',
-			platform: 'PC',
-			timezone: 'UTC+9',
-			bio: 'Coordinates fleet carrier Tritium restocking runs and monitors local commodity markets.',
-			categories: ['Logistics', 'Specialists', 'Traders']
-		},
-		{
-			name: 'CMDR Aethelgard',
-			role: 'Commander',
-			rank: 'Dangerous',
-			platform: 'PC',
-			timezone: 'UTC+1',
-			bio: 'Active combat wing pilot participating in LHS 3447 authority security runs.',
-			categories: ['Combat Pilots']
-		},
-		{
-			name: 'CMDR Nova_Storm',
-			role: 'Commander',
-			rank: 'Ranger',
-			platform: 'Xbox',
-			timezone: 'UTC-6',
-			bio: 'Deep space mapper currently stationed aboard the ISS Valhall hangar bay.',
-			categories: ['Explorers']
-		},
-		{
-			name: 'CMDR Polaris_Cap',
-			role: 'Commander',
-			rank: 'Broker',
-			platform: 'PlayStation',
-			timezone: 'UTC',
-			bio: 'Trade fleet pilot assisting with Tritium restocking trade loops.',
-			categories: ['Traders']
-		},
-		{
-			name: 'CMDR VoidWalker',
-			role: 'Commander',
-			rank: 'Elite Explorer',
-			platform: 'PC',
-			timezone: 'UTC+3',
-			bio: 'Charting pristine rings and planetary surfaces beyond the bubble.',
-			categories: ['Explorers']
-		}
-	];
-
-	// Filter computed list
-	let filteredRoster = $derived(
-		fullRoster.filter((cmdr) => {
-			return selectedRole === 'All' || cmdr.categories.includes(selectedRole);
+	const filteredRoster = $derived(
+		allMembers.filter((cmdr) => {
+			return selectedRole === 'All' || (cmdr.categories ?? []).includes(selectedRole);
 		})
 	);
 
@@ -152,37 +82,30 @@
 	</div>
 </section>
 
-<!-- ROSTER SUMMARY MODULE (Explaining kinds of members) -->
+<!-- COMMUNITY MAKEUP SUMMARY -->
 <section class="mx-auto max-w-7xl px-4 py-12 sm:py-16">
 	<div class="grid gap-8 lg:grid-cols-3">
-		<!-- Left: Roles Summary Card -->
+		<!-- Left: Role Distribution -->
 		<div
 			use:inview
 			class="inview-hidden rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-glow sm:p-8 lg:col-span-2"
 		>
 			<h2 class="mb-4 text-xl font-bold tracking-wider text-white uppercase">
-				Squadron Roles Guide
+				Community Makeup
 			</h2>
 			<p class="mb-6 text-xs leading-relaxed text-gray-400">
-				To support a thriving multi-platform community, our members coordinate around specialized
-				operational groups. These roles help keep the squadron active and secure.
+				{allMembers.length} active pilots across {Object.keys(roleGroups).length} operational
+				groups. Roles coordinate around specialized operational groups to keep the squadron active
+				and secure.
 			</p>
 
-			<div class="grid gap-4 text-xs sm:grid-cols-2">
-				<div class="border-l border-primary-main pl-4">
-					<span class="block font-bold text-white uppercase">Mentors & Recruiters</span>
-					<p class="mt-1 text-gray-500">
-						Recruiters welcome new arrivals in Discord. Mentors pair with newer pilots to help with
-						outfitting and credit farming loops.
-					</p>
-				</div>
-				<div class="border-l border-primary-main pl-4">
-					<span class="block font-bold text-white uppercase">Explorers & Combat</span>
-					<p class="mt-1 text-gray-500">
-						Explorers chart coordinates beyond the bubble. Combat pilots wing up for authority
-						security runs and AX defence.
-					</p>
-				</div>
+			<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+				{#each Object.entries(roleGroups).sort((a, b) => b[1] - a[1]) as [role, count]}
+					<div class="flex items-center justify-between rounded-lg border border-white/5 bg-white/5 px-4 py-2.5">
+						<span class="text-xs font-semibold text-gray-300 uppercase">{role}</span>
+						<span class="font-mono text-sm font-bold text-primary-light">{count}</span>
+					</div>
+				{/each}
 			</div>
 		</div>
 
@@ -254,7 +177,7 @@
 											.slice(0, 2)
 											.toUpperCase()}
 									</div>
-									<div>
+									<div class="min-w-0 flex-1">
 										<h3 class="text-sm font-bold tracking-wide text-white uppercase">
 											CMDR {cmdr.name.replace('CMDR ', '')}
 										</h3>
@@ -263,12 +186,28 @@
 											>{cmdr.role}</span
 										>
 									</div>
+									{#if cmdr.inaraUrl}
+										<a
+											href={cmdr.inaraUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="shrink-0 text-gray-500 transition-colors hover:text-primary-light"
+											title="View on Inara"
+										>
+											<ExternalLinkAltSolid class="size-3.5" />
+										</a>
+									{/if}
 								</div>
 
-								<p class="mb-4 font-sans text-xs leading-relaxed text-gray-400">{cmdr.bio}</p>
+								<p class="mb-3 font-sans text-xs leading-relaxed text-gray-400">{cmdr.bio}</p>
+
+								<div class="mb-3 flex items-center gap-2 text-[10px] text-gray-500">
+									<StarSolid class="size-3 text-primary-light" />
+									<span class="font-semibold text-gray-400">{cmdr.rank}</span>
+								</div>
 
 								<div class="mb-4 flex flex-wrap gap-1.5">
-									{#each cmdr.categories as tag}
+									{#each cmdr.categories ?? [] as tag}
 										<span
 											class="rounded border border-white/5 bg-white/5 px-2 py-0.5 text-[9px] font-semibold text-gray-400 uppercase"
 										>

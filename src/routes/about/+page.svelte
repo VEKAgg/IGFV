@@ -21,6 +21,7 @@
 	} from 'svelte-awesome-icons';
 	import { resolve } from '$app/paths';
 	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
+	import { leadership } from '$lib/data/members';
 
 	// ─── FAQ Accordion State ───
 	let openFaq = $state<number | null>(null);
@@ -289,7 +290,7 @@
 		</h2>
 
 		<div class="grid gap-6 md:grid-cols-3">
-			{#each [{ name: 'Don Samen', role: 'Leader', desc: 'Founder and overall commander. Focuses on fleet carrier operations and keeping a relaxed, low-stress squadron community.' }, { name: 'Twisted VorteK', role: 'Manager', desc: 'Active wing coordinator. Specializes in combat engineering, bounty hunting loops, and weapon system training.' }, { name: 'Sarah Thorne', role: 'Officer / Lead Explorer', desc: 'Expedition coordinator. Maps deep space pathways and guides pilots through distant nebula transits.' }] as lead}
+			{#each leadership as lead}
 				<div
 					class="rounded-xl border border-white/10 bg-[#000d22]/90 p-6 transition-all duration-300 hover:border-primary-main/30"
 				>
@@ -306,7 +307,7 @@
 							>
 						</div>
 					</div>
-					<p class="text-xs leading-relaxed text-gray-400">{lead.desc}</p>
+					<p class="text-xs leading-relaxed text-gray-400">{lead.bio}</p>
 				</div>
 			{/each}
 		</div>

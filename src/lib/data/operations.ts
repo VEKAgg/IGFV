@@ -40,7 +40,9 @@ export const operations: Operation[] = [
 		participation:
 			'Open to all cargo haulers. High payout trade loop active from surrounding stations.',
 		progress: tritiumDepot.progress,
-		status: 'active'
+		status: 'active',
+		relatedLink: '/fleet-carrier',
+		relatedLinkLabel: 'View Carrier Status'
 	},
 	{
 		id: 'op-004',

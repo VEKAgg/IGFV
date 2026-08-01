@@ -249,3 +249,46 @@ When building or updating features according to the project roadmap, strictly ad
      - Baseline starter ships: Cobra Mk III (all-rounder), Asp Explorer (exploration go-to).
      - Keybind fix: Rebind Boost key away from TAB to prevent accidental Steam Overlay triggers.
      - Community integration: Explain Elite's weak built-in social tools and link directly to joining IGFV's Discord & Mentor program for organized wings.
+
+---
+
+## Deferred Work (Future Sessions)
+
+The following items are documented but deferred to future sessions. Do not implement until explicitly requested.
+
+### A. Almost Everything Toolkit Guide (Directive 9)
+- **Route**: Create `src/routes/guides/newp-toolkit/+page.svelte` or extend `src/lib/data/guides.ts`.
+- **Attribution**: Prominent credit linking to Waveshaper's Steam Community guide *"The Guide for Almost Everything"*.
+- **Content**: 7 activity categories (Combat, Trading, Exploration, Mining, Power/Ship Management, Engineering, Beginner Advice).
+- **Status**: Content-heavy task, deferred. Existing guides cover Exploration, Mining, BGS, and Squadron Logistics.
+
+### B. Dynamic Status Badges & Live Data Fetching (Directive 6)
+- **Goal**: Pages should dynamically toggle `DataStatusPanel` between `live` and `fallback`/`placeholder` based on actual API response.
+- **Current state**: Only homepage toggles dynamically (Discord widget). All other pages use hardcoded `state="placeholder"` or `state="live"`.
+- **Pages needing dynamic status**: Operations, Fleet Carrier, Members, News.
+- **Prerequisite**: Server load functions (`+page.server.ts`) or client-side `$effect` fetching from `/api/inara/proxy` with proper squadron ID configuration.
+- **Status**: Deferred until Inara API integration is matured (currently only the proxy endpoint exists with no consumers).
+
+### C. Dynamic Member Count from Inara (Directive 3)
+- **Goal**: Home page stats should fetch live member count from Inara API instead of using static `'124'` from `squadron.ts`.
+- **Current state**: `squadronStatsWithIcons` imports static data. API proxy exists at `/api/inara/proxy` but no client consumes it.
+- **Status**: Deferred with dynamic status badges (item B above).
+
+### 10. Emergency Fuel Procedures & The Fuel Rats Guide (`/guides`)
+- **Data Location & Schema**: Add a new `GuideEntry` object in `src/lib/data/guides.ts` adhering to the standard schema with `dataState: "live"`.
+- **Metadata**:
+  - `title`: "What to Do When You Have No Fuel"
+  - `category`: "Beginner Tips" (secondary tag: "Emergency Procedures")
+  - `author`: "Disodium & RadLock"
+  - `sourceUrl`: `https://steamcommunity.com/sharedfiles/filedetails/?id=500051873`
+  - `sourceLabel`: "Steam Community Guide"
+  - `datePublished`: `2015-08-15`, `dateUpdated`: `2020-08-10`
+  - `dataState`: `"live"`
+- **Content Sections (Paraphrased Collapsible Accordion Subsections)**:
+  1. **Overview**: Explain that running out of fuel is not fatal and introduce The Fuel Rats rescue collective.
+  2. **If You're on Life Support (Urgent)**: Note system name and nearby celestial body, record remaining oxygen time, and **log out to the main menu immediately** to pause the oxygen timer.
+  3. **How to Request a Rescue (Website Method)**: Navigate to `fuelrats.com` -> "Get Help" -> "I need to be rescued"; fill in CMDR name, system, platform (PC/Xbox/PS), and oxygen status. Note that Rats only request CMDR names (never passwords/emails).
+  4. **Alternative Method (IRC)**: Join `#FuelRats` on `irc.fuelrats.com` and post a distress call formatted as: `RATSIGNAL – CMDR Name/GamerTag, Platform, Current System, Oxygen remaining`.
+  5. **Who Are The Fuel Rats?**: Describe them as a leaderless volunteer community dedicated to fuel rescues across the galaxy.
+  6. **Cross-links & CTAs**: Include links to `fuelrats.com`, external ED tools (Inara, EDSM, Coriolis, Spansh, EDDB), and an IGFV Discord CTA ("Join our Discord for live rescue coordination and community support").
+- **Attribution & Rules**: Include explicit credit: *"Adapted from a Steam Community guide by Disodium & RadLock"* linking to `https://steamcommunity.com/sharedfiles/filedetails/?id=500051873`. Ensure paraphrased original wording and ARIA keyboard accessibility.
