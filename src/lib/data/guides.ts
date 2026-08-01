@@ -3,6 +3,9 @@ import type { GuideEntry } from '$lib/types';
 export interface ExtendedGuideEntry extends GuideEntry {
 	difficulty: 'Beginner' | 'Intermediate' | 'Squadron-Specific';
 	isStartHere?: boolean;
+	author?: string;
+	sourceUrl?: string;
+	sourceLabel?: string;
 }
 
 export const guides: ExtendedGuideEntry[] = [
@@ -110,6 +113,49 @@ export const guides: ExtendedGuideEntry[] = [
 			{
 				title: 'Expedition Preparation',
 				text: 'During long voyages, docking access is set to Friends and Squadron members only. Set your ships in shipyard hangar bay at least 30 minutes before jump scheduled times.'
+			}
+		],
+		dataState: 'live'
+	},
+	{
+		slug: 'emergency-fuel-procedures',
+		title: 'What to Do When You Have No Fuel',
+		category: 'Beginner Tips',
+		publishedAt: '3281-08-15',
+		difficulty: 'Beginner',
+		isStartHere: false,
+		author: 'Disodium & RadLock',
+		sourceUrl:
+			'https://steamcommunity.com/sharedfiles/filedetails/?id=500051873',
+		sourceLabel: 'Steam Community Guide',
+		excerpt:
+			'Running out of fuel is not a death sentence. Learn the emergency procedures and how to request a rescue from The Fuel Rats.',
+		content:
+			'Even experienced pilots run dry. If your Fuel Scoop cannot keep up with your jump cadence, or you stray into a dead zone without KGBFOAM stars, you will eventually hit an empty tank. Do not panic — help is available.',
+		steps: [
+			{
+				title: 'If You Are on Life Support (Urgent)',
+				text: 'Note your current system name and the nearest celestial body. Check your remaining oxygen time in the HUD. Immediately log out to the main menu — this pauses the oxygen timer and gives rescue teams time to reach you.'
+			},
+			{
+				title: 'Request a Rescue via the Website',
+				text: 'Navigate to fuelrats.com and select "Get Help" then "I need to be rescued." Fill in your CMDR name, current system, platform (PC/Xbox/PlayStation), and whether you have oxygen remaining. The Fuel Rats will never ask for your password or email — only your CMDR name.'
+			},
+			{
+				title: 'Alternative: IRC Distress Signal',
+				text: 'Join #FuelRats on irc.fuelrats.com and post a distress call in this format: RATSIGNAL – CMDR Name/GamerTag, Platform, Current System, Oxygen remaining. A dispatcher will guide you through the process.'
+			},
+			{
+				title: 'Who Are The Fuel Rats?',
+				text: 'The Fuel Rats are a leaderless, volunteer-run rescue collective operating across the galaxy. They have rescued hundreds of thousands of stranded commanders and operate entirely on goodwill. No payment is required, though donations help keep their fleet fueled.'
+			},
+			{
+				title: 'Prevention: Scoopability Check',
+				text: 'Always check star class before jumping. KGBFOAM stars (O, B, A, F, G, K, M) are scoopable. Plot routes through scoopable stars using the Galaxy Map filter. Carry a Fuel Scoop rated at least to class D for your ship size.'
+			},
+			{
+				title: 'IGFV Squadron Support',
+				text: 'Join our Discord for live rescue coordination. Squadron members with Fuel Limpet controllers can perform local rescues faster than external teams. Always fuel up at ISS Valhall before deep-space sorties.'
 			}
 		],
 		dataState: 'live'

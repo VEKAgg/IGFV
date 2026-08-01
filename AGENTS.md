@@ -292,3 +292,27 @@ The following items are documented but deferred to future sessions. Do not imple
   5. **Who Are The Fuel Rats?**: Describe them as a leaderless volunteer community dedicated to fuel rescues across the galaxy.
   6. **Cross-links & CTAs**: Include links to `fuelrats.com`, external ED tools (Inara, EDSM, Coriolis, Spansh, EDDB), and an IGFV Discord CTA ("Join our Discord for live rescue coordination and community support").
 - **Attribution & Rules**: Include explicit credit: *"Adapted from a Steam Community guide by Disodium & RadLock"* linking to `https://steamcommunity.com/sharedfiles/filedetails/?id=500051873`. Ensure paraphrased original wording and ARIA keyboard accessibility.
+
+### 11. Efficient Keyboard and Mouse Controls Guide (`/guides`)
+- **Data Location & Schema**: Add a new `GuideEntry` object in `src/lib/data/guides.ts` using the existing schema with `dataState: "live"`.
+- **Metadata**:
+  - `title`: "Efficient Keyboard & Mouse Controls for Elite Dangerous"
+  - `category`: "Gameplay Basics" (secondary tag: "Ship Controls / Keybinds")
+  - `author`: "Cullen & Regis I>"
+  - `sourceUrl`: `https://steamcommunity.com/sharedfiles/filedetails/?id=478686362`
+  - `sourceLabel`: "Steam Community Guide"
+  - `datePublished`: `2015-07-10`, `dateUpdated`: `2024-10-10`
+  - `dataState`: `"live"`
+- **Content Sections (Paraphrased Collapsible Accordion Subsections)**:
+  1. **Introduction**: Explain why default flight controls feel clunky for M&K players and how WASD FPS/MMO conventions improve flight ergonomics.
+  2. **Where Keybinds Are Stored**: Save path `C:\Users\USERNAME\AppData\Local\Frontier Developments\Elite Dangerous\Options\Bindings\`; difference between `Custom.3.0.binds` (Horizons) and `Custom.4.0.binds` (Odyssey); reminder to back up files manually (cloud saves do not sync control settings).
+  3. **Flight — Roll & Strafe Presets**: Rotational Preset (Roll A/D, Lateral Q/E) vs. Strafe Preset (Roll Q/E, Lateral A/D).
+  4. **Flight — Thrust & Throttle**: Forward/Backward (W/S); Vertical Up/Down (Space / Left Ctrl or C); Mouse wheel 10% step increments; Quick throttle keys (0% X, 25% O, 50% P, 75% [, 100% ]); Autorun key tip (50% on R).
+  5. **Flight Philosophy / Why WASD Works**: Roll on digital keybinds (fastest rotation axis), Pitch on analog mouse movement, Yaw on mouse X-axis.
+  6. **Flight Miscellaneous**: Flight Assist set to Toggle mode; Frame Shift Drive combined single-key bind; Rotational Correction toggle.
+  7. **Targeting & Weapons**: Select Target Ahead (F); Subsystem cycling (Y/U); Target Next System in Route (`); Hardpoints (R); Silent Running precautions & Heat Sink Launchers.
+  8. **Miscellaneous Binds**: Voice comms Push to Mute toggle; Reset HMD (F11); Avoid careless "Jettison All Cargo"; Sensor Zoom (Numpad 4/6); Numpad utility keys (7 SCB, 8 Chaff, 9 ECM, 1-3 Cosmetics); Enable Context Menu ON.
+  9. **HUD & Mode Switches**: Galaxy Map (M), System Map (,), HUD Mode switch (C), Friends Menu (I), FSS Target Signal (F).
+  10. **Limitations & Caveats**: Numpad layout requirement (60%/65% keyboard adjustments); clean keybind tables; note that scheme predates full Odyssey on-foot controls.
+  11. **Cross-links & CTAs**: Links to Inara, EDSM, Coriolis, Spansh, EDDB, and IGFV Discord CTA ("Share your own keybind setup in our Discord").
+- **Attribution & Rules**: Include visible attribution: *"Adapted from a Steam Community guide by Cullen & Regis I>"* linking to source URL. Render keybind tables using existing site table/list UI components. Preserving ARIA keyboard accessibility.

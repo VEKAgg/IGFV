@@ -3,16 +3,8 @@
 	import {
 		UsersSolid,
 		StarSolid,
-		ClockSolid,
-		GlobeAmericasSolid,
-		HandshakeSolid,
-		FireSolid,
 		ExternalLinkAltSolid,
-		CompassSolid,
-		ShieldAltSolid,
-		UserAstronautSolid,
-		ExclamationTriangleSolid,
-		InfoCircleSolid
+		ExclamationTriangleSolid
 	} from 'svelte-awesome-icons';
 	import { members, standardMembersPlaceholder } from '$lib/data/members';
 	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
@@ -100,7 +92,7 @@
 			</p>
 
 			<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-				{#each Object.entries(roleGroups).sort((a, b) => b[1] - a[1]) as [role, count]}
+				{#each Object.entries(roleGroups).sort((a, b) => b[1] - a[1]) as [role, count] (role)}
 					<div class="flex items-center justify-between rounded-lg border border-white/5 bg-white/5 px-4 py-2.5">
 						<span class="text-xs font-semibold text-gray-300 uppercase">{role}</span>
 						<span class="font-mono text-sm font-bold text-primary-light">{count}</span>
@@ -144,7 +136,7 @@
 	<div class="mx-auto max-w-7xl">
 		<!-- Role Filters -->
 		<div class="mb-12 flex flex-wrap justify-center gap-2">
-			{#each roleFilters as role}
+			{#each roleFilters as role (role)}
 				<button
 					onclick={() => (selectedRole = role)}
 					class="rounded px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all {selectedRole ===
@@ -160,7 +152,7 @@
 		<!-- Members Grid (Solid tinted panels) -->
 		{#if filteredRoster.length > 0}
 			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				{#each filteredRoster as cmdr, idx}
+				{#each filteredRoster as cmdr, idx (cmdr.name)}
 					<div use:inview={{ delay: idx * 50 }} class="inview-hidden group">
 						<div
 							class="flex h-full flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/95 p-6 shadow-sm transition-all hover:border-primary-main/20"
@@ -207,7 +199,7 @@
 								</div>
 
 								<div class="mb-4 flex flex-wrap gap-1.5">
-									{#each cmdr.categories ?? [] as tag}
+									{#each cmdr.categories ?? [] as tag (tag)}
 										<span
 											class="rounded border border-white/5 bg-white/5 px-2 py-0.5 text-[9px] font-semibold text-gray-400 uppercase"
 										>

@@ -3,16 +3,8 @@
 	import {
 		ImagesSolid,
 		ImageSolid,
-		StarSolid,
-		CalendarAltSolid,
 		UserSolid,
-		CheckSolid,
-		SpaceShuttleSolid,
-		CompassSolid,
-		FireSolid,
-		HammerSolid,
 		DiscordBrands,
-		ExternalLinkAltSolid,
 		ArrowRightSolid
 	} from 'svelte-awesome-icons';
 	import { resolve } from '$app/paths';
@@ -119,7 +111,7 @@
 	<div class="mx-auto max-w-7xl">
 		<!-- Category tabs -->
 		<div class="mb-12 flex flex-wrap justify-center gap-2">
-			{#each galleryCategories as cat}
+			{#each galleryCategories as cat (cat.id)}
 				<button
 					onclick={() => (activeCategory = cat.id)}
 					class="rounded px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all {activeCategory ===
@@ -135,7 +127,7 @@
 		<!-- Grid list (Frosted cards with solid layout) -->
 		{#if filteredItems.length > 0}
 			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				{#each filteredItems as item, idx}
+				{#each filteredItems as item, idx (item.id)}
 					<div use:inview={{ delay: idx * 60 }} class="inview-hidden">
 						<div
 							class="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-[#000d22]/90 shadow-sm transition-colors hover:border-primary-main/20"
