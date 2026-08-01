@@ -125,8 +125,7 @@ export const guides: ExtendedGuideEntry[] = [
 		difficulty: 'Beginner',
 		isStartHere: false,
 		author: 'Disodium & RadLock',
-		sourceUrl:
-			'https://steamcommunity.com/sharedfiles/filedetails/?id=500051873',
+		sourceUrl: 'https://steamcommunity.com/sharedfiles/filedetails/?id=500051873',
 		sourceLabel: 'Steam Community Guide',
 		excerpt:
 			'Running out of fuel is not a death sentence. Learn the emergency procedures and how to request a rescue from The Fuel Rats.',
@@ -156,6 +155,60 @@ export const guides: ExtendedGuideEntry[] = [
 			{
 				title: 'IGFV Squadron Support',
 				text: 'Join our Discord for live rescue coordination. Squadron members with Fuel Limpet controllers can perform local rescues faster than external teams. Always fuel up at ISS Valhall before deep-space sorties.'
+			}
+		],
+		dataState: 'live'
+	},
+	{
+		slug: 'keyboard-mouse-controls',
+		title: 'Efficient Keyboard & Mouse Controls',
+		category: 'Gameplay Basics',
+		publishedAt: '3281-07-10',
+		difficulty: 'Beginner',
+		isStartHere: false,
+		author: 'Cullen & Regis I>',
+		sourceUrl: 'https://steamcommunity.com/sharedfiles/filedetails/?id=478686362',
+		sourceLabel: 'Steam Community Guide',
+		excerpt:
+			'Remap your flight controls to follow FPS/MMO WASD conventions for smoother, more intuitive piloting on keyboard and mouse.',
+		content:
+			'Default flight controls in Elite Dangerous feel clunky for keyboard and mouse players. Remapping to WASD conventions — pitch on mouse, roll and strafe on keys — transforms the flight model into something familiar to any FPS veteran.',
+		steps: [
+			{
+				title: 'Where Keybinds Are Stored',
+				text: 'Save files live at C:\\Users\\USERNAME\\AppData\\Local\\Frontier Developments\\Elite Dangerous\\Options\\Bindings\\. Custom.3.0.binds is Horizons, Custom.4.0.binds is Odyssey. Back up manually — cloud saves do not sync control settings.'
+			},
+			{
+				title: 'Flight — Roll & Strafe Presets',
+				text: 'Rotational Preset: Roll on A/D, Lateral thrust on Q/E. Strafe Preset: Roll on Q/E, Lateral on A/D. Choose one and stick with it — consistency builds muscle memory.'
+			},
+			{
+				title: 'Flight — Thrust & Throttle',
+				text: 'Forward/Backward on W/S. Vertical Up/Down on Space and Left Ctrl (or C). Mouse wheel for 10% step throttle increments. Quick throttle keys: 0% on X, 25% on O, 50% on P, 75% on [, 100% on ]. Set autorun to 50% throttle on R.'
+			},
+			{
+				title: 'Flight Philosophy — Why WASD Works',
+				text: 'Roll on digital keys (fastest rotation axis for quick reactions). Pitch on analog mouse movement (precise vertical aiming). Yaw on mouse X-axis (natural horizontal tracking). This mirrors FPS mouse-look behavior.'
+			},
+			{
+				title: 'Flight Miscellaneous',
+				text: 'Set Flight Assist to Toggle mode — tapping it mid-fight is faster than holding. Bind Frame Shift Drive to a single combined key. Toggle Rotational Correction off for cleaner flight in rotating stations.'
+			},
+			{
+				title: 'Targeting & Weapons',
+				text: 'Select Target Ahead on F. Subsystem cycling on Y/U. Target Next System in Route on `. Hardpoints deploy on R. Use Silent Running sparingly — always carry Heat Sink Launchers to avoid cooking your modules.'
+			},
+			{
+				title: 'Miscellaneous Binds',
+				text: 'Voice comms Push to Mute as a toggle. Reset HMD on F11. Never bind Jettison All Cargo to anything accessible. Sensor Zoom on Numpad 4/6. Numpad utility keys: 7 for Shield Cell Banks, 8 for Chaff, 9 for ECM, 1-3 for cosmetics. Enable Context Menu ON.'
+			},
+			{
+				title: 'HUD & Mode Switches',
+				text: 'Galaxy Map on M. System Map on ,. HUD Mode switch on C. Friends Menu on I. FSS Target Signal on F. These are safe defaults that avoid conflicts with flight controls.'
+			},
+			{
+				title: 'Limitations & Caveats',
+				text: 'This scheme assumes a full-size keyboard with Numpad. 60%/65% keyboards may need alternative binds for numpad keys. This scheme predates Odyssey on-foot controls — rebind those separately if you own the expansion.'
 			}
 		],
 		dataState: 'live'

@@ -256,12 +256,6 @@ When building or updating features according to the project roadmap, strictly ad
 
 The following items are documented but deferred to future sessions. Do not implement until explicitly requested.
 
-### A. Almost Everything Toolkit Guide (Directive 9)
-- **Route**: Create `src/routes/guides/newp-toolkit/+page.svelte` or extend `src/lib/data/guides.ts`.
-- **Attribution**: Prominent credit linking to Waveshaper's Steam Community guide *"The Guide for Almost Everything"*.
-- **Content**: 7 activity categories (Combat, Trading, Exploration, Mining, Power/Ship Management, Engineering, Beginner Advice).
-- **Status**: Content-heavy task, deferred. Existing guides cover Exploration, Mining, BGS, and Squadron Logistics.
-
 ### B. Dynamic Status Badges & Live Data Fetching (Directive 6)
 - **Goal**: Pages should dynamically toggle `DataStatusPanel` between `live` and `fallback`/`placeholder` based on actual API response.
 - **Current state**: Only homepage toggles dynamically (Discord widget). All other pages use hardcoded `state="placeholder"` or `state="live"`.
@@ -273,46 +267,3 @@ The following items are documented but deferred to future sessions. Do not imple
 - **Goal**: Home page stats should fetch live member count from Inara API instead of using static `'124'` from `squadron.ts`.
 - **Current state**: `squadronStatsWithIcons` imports static data. API proxy exists at `/api/inara/proxy` but no client consumes it.
 - **Status**: Deferred with dynamic status badges (item B above).
-
-### 10. Emergency Fuel Procedures & The Fuel Rats Guide (`/guides`)
-- **Data Location & Schema**: Add a new `GuideEntry` object in `src/lib/data/guides.ts` adhering to the standard schema with `dataState: "live"`.
-- **Metadata**:
-  - `title`: "What to Do When You Have No Fuel"
-  - `category`: "Beginner Tips" (secondary tag: "Emergency Procedures")
-  - `author`: "Disodium & RadLock"
-  - `sourceUrl`: `https://steamcommunity.com/sharedfiles/filedetails/?id=500051873`
-  - `sourceLabel`: "Steam Community Guide"
-  - `datePublished`: `2015-08-15`, `dateUpdated`: `2020-08-10`
-  - `dataState`: `"live"`
-- **Content Sections (Paraphrased Collapsible Accordion Subsections)**:
-  1. **Overview**: Explain that running out of fuel is not fatal and introduce The Fuel Rats rescue collective.
-  2. **If You're on Life Support (Urgent)**: Note system name and nearby celestial body, record remaining oxygen time, and **log out to the main menu immediately** to pause the oxygen timer.
-  3. **How to Request a Rescue (Website Method)**: Navigate to `fuelrats.com` -> "Get Help" -> "I need to be rescued"; fill in CMDR name, system, platform (PC/Xbox/PS), and oxygen status. Note that Rats only request CMDR names (never passwords/emails).
-  4. **Alternative Method (IRC)**: Join `#FuelRats` on `irc.fuelrats.com` and post a distress call formatted as: `RATSIGNAL – CMDR Name/GamerTag, Platform, Current System, Oxygen remaining`.
-  5. **Who Are The Fuel Rats?**: Describe them as a leaderless volunteer community dedicated to fuel rescues across the galaxy.
-  6. **Cross-links & CTAs**: Include links to `fuelrats.com`, external ED tools (Inara, EDSM, Coriolis, Spansh, EDDB), and an IGFV Discord CTA ("Join our Discord for live rescue coordination and community support").
-- **Attribution & Rules**: Include explicit credit: *"Adapted from a Steam Community guide by Disodium & RadLock"* linking to `https://steamcommunity.com/sharedfiles/filedetails/?id=500051873`. Ensure paraphrased original wording and ARIA keyboard accessibility.
-
-### 11. Efficient Keyboard and Mouse Controls Guide (`/guides`)
-- **Data Location & Schema**: Add a new `GuideEntry` object in `src/lib/data/guides.ts` using the existing schema with `dataState: "live"`.
-- **Metadata**:
-  - `title`: "Efficient Keyboard & Mouse Controls for Elite Dangerous"
-  - `category`: "Gameplay Basics" (secondary tag: "Ship Controls / Keybinds")
-  - `author`: "Cullen & Regis I>"
-  - `sourceUrl`: `https://steamcommunity.com/sharedfiles/filedetails/?id=478686362`
-  - `sourceLabel`: "Steam Community Guide"
-  - `datePublished`: `2015-07-10`, `dateUpdated`: `2024-10-10`
-  - `dataState`: `"live"`
-- **Content Sections (Paraphrased Collapsible Accordion Subsections)**:
-  1. **Introduction**: Explain why default flight controls feel clunky for M&K players and how WASD FPS/MMO conventions improve flight ergonomics.
-  2. **Where Keybinds Are Stored**: Save path `C:\Users\USERNAME\AppData\Local\Frontier Developments\Elite Dangerous\Options\Bindings\`; difference between `Custom.3.0.binds` (Horizons) and `Custom.4.0.binds` (Odyssey); reminder to back up files manually (cloud saves do not sync control settings).
-  3. **Flight — Roll & Strafe Presets**: Rotational Preset (Roll A/D, Lateral Q/E) vs. Strafe Preset (Roll Q/E, Lateral A/D).
-  4. **Flight — Thrust & Throttle**: Forward/Backward (W/S); Vertical Up/Down (Space / Left Ctrl or C); Mouse wheel 10% step increments; Quick throttle keys (0% X, 25% O, 50% P, 75% [, 100% ]); Autorun key tip (50% on R).
-  5. **Flight Philosophy / Why WASD Works**: Roll on digital keybinds (fastest rotation axis), Pitch on analog mouse movement, Yaw on mouse X-axis.
-  6. **Flight Miscellaneous**: Flight Assist set to Toggle mode; Frame Shift Drive combined single-key bind; Rotational Correction toggle.
-  7. **Targeting & Weapons**: Select Target Ahead (F); Subsystem cycling (Y/U); Target Next System in Route (`); Hardpoints (R); Silent Running precautions & Heat Sink Launchers.
-  8. **Miscellaneous Binds**: Voice comms Push to Mute toggle; Reset HMD (F11); Avoid careless "Jettison All Cargo"; Sensor Zoom (Numpad 4/6); Numpad utility keys (7 SCB, 8 Chaff, 9 ECM, 1-3 Cosmetics); Enable Context Menu ON.
-  9. **HUD & Mode Switches**: Galaxy Map (M), System Map (,), HUD Mode switch (C), Friends Menu (I), FSS Target Signal (F).
-  10. **Limitations & Caveats**: Numpad layout requirement (60%/65% keyboard adjustments); clean keybind tables; note that scheme predates full Odyssey on-foot controls.
-  11. **Cross-links & CTAs**: Links to Inara, EDSM, Coriolis, Spansh, EDDB, and IGFV Discord CTA ("Share your own keybind setup in our Discord").
-- **Attribution & Rules**: Include visible attribution: *"Adapted from a Steam Community guide by Cullen & Regis I>"* linking to source URL. Render keybind tables using existing site table/list UI components. Preserving ARIA keyboard accessibility.
