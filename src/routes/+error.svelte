@@ -31,8 +31,8 @@
 
 			<p class="mt-6 text-sm leading-relaxed text-gray-400">
 				{#if $page.status === 404}
-					The stellar body you are requesting does not exist in any known star system.
-					Verify your coordinates and try again.
+					The stellar body you are requesting does not exist in any known star system. Verify your
+					coordinates and try again.
 				{:else}
 					Flight computers encountered an unexpected anomaly. Check your systems and retry.
 				{/if}
@@ -72,9 +72,7 @@
 				</a>
 			</div>
 
-			<p class="animate-blink mt-10 text-xs text-gray-500">
-				Recalibrating navigation array...
-			</p>
+			<p class="animate-blink mt-10 text-xs text-gray-500">Recalibrating navigation array...</p>
 		</div>
 	</div>
 </section>

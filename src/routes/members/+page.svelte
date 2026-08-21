@@ -82,18 +82,17 @@
 			use:inview
 			class="inview-hidden rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-glow sm:p-8 lg:col-span-2"
 		>
-			<h2 class="mb-4 text-xl font-bold tracking-wider text-white uppercase">
-				Community Makeup
-			</h2>
+			<h2 class="mb-4 text-xl font-bold tracking-wider text-white uppercase">Community Makeup</h2>
 			<p class="mb-6 text-xs leading-relaxed text-gray-400">
-				{allMembers.length} active pilots across {Object.keys(roleGroups).length} operational
-				groups. Roles coordinate around specialized operational groups to keep the squadron active
-				and secure.
+				{allMembers.length} active pilots across {Object.keys(roleGroups).length} operational groups.
+				Roles coordinate around specialized operational groups to keep the squadron active and secure.
 			</p>
 
 			<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
 				{#each Object.entries(roleGroups).sort((a, b) => b[1] - a[1]) as [role, count] (role)}
-					<div class="flex items-center justify-between rounded-lg border border-white/5 bg-white/5 px-4 py-2.5">
+					<div
+						class="flex items-center justify-between rounded-lg border border-white/5 bg-white/5 px-4 py-2.5"
+					>
 						<span class="text-xs font-semibold text-gray-300 uppercase">{role}</span>
 						<span class="font-mono text-sm font-bold text-primary-light">{count}</span>
 					</div>

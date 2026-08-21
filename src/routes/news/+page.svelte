@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { inview } from '$lib/actions/inview';
+	import { untrack } from 'svelte';
 	import {
 		NewspaperSolid,
 		UserSolid,
@@ -31,7 +32,9 @@
 	}
 
 	$effect(() => {
-		loadNews();
+		untrack(() => {
+			loadNews();
+		});
 	});
 
 	// Filter and Active News State
@@ -48,10 +51,10 @@
 		'Operations',
 		'Recruitment'
 	];
-	let featuredPost = $derived(newsPosts.find((p) => p.isFeatured) || newsPosts[0]);
+	const featuredPost = $derived(newsPosts.find((p) => p.isFeatured) || newsPosts[0]);
 
 	// Filtered posts
-	let filteredNews = $derived(
+	const filteredNews = $derived(
 		newsPosts.filter((p) => {
 			const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
 			return matchesCategory;
@@ -59,7 +62,7 @@
 	);
 
 	// Grouping by Year/Month
-	let archivedGroups = $derived(
+	const archivedGroups = $derived(
 		newsPosts.reduce(
 			(acc, p) => {
 				const yearMonth = p.publishedAt.slice(0, 7);

@@ -14,7 +14,7 @@
 	let activeCategory = $state<string>('all');
 
 	// Filtering
-	let filteredItems = $derived(
+	const filteredItems = $derived(
 		galleryItems.filter((item) => {
 			return activeCategory === 'all' || item.category === activeCategory;
 		})

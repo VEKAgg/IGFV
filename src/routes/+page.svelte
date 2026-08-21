@@ -19,17 +19,13 @@
 		ShieldAltSolid,
 		InfoCircleSolid
 	} from 'svelte-awesome-icons';
+	import { untrack } from 'svelte';
 	import ScrollDown from '$lib/components/ScrollDown.svelte';
 	import CurrentFocus from '$lib/components/UI/CurrentFocus.svelte';
 	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
 	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
 	import { resolve } from '$app/paths';
-	import {
-		whyJoinReasons,
-		squadronStatsWithIcons,
-		onboardingSteps,
-		testimonials
-	} from '$lib/data/squadron';
+	import { whyJoinReasons, squadronStatsWithIcons } from '$lib/data/squadron';
 	import type { NewsPost } from '$lib/types';
 
 	// ─── Latest Announcement ───
@@ -50,7 +46,9 @@
 	}
 
 	$effect(() => {
-		loadLatestNews();
+		untrack(() => {
+			loadLatestNews();
+		});
 	});
 
 	// ─── Discord Widget Client Fetching ───
@@ -76,7 +74,9 @@
 	}
 
 	$effect(() => {
-		loadDiscord();
+		untrack(() => {
+			loadDiscord();
+		});
 	});
 
 	// ─── Cursor tracking ───

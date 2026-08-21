@@ -151,7 +151,7 @@
 				},
 				{
 					title: 'Community Integration',
-					text: 'Elite Dangerous has weak built-in social tools. Join IGFV\'s Discord immediately for organized wings, mentor pairing, and live rescue support. Squadron membership on Inara tracks your progress and unlocks group benefits.'
+					text: "Elite Dangerous has weak built-in social tools. Join IGFV's Discord immediately for organized wings, mentor pairing, and live rescue support. Squadron membership on Inara tracks your progress and unlocks group benefits."
 				}
 			]
 		}
@@ -251,7 +251,7 @@
 
 				<!-- Expanded Content -->
 				{#if expandedCategory === cat.id}
-					<div class="border-t border-white/5 px-6 pb-6 pt-4">
+					<div class="border-t border-white/5 px-6 pt-4 pb-6">
 						<div class="space-y-4">
 							{#each cat.tips as tip (tip.title)}
 								<div class="relative flex gap-4 border-l border-white/10 pl-4">
