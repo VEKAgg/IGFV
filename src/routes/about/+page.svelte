@@ -2,25 +2,14 @@
 	import { inview } from '$lib/actions/inview';
 	import {
 		HistorySolid,
-		RocketSolid,
-		StarSolid,
-		UsersSolid,
 		GlobeAmericasSolid,
 		ClockSolid,
-		HandshakeSolid,
-		ShieldAltSolid,
 		HandsHelpingSolid,
 		CheckSolid,
-		CompassSolid,
-		HammerSolid,
-		FireSolid,
-		SpaceShuttleSolid,
-		InfoCircleSolid,
-		QuestionCircleSolid,
 		UserAstronautSolid
 	} from 'svelte-awesome-icons';
-	import { resolve } from '$app/paths';
 	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
+	import { leadership } from '$lib/data/members';
 
 	// ─── FAQ Accordion State ───
 	let openFaq = $state<number | null>(null);
@@ -140,7 +129,7 @@
 					logs. In IGFV, you are welcome exactly as you are.
 				</p>
 				<div class="space-y-4">
-					{#each [{ title: 'No Ranks Requirement', desc: 'No Elite rankings required to participate in wing operations.' }, { title: 'No Ship Gatekeeping', desc: 'You do not need an engineered Anaconda or Cutter to fly with us.' }, { title: 'No Attendance Quotas', desc: 'No mandatory weekly hours or active check-ins required.' }] as item}
+					{#each [{ title: 'No Ranks Requirement', desc: 'No Elite rankings required to participate in wing operations.' }, { title: 'No Ship Gatekeeping', desc: 'You do not need an engineered Anaconda or Cutter to fly with us.' }, { title: 'No Attendance Quotas', desc: 'No mandatory weekly hours or active check-ins required.' }] as item (item.title)}
 						<div class="flex gap-4 border-l-2 border-primary-main pl-4">
 							<div>
 								<h4 class="text-xs font-bold text-white uppercase">{item.title}</h4>
@@ -225,7 +214,7 @@
 		</h2>
 
 		<div class="relative ml-4 border-l border-white/10 md:ml-32">
-			{#each [{ year: '3305 (2019)', title: 'Founded in LHS 3447', text: 'Commander Don Samen establishes the squadron with three pilots, dedicating operations to trade logs and exploration mapping.' }, { year: '3307 (2021)', title: 'Valhall Acquired', text: 'The Imperial Fleet Carrier ISS Valhall (VXX-RHJ) is commissioned, expanding operations into a mobile deep space headquarters.' }, { year: '3311 (2025)', title: 'Galactic Expansion', text: 'Welcoming pilots across PC, Xbox, and PlayStation, achieving over 100 registered members on Inara registries.' }] as item}
+			{#each [{ year: '3305 (2019)', title: 'Founded in LHS 3447', text: 'Commander Don Samen establishes the squadron with three pilots, dedicating operations to trade logs and exploration mapping.' }, { year: '3307 (2021)', title: 'Valhall Acquired', text: 'The Imperial Fleet Carrier ISS Valhall (VXX-RHJ) is commissioned, expanding operations into a mobile deep space headquarters.' }, { year: '3311 (2025)', title: 'Galactic Expansion', text: 'Welcoming pilots across PC, Xbox, and PlayStation, achieving over 100 registered members on Inara registries.' }] as item (item.title)}
 				<div class="relative mb-10 ml-8">
 					<!-- Blinking dot on current timeline step -->
 					<span
@@ -261,7 +250,7 @@
 		</h2>
 
 		<div class="grid gap-6 md:grid-cols-3">
-			{#each [{ cmdr: 'CMDR Sarah Thorne', quote: 'No quotas, no militaristic demands. I can disappear for three months in deep space and my cabin on ISS Valhall is still waiting for me.', role: 'Explorer' }, { cmdr: 'CMDR Marcus Vance', quote: 'The veteran pilots helped me coordinate my first engineering loop in a weekend. Highly active and supportive wing coordination.', role: 'Combat pilot' }, { cmdr: 'CMDR Jin-Woo', quote: 'Trade runs are highly organized. Fleet carrier logistics loops are mapped with exact price sheets, keeping everyone profitable.', role: 'Industry Specialist' }] as test}
+			{#each [{ cmdr: 'CMDR Sarah Thorne', quote: 'No quotas, no militaristic demands. I can disappear for three months in deep space and my cabin on ISS Valhall is still waiting for me.', role: 'Explorer' }, { cmdr: 'CMDR Marcus Vance', quote: 'The veteran pilots helped me coordinate my first engineering loop in a weekend. Highly active and supportive wing coordination.', role: 'Combat pilot' }, { cmdr: 'CMDR Jin-Woo', quote: 'Trade runs are highly organized. Fleet carrier logistics loops are mapped with exact price sheets, keeping everyone profitable.', role: 'Industry Specialist' }] as test (test.cmdr)}
 				<div
 					class="flex flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/90 p-6 shadow-glow"
 				>
@@ -289,7 +278,7 @@
 		</h2>
 
 		<div class="grid gap-6 md:grid-cols-3">
-			{#each [{ name: 'Don Samen', role: 'Leader', desc: 'Founder and overall commander. Focuses on fleet carrier operations and keeping a relaxed, low-stress squadron community.' }, { name: 'Twisted VorteK', role: 'Manager', desc: 'Active wing coordinator. Specializes in combat engineering, bounty hunting loops, and weapon system training.' }, { name: 'Sarah Thorne', role: 'Officer / Lead Explorer', desc: 'Expedition coordinator. Maps deep space pathways and guides pilots through distant nebula transits.' }] as lead}
+			{#each leadership as lead (lead.name)}
 				<div
 					class="rounded-xl border border-white/10 bg-[#000d22]/90 p-6 transition-all duration-300 hover:border-primary-main/30"
 				>
@@ -306,7 +295,7 @@
 							>
 						</div>
 					</div>
-					<p class="text-xs leading-relaxed text-gray-400">{lead.desc}</p>
+					<p class="text-xs leading-relaxed text-gray-400">{lead.bio}</p>
 				</div>
 			{/each}
 		</div>
@@ -326,7 +315,7 @@
 		</div>
 
 		<div class="space-y-4">
-			{#each faqs as faq, i}
+			{#each faqs as faq, i (faq.question)}
 				<div class="rounded-xl border border-white/10 bg-[#000d22]/90">
 					<button
 						onclick={() => toggleFaq(i)}

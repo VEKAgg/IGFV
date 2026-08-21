@@ -17,7 +17,8 @@ export const galleryItems: GalleryItem[] = [
 			'A fleet of IGFV exploration ships posing in front of the supermassive black hole at the center of the Milky Way.',
 		category: 'exploration',
 		imageUrl: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=800',
-		credit: 'CMDR Sarah Thorne'
+		credit: 'CMDR Sarah Thorne',
+		relatedEventId: 'evt-005'
 	},
 	{
 		id: 'gal-003',
@@ -25,7 +26,8 @@ export const galleryItems: GalleryItem[] = [
 		caption: 'Commanders engaging pirate targets in a high-intensity resource extraction site.',
 		category: 'operations',
 		imageUrl: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=800',
-		credit: 'CMDR Twisted VorteK'
+		credit: 'CMDR Twisted VorteK',
+		relatedEventId: 'evt-003'
 	},
 	{
 		id: 'gal-004',

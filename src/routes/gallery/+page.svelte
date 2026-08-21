@@ -3,17 +3,11 @@
 	import {
 		ImagesSolid,
 		ImageSolid,
-		StarSolid,
-		CalendarAltSolid,
 		UserSolid,
-		CheckSolid,
-		SpaceShuttleSolid,
-		CompassSolid,
-		FireSolid,
-		HammerSolid,
 		DiscordBrands,
-		ExternalLinkAltSolid
+		ArrowRightSolid
 	} from 'svelte-awesome-icons';
+	import { resolve } from '$app/paths';
 	import { galleryItems, galleryCategories } from '$lib/data/gallery';
 
 	// Category filter state
@@ -117,7 +111,7 @@
 	<div class="mx-auto max-w-7xl">
 		<!-- Category tabs -->
 		<div class="mb-12 flex flex-wrap justify-center gap-2">
-			{#each galleryCategories as cat}
+			{#each galleryCategories as cat (cat.id)}
 				<button
 					onclick={() => (activeCategory = cat.id)}
 					class="rounded px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all {activeCategory ===
@@ -133,7 +127,7 @@
 		<!-- Grid list (Frosted cards with solid layout) -->
 		{#if filteredItems.length > 0}
 			<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-				{#each filteredItems as item, idx}
+				{#each filteredItems as item, idx (item.id)}
 					<div use:inview={{ delay: idx * 60 }} class="inview-hidden">
 						<div
 							class="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-[#000d22]/90 shadow-sm transition-colors hover:border-primary-main/20"
@@ -154,16 +148,27 @@
 									<p class="mb-4 font-sans text-xs leading-relaxed text-gray-400">{item.caption}</p>
 								</div>
 
-								<div
-									class="mt-4 flex items-center justify-between border-t border-white/5 pt-3 text-[11px] text-gray-500"
-								>
-									<span class="font-mono text-[9px] tracking-wider text-gray-500 uppercase"
-										>{item.category}</span
+								<div>
+									{#if item.relatedEventId}
+										<a
+											href={resolve('/events')}
+											class="mb-3 inline-flex items-center gap-1 text-[10px] font-bold tracking-wider text-primary-light uppercase transition-colors hover:text-white"
+										>
+											View Event Archive
+											<ArrowRightSolid class="size-2.5" />
+										</a>
+									{/if}
+									<div
+										class="flex items-center justify-between border-t border-white/5 pt-3 text-[11px] text-gray-500"
 									>
-									<span class="flex items-center gap-1 font-bold text-white">
-										<UserSolid class="size-2.5 text-primary-light" />
-										{item.credit}
-									</span>
+										<span class="font-mono text-[9px] tracking-wider text-gray-500 uppercase"
+											>{item.category}</span
+										>
+										<span class="flex items-center gap-1 font-bold text-white">
+											<UserSolid class="size-2.5 text-primary-light" />
+											{item.credit}
+										</span>
+									</div>
 								</div>
 							</div>
 						</div>

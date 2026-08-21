@@ -2,15 +2,9 @@
 	import { inview } from '$lib/actions/inview';
 	import {
 		RocketSolid,
-		StarSolid,
-		CheckSolid,
-		UsersSolid,
-		CalendarAltSolid,
-		CompassSolid,
-		SpaceShuttleSolid,
-		ShieldAltSolid,
 		ExclamationTriangleSolid,
-		UserAstronautSolid
+		UserAstronautSolid,
+		ArrowRightSolid
 	} from 'svelte-awesome-icons';
 	import { operations } from '$lib/data/operations';
 	import DataStatusPanel from '$lib/components/UI/DataStatusPanel.svelte';
@@ -111,7 +105,7 @@
 	<!-- Filter Tabs -->
 	<div class="mb-12 flex justify-center">
 		<div class="inline-flex rounded-lg border border-white/10 bg-[#000d22]/90 p-1">
-			{#each [{ id: 'active', label: 'Active Missions' }, { id: 'upcoming', label: 'Upcoming Plans' }, { id: 'completed', label: 'Archived / Complete' }] as tab}
+			{#each [{ id: 'active', label: 'Active Missions' }, { id: 'upcoming', label: 'Upcoming Plans' }, { id: 'completed', label: 'Archived / Complete' }] as tab (tab.id)}
 				<button
 					onclick={() => (activeTab = tab.id as any)}
 					class="rounded-md px-4 py-2 text-xs font-bold tracking-wider uppercase transition-all {activeTab ===
@@ -128,7 +122,7 @@
 	<!-- Cards list -->
 	{#if filteredOps.length > 0}
 		<div class="grid gap-6 md:grid-cols-2">
-			{#each filteredOps as op, i}
+			{#each filteredOps as op, i (op.id)}
 				<div use:inview={{ delay: i * 80 }} class="inview-hidden group">
 					<div
 						class="flex h-full flex-col justify-between rounded-xl border border-white/10 bg-[#000d22]/95 p-6 shadow-glow transition-all duration-300 hover:border-primary-main/30"
@@ -219,6 +213,15 @@
 							>
 							<span class="font-mono">{op.eta}</span>
 						</div>
+						{#if op.relatedLink}
+							<a
+								href={op.relatedLink}
+								class="mt-3 inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-primary-light uppercase transition-colors hover:text-white"
+							>
+								{op.relatedLinkLabel ?? 'View Details'}
+								<ArrowRightSolid class="size-3" />
+							</a>
+						{/if}
 					</div>
 				</div>
 			{/each}

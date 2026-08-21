@@ -20,7 +20,8 @@
 		fleetCarrierPlaceholder,
 		carrierEtiquette,
 		carrierServicesDetail,
-		carrierJumpHistory
+		carrierJumpHistory,
+		tritiumDepot
 	} from '$lib/data/fleet-carrier';
 </script>
 
@@ -160,7 +161,7 @@
 
 				<div class="flex items-center justify-between border-t border-white/5 pt-3 text-xs">
 					<span class="text-[10px] font-medium text-gray-500 uppercase">Tritium Depot:</span>
-					<span class="font-mono font-bold text-primary-light">3,000 / 5,000 T (60%)</span>
+					<span class="font-mono font-bold text-primary-light">{tritiumDepot.displayString}</span>
 				</div>
 			</div>
 		</div>
@@ -302,9 +303,9 @@
 						<div class="rounded border border-white/5 bg-black/40 px-3 py-1.5">
 							ETA Colonia: July 3
 						</div>
-						<div class="rounded border border-white/5 bg-black/40 px-3 py-1.5">
-							Tritium Need: 5,000 T
-						</div>
+					<div class="rounded border border-white/5 bg-black/40 px-3 py-1.5">
+						Tritium Need: {tritiumDepot.formattedTarget}
+					</div>
 					</div>
 				</div>
 			</div>

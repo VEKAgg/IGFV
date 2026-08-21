@@ -1,20 +1,6 @@
 <script lang="ts">
 	import { inview } from '$lib/actions/inview';
-	import {
-		BookSolid,
-		CheckSolid,
-		StarSolid,
-		RocketSolid,
-		FireSolid,
-		HammerSolid,
-		ToolboxSolid,
-		ExternalLinkAltSolid,
-		GlobeAmericasSolid,
-		CompassSolid,
-		ExclamationTriangleSolid,
-		BookmarkSolid,
-		ChevronRightSolid
-	} from 'svelte-awesome-icons';
+	import { BookSolid, BookmarkSolid, ChevronRightSolid } from 'svelte-awesome-icons';
 	import { guides } from '$lib/data/guides';
 	import { resolve } from '$app/paths';
 	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
@@ -110,11 +96,42 @@
 	</section>
 {/if}
 
+<!-- TOOLKIT FEATURED CARD -->
+<section class="mx-auto max-w-7xl px-4 py-8">
+	<a
+		href={resolve('/guides/newp-toolkit')}
+		use:inview
+		class="inview-hidden group block overflow-hidden rounded-xl border border-primary-main/20 bg-linear-to-r from-primary-main/10 via-[#000d22]/95 to-dark-bg/95 shadow-glow transition-all duration-300 hover:border-primary-main/40 hover:shadow-glow-hover"
+	>
+		<div class="flex items-center gap-6 p-6 sm:p-8">
+			<div
+				class="flex size-14 shrink-0 items-center justify-center rounded-xl bg-primary-main/15 text-primary-light transition-colors group-hover:bg-primary-main/25"
+			>
+				<BookSolid class="size-7" />
+			</div>
+			<div class="flex-1">
+				<h2 class="text-xl font-bold tracking-wide text-white uppercase">
+					Almost Everything <span class="text-primary-main">Toolkit</span>
+				</h2>
+				<p class="mt-1 text-xs leading-relaxed text-gray-400">
+					A comprehensive reference covering Combat, Trading, Exploration, Mining, Power Management,
+					Engineering, and Beginner Advice — 21 tips across 7 categories.
+				</p>
+			</div>
+			<div
+				class="hidden shrink-0 text-xs font-bold tracking-wider text-primary-light uppercase sm:inline-flex"
+			>
+				Open Toolkit →
+			</div>
+		</div>
+	</a>
+</section>
+
 <!-- CURATED SECTIONS (Solid high-contrast containers) -->
 <section class="border-t border-white/5 bg-dark-bg/90 px-4 py-12 sm:py-16">
 	<div class="mx-auto max-w-7xl">
 		<div class="space-y-16">
-			{#each difficulties as diff}
+			{#each difficulties as diff (diff)}
 				{@const guidesList = getGuidesByDifficulty(diff)}
 				{#if guidesList.length > 0}
 					<div>
@@ -123,7 +140,7 @@
 						</div>
 
 						<div class="grid gap-6 md:grid-cols-2">
-							{#each guidesList as guide}
+							{#each guidesList as guide (guide.slug)}
 								<div
 									id="guide-{guide.slug}"
 									class="rounded-xl border {expandedGuideSlug === guide.slug
@@ -147,6 +164,20 @@
 										<h4 class="mb-2 text-base font-bold tracking-wide text-white uppercase">
 											{guide.title}
 										</h4>
+										{#if guide.author}
+											<p class="mb-2 text-[10px] text-gray-500">
+												By {guide.author}
+												{#if guide.sourceUrl}
+													· <a
+														href={guide.sourceUrl}
+														target="_blank"
+														rel="noopener noreferrer"
+														class="text-primary-light transition-colors hover:text-white"
+														>{guide.sourceLabel ?? 'External Source'}</a
+													>
+												{/if}
+											</p>
+										{/if}
 										<p class="mb-6 text-xs leading-relaxed text-gray-400">{guide.excerpt}</p>
 
 										<!-- Expanded Steps -->
@@ -162,7 +193,7 @@
 															class="block font-mono text-[10px] font-bold text-primary-light uppercase"
 															>Step-by-Step Training:</span
 														>
-														{#each guide.steps as step, idx}
+														{#each guide.steps as step (step.title)}
 															<div class="relative flex gap-4 border-l border-white/10 pl-4">
 																<div
 																	class="absolute top-1.5 left-[-5px] size-2 rounded-full bg-primary-main"
