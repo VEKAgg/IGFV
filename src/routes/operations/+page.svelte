@@ -62,7 +62,7 @@
 		};
 	});
 
-	let filteredOps = $derived(enrichedOps.filter((op) => op.status === activeTab));
+	const filteredOps = $derived(enrichedOps.filter((op) => op.status === activeTab));
 </script>
 
 <!-- Hero Section -->

@@ -15,7 +15,7 @@
 		};
 	});
 
-	let visible = $derived(scrollY > 300);
+	const visible = $derived(scrollY > 300);
 
 	function scrollToTop() {
 		window.scrollTo({ top: 0, behavior: 'smooth' });

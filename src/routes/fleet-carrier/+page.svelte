@@ -303,9 +303,9 @@
 						<div class="rounded border border-white/5 bg-black/40 px-3 py-1.5">
 							ETA Colonia: July 3
 						</div>
-					<div class="rounded border border-white/5 bg-black/40 px-3 py-1.5">
-						Tritium Need: {tritiumDepot.formattedTarget}
-					</div>
+						<div class="rounded border border-white/5 bg-black/40 px-3 py-1.5">
+							Tritium Need: {tritiumDepot.formattedTarget}
+						</div>
 					</div>
 				</div>
 			</div>
