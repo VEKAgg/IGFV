@@ -91,7 +91,7 @@ Track all known issues, bugs, and technical debt here. Use consistent IDs.
 
 | ID | Severity | Status | File | Description |
 |----|----------|--------|------|-------------|
-| GAP-001 | HIGH | ⬜ Open | `src/lib/directus.ts` | Adopt Directus SDK (from fh6/tttr) to pull squadron news from `api.veka.gg/posts` |
+| GAP-001 | HIGH | ⬜ Open | `src/lib/directus.ts` | Adopt Directus SDK (from fh6/tttr) to pull squadron news from `api.veka.gg/posts` — filter by site key `igfv`: `filter: { sites: { key: { _eq: 'igfv' } } }` (site key exists and is active, verified 2026-10-26; 0 posts tagged to it yet) |
 | GAP-002 | MEDIUM | ⬜ Open | `src/routes/api/inara/proxy/` | Connect Inara API proxy to live components with dynamic `dataState` toggles |
 | GAP-003 | LOW | ⬜ Open | `src/lib/components/` | Adopt Sayara's `capabilities.svelte.ts` for LOD on heavy star-system data |
 
