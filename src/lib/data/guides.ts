@@ -1,7 +1,11 @@
 import type { GuideEntry } from '$lib/types';
 
+export const difficulties = ['Beginner', 'Intermediate', 'Advanced', 'Squadron-Specific'] as const;
+
+export type Difficulty = (typeof difficulties)[number];
+
 export interface ExtendedGuideEntry extends GuideEntry {
-	difficulty: 'Beginner' | 'Intermediate' | 'Squadron-Specific';
+	difficulty: Difficulty;
 	isStartHere?: boolean;
 	author?: string;
 	sourceUrl?: string;

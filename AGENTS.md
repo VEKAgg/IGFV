@@ -1,3 +1,183 @@
+# AGENTS.md — IGFV
+
+> Elite Dangerous squadron community portal. SvelteKit 5, Svelte 5 runes, TypeScript (strict), Tailwind CSS v4. Package management via `pnpm`.
+
+---
+
+## Session Protocol (read first — every session)
+
+1. **Read** this AGENTS.md fully before touching any code.
+2. **Do** the current task.
+3. **Update** this AGENTS.md (Issue Tracker, decisions, gotchas) whenever context changes.
+4. **Verify** quality gates → **commit + push** — one clean commit per task.
+5. **Log** one line to the Bedrock vault journal: `C:\Users\Shafaat\Documents\Bedrock\60 Journal\<YYYY-MM-DD>.md` (create the file if missing).
+
+---
+
+## Agent Workflow (MANDATORY)
+
+Every coding session must follow this loop for each task:
+
+1. **Write the code** for the current task / step.
+2. **Audit** — run quality gates. Fix any errors or warnings.
+3. **Commit** — stage changes and commit with a descriptive message.
+4. **Push** — push the commit.
+5. **Move on** — only start the next task after the current one is linted, tested, committed, and pushed.
+
+**Never batch multiple tasks into one commit. Each completed task = one clean commit.**
+
+---
+
+## Quality Gates (run before every push)
+
+```bash
+pnpm check          # svelte-check type verification
+pnpm lint           # prettier --check + eslint
+pnpm build          # ensure production bundle compiles cleanly
+```
+
+| Gate | Command | Must pass |
+|------|---------|-----------|
+| Typecheck | `pnpm check` | Yes |
+| Lint | `pnpm lint` | Yes |
+| Build | `pnpm build` | Yes |
+
+---
+
+## Git History Audit (First Session Only)
+
+On your first session with this project, run through the git log and populate the Issue Tracker and Locked Design Decisions sections above with historical context:
+
+```bash
+git log --oneline -50          # recent commits
+git log --all --oneline -100   # all branches
+git log --grep="fix" --oneline # bug fix history
+git log --grep="breaking" --oneline # breaking changes
+```
+
+- Add past bugs/fixes to the Issue Tracker (status: Done)
+- Add confirmed decisions to Locked Design Decisions (with dates)
+- Note any patterns of recurring issues
+- This gives future agents full context without re-auditing
+
+---
+
+## Issue Tracker
+
+Track all known issues, bugs, and technical debt here. Use consistent IDs.
+
+### Format
+
+| ID | Severity | Status | File | Description |
+|----|----------|--------|------|-------------|
+| FIX-001 | CRITICAL | ✅ Done | `src/routes/+page.svelte:42` | One-line problem description |
+| FIX-002 | HIGH | ⬜ Open | `src/lib/components/FleetRoster.svelte:15` | One-line problem description |
+| GAP-001 | MEDIUM | ⬜ Deferred | — | Missing feature or capability |
+
+### Severity Levels
+
+- **CRITICAL**: Build errors, security vulnerabilities, data loss, broken auth
+- **HIGH**: Logic errors, broken UI, incorrect data display
+- **MEDIUM**: Code quality, dead code, missing error handling, performance
+- **LOW**: Style, naming, documentation gaps
+
+### Status Values
+
+- `✅ Done` — Fixed in a previous session
+- `⬜ Open` — Needs to be fixed
+- `⬜ Deferred` — Known but deferred to a future session
+
+### Open Issues & Architectural Gaps
+
+| ID | Severity | Status | File | Description |
+|----|----------|--------|------|-------------|
+| GAP-001 | HIGH | ⬜ Open | `src/lib/directus.ts` | Adopt Directus SDK (from fh6/tttr) to pull squadron news from `api.veka.gg/posts` — filter by site key `igfv`: `filter: { sites: { key: { _eq: 'igfv' } } }` (site key exists and is active, verified 2026-10-26; 0 posts tagged to it yet) |
+| GAP-002 | MEDIUM | ⬜ Open | `src/routes/api/inara/proxy/` | Connect Inara API proxy to live components with dynamic `dataState` toggles |
+| GAP-003 | LOW | ⬜ Open | `src/lib/components/` | Adopt Sayara's `capabilities.svelte.ts` for LOD on heavy star-system data |
+
+### Completed Fixes
+
+| ID | Status | File |
+|----|--------|------|
+| — | — | Initial release baseline established |
+
+---
+
+## Locked Design Decisions
+
+Decisions confirmed by the owner. **Do not deviate without explicit instruction.**
+
+| Decision | Chosen | Date |
+|----------|--------|------|
+| CSS framework | Tailwind v4 with `@theme` directive | 2026-01-15 |
+| Component patterns | Svelte 5 runes only, no `$:` | 2026-01-15 |
+| Data source | Hardcoded in `src/lib/data/fleet.ts` | 2026-01-15 |
+| Ship display | Top 10 most-flown, mass-locked tier grouping, star-perk visualization | 2026-01-15 |
+| CMS integration | Deferred — `posts` collection via Directus | 2026-01-15 |
+
+---
+
+## Aesthetic Direction
+
+### Color Tokens
+
+```css
+--color-surface:        #0A0A0A;
+--color-surface-raised: #1E293B;
+--color-text-primary:   #FFFFFF;
+--color-text-secondary: #94A3B8;
+--color-accent:         #FF5600;
+```
+
+### Design Principles
+
+- Dark mode first, light mode as secondary
+- VEKA orange accent (`#FF5600` / `#FF6B00`)
+- Responsive: mobile-first
+
+---
+
+## File Modification Restriction
+
+- **Always edit**: `AGENTS.md`, `CLAUDE.md`, `README.md` — these are agent-maintained files.
+- **Edit with caution**: `.svelte`, `.ts`, `.css` files — only when executing a specific task or fix.
+- **Never edit**: `svelte.config.js`, `vite.config.ts`, `tsconfig.json`, `.env` unless explicitly instructed.
+- **Document all changes**: Note exact files modified in commit messages.
+
+---
+
+## Pre-Submit Checklist
+
+Before finishing any task, verify:
+
+- [ ] `pnpm check` — no type errors
+- [ ] `pnpm lint` — no ESLint or Prettier warnings
+- [ ] `pnpm build` — production build succeeds
+- [ ] Svelte 5 runes syntax used throughout (`$state`, `$derived`, `$props`, `$effect`)
+- [ ] No legacy reactive declarations (`$:`) or `<slot>` usage
+- [ ] Tailwind v4 syntax (numeric scales, parentheses for CSS vars)
+- [ ] AGENTS.md is still accurate
+
+---
+
+## Svelte 5 Runes Compliance
+
+- All components use `$state`, `$derived`, `$props` (runes mode enforced)
+- Use `{@render children()}` for slot composition (not `<slot>`)
+- Use `$derived` for computed values
+- Never mix runes with legacy reactive declarations (`$:`)
+
+---
+
+## Tailwind CSS v4 Rules
+
+1. **Numeric scale for dimensions**: Use `h-0.75` instead of `h-[3px]`, `w-70` instead of `w-[280px]`
+2. **Parentheses for CSS variables**: Use `bg-(--color-surface)` instead of `bg-[var(--color-surface)]`
+3. **Theme color aliases**: Prefer named theme colors over raw hex values
+4. **No arbitrary brackets** when a Tailwind utility class exists
+
+---
+
 ## Project Configuration
 
 - **Language**: TypeScript (strict mode)

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { DataState } from '$lib/types';
-	import { WifiSolid, CircleSolid } from 'svelte-awesome-icons';
+	import { WifiSolid } from 'svelte-awesome-icons';
 
 	let {
 		state = 'live',

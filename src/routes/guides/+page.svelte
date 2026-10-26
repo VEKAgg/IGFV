@@ -1,12 +1,9 @@
 <script lang="ts">
 	import { inview } from '$lib/actions/inview';
 	import { BookSolid, BookmarkSolid, ChevronRightSolid } from 'svelte-awesome-icons';
-	import { guides } from '$lib/data/guides';
+	import { guides, difficulties } from '$lib/data/guides';
 	import { resolve } from '$app/paths';
 	import NewCommandersStart from '$lib/components/UI/NewCommandersStart.svelte';
-
-	// Difficulty categories: 'Beginner' | 'Intermediate' | 'Squadron-Specific'
-	const difficulties = ['Beginner', 'Intermediate', 'Squadron-Specific'] as const;
 
 	// Keep track of which guide is expanded
 	let expandedGuideSlug = $state<string | null>(null);

@@ -1,13 +1,9 @@
 <script lang="ts">
-	import { DiscordBrands, XTwitterBrands, FacebookBrands } from 'svelte-awesome-icons';
+	import { DiscordBrands } from 'svelte-awesome-icons';
 
 	const currentYear = new Date().getFullYear();
 
-	const socialLinks = [
-		{ href: 'https://discord.gg/igfv', icon: DiscordBrands, label: 'Discord' },
-		{ href: 'https://twitter.com/', icon: XTwitterBrands, label: 'X / Twitter' },
-		{ href: 'https://facebook.com/', icon: FacebookBrands, label: 'Facebook' }
-	];
+	const socialLinks = [{ href: 'https://discord.gg/igfv', icon: DiscordBrands, label: 'Discord' }];
 </script>
 
 <footer class="border-t-4 border-primary-main bg-dark-navy">
